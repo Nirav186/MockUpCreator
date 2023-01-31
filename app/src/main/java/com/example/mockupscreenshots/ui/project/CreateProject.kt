@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.core.components.DropDownMenu
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -136,33 +137,14 @@ fun CreateProject() {
             )
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFD2E0ED),
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = device,
-                color = Color.Gray,
-                fontSize = 16.sp
-            )
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_down),
-                contentDescription = null,
-                tint = Color(0xFF93A2B2)
-            )
-        }
+        DropDownMenu(
+            modifier = Modifier,
+            items = listOf("Android","Ios"),
+            selectedItem = device,
+            onItemSelect = {
+                device = it
+            }
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
