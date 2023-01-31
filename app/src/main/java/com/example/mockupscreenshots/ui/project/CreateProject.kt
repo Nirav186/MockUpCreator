@@ -37,7 +37,7 @@ import com.example.mockupscreenshots.ui.theme.BgColor
 @Composable
 fun CreateProject() {
 
-    val createProjectViewModel: CreateProjectViewModel = hiltViewModel()
+    val projectViewModel: ProjectViewModel = hiltViewModel()
 
     var projectName by remember { mutableStateOf("") }
     var projectDes by remember { mutableStateOf("") }
@@ -200,7 +200,7 @@ fun CreateProject() {
                 .width(300.dp)
                 .height(100.dp)
                 .clickable(onClick = {
-                    createProjectViewModel.addProject(
+                    projectViewModel.addProject(
                         Project(
                             name = projectName,
                             description = projectDes,

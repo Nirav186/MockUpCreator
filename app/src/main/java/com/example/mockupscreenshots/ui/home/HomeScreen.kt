@@ -31,6 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.getImageFromAsset
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
+import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.DeviceFrameViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -83,19 +84,17 @@ private fun EmptyFrame(frameItem: DeviceFrameItem, onFrameSelect: (DeviceFrameIt
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(onNewProject: () -> Unit) {
-    val selectedTab = remember {
-        mutableStateOf(0)
-    }
+fun Home(onNewProject: () -> Unit, onProjectSelect: (Project) -> Unit) {
+    val homeViewModel: HomeViewModel = hiltViewModel()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = BgColor)
     ) {
-        if (selectedTab.value == 0) {
+        if (homeViewModel.selectedTab.value == 0) {
             HomeTab()
         } else {
-            MyProjectsTab()
+            MyProjectsTab(onProjectSelect = onProjectSelect)
         }
         Row(
             modifier = Modifier
@@ -109,8 +108,8 @@ fun Home(onNewProject: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            TabHome(selectedTab)
-            TabMyProjects(selectedTab)
+            TabHome(homeViewModel.selectedTab)
+            TabMyProjects(homeViewModel.selectedTab)
         }
         Card(
             modifier = Modifier
