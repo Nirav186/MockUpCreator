@@ -38,6 +38,7 @@ fun NavigationGraph(navController: NavHostController) {
         }
         composable(route = NavigationTarget.CreateProject.route) {
             CreateProject(
+                navController = navController,
                 onAddScreenshotClick = {
                     navController.navigate(NavigationTarget.AddScreenshot.route)
                 }
@@ -51,7 +52,7 @@ fun NavigationGraph(navController: NavHostController) {
             )
         }
         composable(route = NavigationTarget.AddScreenshot.route) {
-            AddScreenshot()
+            AddScreenshot(navController)
         }
     }
 }

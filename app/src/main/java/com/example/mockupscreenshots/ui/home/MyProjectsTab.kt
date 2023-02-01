@@ -28,6 +28,7 @@ import com.example.mockupscreenshots.ui.project.ProjectViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
+import com.example.mockupscreenshots.ui.theme.SecondaryColor
 
 @Composable
 fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
@@ -118,7 +119,7 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     text = project.device,
                     style = TextStyle(
-                        color = Color(0xFF93A2B2),
+                        color = SecondaryColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -144,7 +145,7 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
         Text(
             text = project.description,
             style = TextStyle(
-                color = Color(0xFF93A2B2),
+                color = SecondaryColor,
                 fontSize = 16.sp
             ),
             maxLines = 1,

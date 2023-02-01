@@ -22,6 +22,7 @@ import com.example.mockupscreenshots.core.components.AppButton
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
+import com.example.mockupscreenshots.ui.theme.SecondaryColor
 
 @Composable
 fun ProjectPage(project: Project, onBackPressed: () -> Unit) {
@@ -107,7 +108,7 @@ fun ProjectPage(project: Project, onBackPressed: () -> Unit) {
                         modifier = Modifier.fillMaxWidth(),
                         text = project.device,
                         style = TextStyle(
-                            color = Color(0xFF93A2B2),
+                            color = SecondaryColor,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -133,7 +134,7 @@ fun ProjectPage(project: Project, onBackPressed: () -> Unit) {
             Text(
                 text = project.description,
                 style = TextStyle(
-                    color = Color(0xFF93A2B2),
+                    color = SecondaryColor,
                     fontSize = 16.sp
                 )
             )

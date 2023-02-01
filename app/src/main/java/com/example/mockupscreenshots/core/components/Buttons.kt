@@ -7,6 +7,9 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -55,5 +58,26 @@ fun AppButton(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun ButtonWithBg(
+    modifier: Modifier,
+    imageVector: ImageVector,
+    color: Color
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(color.copy(alpha = 0.15f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            modifier = Modifier.padding(8.dp),
+            imageVector = imageVector,
+            contentDescription = null,
+            tint = color
+        )
     }
 }

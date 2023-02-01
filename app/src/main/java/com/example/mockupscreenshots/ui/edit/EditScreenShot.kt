@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.ui.addscreenshot.BottomPanel
 import java.io.File
 
 
@@ -30,7 +31,6 @@ fun EditScreenShot() {
     val cacheFile = File(LocalContext.current.cacheDir, "temp.png")
     val bmOptions = BitmapFactory.Options()
     val bitmap = BitmapFactory.decodeFile(cacheFile.absolutePath, bmOptions)
-//    bitmap = Bitmap.createScaledBitmap(bitmap!!)
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             modifier = Modifier.fillMaxSize(),

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.ui.theme.SecondaryColor
 
 @Composable
 fun DropDownMenu(
@@ -66,7 +67,7 @@ fun DropDownMenu(
                     .rotate(if (mExpanded) 180f else 0f),
                 painter = painterResource(id = R.drawable.ic_down),
                 contentDescription = null,
-                tint = Color(0xFF93A2B2)
+                tint = SecondaryColor
             )
         }
         DropdownMenu(
