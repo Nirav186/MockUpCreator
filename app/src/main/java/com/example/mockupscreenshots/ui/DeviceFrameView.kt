@@ -23,13 +23,13 @@ class DeviceFrameView @JvmOverloads constructor(
     context: Context,
     attributeSet: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    val frame: DeviceFrameItem,
+    val frame: MutableState<DeviceFrameItem>,
     val bitmap: MutableState<Bitmap>?
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
 
     @Composable
     override fun Content() {
-        DeviceFrame(frame = frame)
+        DeviceFrame(frame = frame.value)
     }
 
     @Composable

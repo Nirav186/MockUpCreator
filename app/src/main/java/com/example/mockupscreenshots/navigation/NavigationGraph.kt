@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.mockupscreenshots.core.ext.composableWithArgs
 import com.example.mockupscreenshots.core.ext.getString
 import com.example.mockupscreenshots.data.model.Project
+import com.example.mockupscreenshots.ui.addscreenshot.AddScreenshot
 import com.example.mockupscreenshots.ui.edit.EditScreenShot
 import com.example.mockupscreenshots.ui.home.Home
 import com.example.mockupscreenshots.ui.project.CreateProject
@@ -36,7 +37,11 @@ fun NavigationGraph(navController: NavHostController) {
             EditScreenShot()
         }
         composable(route = NavigationTarget.CreateProject.route) {
-            CreateProject()
+            CreateProject(
+                onAddScreenshotClick = {
+                    navController.navigate(NavigationTarget.AddScreenshot.route)
+                }
+            )
         }
         composableWithArgs(route = NavigationTarget.ProjectPage.route, "project") {
             val project = Gson().fromJson(it.getString("project"), Project::class.java)
@@ -44,6 +49,9 @@ fun NavigationGraph(navController: NavHostController) {
                 project = project,
                 onBackPressed = { navController.popBackStack() }
             )
+        }
+        composable(route = NavigationTarget.AddScreenshot.route) {
+            AddScreenshot()
         }
     }
 }

@@ -18,16 +18,16 @@ class DeviceFrameViewModel @Inject constructor(
     var state by mutableStateOf(DeviceFrameState())
 
     init {
-        getBankDataMap()
+        getFrames()
     }
 
-    private fun getBankDataMap() {
+    private fun getFrames() {
         viewModelScope.launch {
             useCaseLoadJsonFromAsset.action(Unit).collect { result ->
                 when (result) {
                     is Resource.Success -> {
-                        result.data?.let { bankData ->
-                            state.frameItems = bankData
+                        result.data?.let { frameItems ->
+                            state.frameItems = frameItems
                         }
                     }
                     is Resource.Error -> Unit

@@ -39,7 +39,7 @@ fun ScreenShotSelectionPage(frameId: String, onNext: () -> Unit) {
     val context = LocalContext.current
     if (frames.isNotEmpty()) {
         val deviceFrameView: MutableState<DeviceFrameView> = remember {
-            mutableStateOf(DeviceFrameView(context = context, bitmap = null, frame = frames[0]))
+            mutableStateOf(DeviceFrameView(context = context, bitmap = null, frame = mutableStateOf(frames[0])))
         }
         val frame = frames.find { it.frameId == frameId }
         val bitmap: MutableState<Bitmap> = remember {
@@ -63,7 +63,7 @@ fun ScreenShotSelectionPage(frameId: String, onNext: () -> Unit) {
                     AndroidView(modifier = Modifier, factory = {
                         DeviceFrameView(
                             context = it,
-                            frame = frame,
+                            frame = mutableStateOf(frame),
                             bitmap = bitmap
                         ).apply {
                             post {

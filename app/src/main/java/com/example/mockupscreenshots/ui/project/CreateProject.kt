@@ -35,7 +35,9 @@ import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
 
 @Composable
-fun CreateProject() {
+fun CreateProject(
+    onAddScreenshotClick: () -> Unit
+) {
 
     val projectViewModel: ProjectViewModel = hiltViewModel()
 
@@ -139,45 +141,19 @@ fun CreateProject() {
         }
         DropDownMenu(
             modifier = Modifier,
-            items = listOf("Android","Ios"),
+            items = listOf("Android", "iOS"),
             selectedItem = device,
             onItemSelect = {
                 device = it
             }
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFD2E0ED),
-                    shape = RoundedCornerShape(14.dp)
-                )
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier.weight(1f),
-                text = "Screenshot Style",
-                color = Color.Gray,
-                fontSize = 16.sp
-            )
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_down),
-                contentDescription = null,
-                tint = Color(0xFF93A2B2)
-            )
-        }
         Box(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
                 .fillMaxWidth()
                 .height(180.dp)
-                .dashedBorder(1.dp, Color(0xFFB1BCC7), 12.dp),
+                .dashedBorder(1.dp, Color(0xFFB1BCC7), 12.dp)
+                .clickable(onClick = onAddScreenshotClick),
             contentAlignment = Alignment.Center
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {

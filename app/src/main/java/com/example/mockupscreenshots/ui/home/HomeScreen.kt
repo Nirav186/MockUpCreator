@@ -1,12 +1,8 @@
 package com.example.mockupscreenshots.ui.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -18,69 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
-import com.example.mockupscreenshots.core.getImageFromAsset
-import com.example.mockupscreenshots.data.model.DeviceFrameItem
 import com.example.mockupscreenshots.data.model.Project
-import com.example.mockupscreenshots.ui.DeviceFrameViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun HomeScreen(onFrameSelect: (String) -> Unit) {
-    val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
-    val frames = deviceFrameViewModel.state.frameItems
-
-    Column(Modifier.fillMaxSize()) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
-            text = "Select Frame",
-            textAlign = TextAlign.Center,
-            color = Color.Black,
-            style = TextStyle(
-                fontWeight = FontWeight.Bold, fontSize = 22.sp
-            )
-        )
-        LazyVerticalGrid(modifier = Modifier,
-            cells = GridCells.Fixed(3),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            content = {
-                items(frames.size) {
-                    EmptyFrame(frameItem = frames[it]) {
-                        onFrameSelect(it.frameId)
-                    }
-                }
-            })
-    }
-}
-
-@Composable
-private fun EmptyFrame(frameItem: DeviceFrameItem, onFrameSelect: (DeviceFrameItem) -> Unit) {
-    val context = LocalContext.current
-    context.getImageFromAsset(frameItem.frameId)?.let { bitmap ->
-        Image(
-            modifier = Modifier
-                .height(150.dp)
-                .clickable(onClick = { onFrameSelect(frameItem) }),
-            bitmap = bitmap,
-            contentDescription = "Frame",
-            contentScale = ContentScale.Fit
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
