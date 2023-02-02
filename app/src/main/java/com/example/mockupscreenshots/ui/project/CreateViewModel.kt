@@ -1,0 +1,14 @@
+package com.example.mockupscreenshots.ui.project
+
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class CreateViewModel @Inject constructor() : ViewModel() {
+
+    val screenshots = mutableStateOf(mutableListOf<String>())
+
+
+}

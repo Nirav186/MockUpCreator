@@ -18,7 +18,7 @@ data class DeviceFrameItem(
     @SerializedName("paddingStart") val paddingStart: Int,
     @SerializedName("paddingTop") val paddingTop: Int,
     @SerializedName("width") val width: Double
-) {
+):java.io.Serializable {
     fun getPadding() = PaddingValues(
         start = (paddingStart).dp,
         end = (paddingEnd).dp,

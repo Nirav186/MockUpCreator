@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.data.model.Project
-import com.example.mockupscreenshots.ui.addscreenshot.BottomPanel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
 

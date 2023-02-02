@@ -9,5 +9,6 @@ data class Project(
     @PrimaryKey(autoGenerate = true) @SerializedName("projectId") val projectId: Long = 0L,
     @SerializedName("name") val name: String,
     @SerializedName("description") val description: String,
-    @SerializedName("device") val device: String
+    @SerializedName("device") val device: String,
+    @SerializedName("screenshots") val screenshots: List<String>
 )

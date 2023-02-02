@@ -6,7 +6,6 @@ import com.google.gson.Gson
 
 sealed class NavigationTarget(var route: String) {
     object Home : NavigationTarget("app://home")
-    object ScreenShotSelectionPage : NavigationTarget("app://screenShotSelectionPage?frameId={frameId}")
     object EditScreenShot : NavigationTarget("app://editScreenShot")
     object CreateProject : NavigationTarget("app://createProject")
     object ProjectPage : NavigationTarget("app://projectPage?project={project}")

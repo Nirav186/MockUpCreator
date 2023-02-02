@@ -78,7 +78,7 @@ fun Bitmap.saveScreenshot():String {
     val fOut = FileOutputStream(tempFile)
     compress(Bitmap.CompressFormat.PNG, 100, fOut)
     fOut.close()
-    return fileName
+    return tempFile.absolutePath
 }
 
 fun Context.hasPermissions(permission: String) =

@@ -1,13 +1,13 @@
 package com.example.mockupscreenshots.ui.project
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -33,7 +33,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.core.components.AppButton
 import com.example.mockupscreenshots.core.components.DropDownMenu
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
@@ -46,6 +48,7 @@ fun CreateProject(
     onAddScreenshotClick: () -> Unit
 ) {
 
+    val createViewModel: CreateViewModel = hiltViewModel()
     val projectViewModel: ProjectViewModel = hiltViewModel()
 
     var projectName by remember { mutableStateOf("") }
@@ -55,10 +58,13 @@ fun CreateProject(
     val result = navController
         .currentBackStackEntry
         ?.savedStateHandle
-        ?.getLiveData<String>("fileName")?.observeAsState()
+        ?.getLiveData<String>("filePath")?.observeAsState()
 
     result?.value?.let {
         Log.e("TAG000", "CreateProject: " + result.value)
+        if (createViewModel.screenshots.value.contains(it).not()) {
+            createViewModel.screenshots.value.add(it)
+        }
     }
 
 
@@ -167,8 +173,11 @@ fun CreateProject(
             }
         )
         LazyVerticalGrid(
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .weight(1f),
             columns = GridCells.Fixed(3),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
             content = {
                 item {
                     Box(
@@ -190,24 +199,32 @@ fun CreateProject(
                         )
                     }
                 }
-//                items()
-            })
-        Image(
-            modifier = Modifier
-                .width(300.dp)
-                .height(100.dp)
-                .clickable(onClick = {
-                    projectViewModel.addProject(
-                        Project(
-                            name = projectName,
-                            description = projectDes,
-                            device = device
-                        )
+                items(createViewModel.screenshots.value) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .height(120.dp)
+                            .padding(horizontal = 5.dp)
+                            .clickable(onClick = {}),
+                        model = it,
+                        contentDescription = null
                     )
-                }),
-            painter = painterResource(id = R.drawable.ic_btn_save),
-            contentDescription = null
-        )
+                }
+            })
+        AppButton(modifier = Modifier
+            .height(80.dp)
+            .width(200.dp),
+            buttonText = "Save",
+            onClick = {
+                projectViewModel.addProject(
+                    Project(
+                        name = projectName,
+                        description = projectDes,
+                        device = device,
+                        screenshots = createViewModel.screenshots.value
+                    )
+                )
+                navController.navigateUp()
+            })
     }
 }
 
