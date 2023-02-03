@@ -15,7 +15,6 @@ import com.google.gson.Gson
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-
     NavHost(
         navController = navController, startDestination = NavigationTarget.Home.route
     ) {
@@ -37,8 +36,12 @@ fun NavigationGraph(navController: NavHostController) {
         composableWithArgs(route = NavigationTarget.ProjectPage.route, "project") {
             val project = Gson().fromJson(it.getString("project"), Project::class.java)
             ProjectPage(
+                navController = navController,
                 project = project,
-                onBackPressed = { navController.popBackStack() }
+                onBackPressed = { navController.popBackStack() },
+                onAddScreenshotClick = {
+                    navController.navigate(NavigationTarget.AddScreenshot.route)
+                }
             )
         }
         composable(route = NavigationTarget.AddScreenshot.route) {

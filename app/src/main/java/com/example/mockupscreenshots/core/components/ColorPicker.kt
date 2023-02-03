@@ -20,11 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
-import com.example.mockupscreenshots.R
-import com.example.mockupscreenshots.core.utils.ColorPicker
 
 @Composable
 fun ColorPicker(
@@ -112,7 +112,11 @@ fun ColorItem(
                     modifier = Modifier
                         .fillMaxSize()
                         .align(Alignment.Center)
-                        .background(if (isSystemInDarkTheme()) Color(0x33FFFFFF) else Color(0x33000000))
+                        .background(
+                            if (isSystemInDarkTheme()) Color(0x33FFFFFF) else Color(
+                                0x33000000
+                            )
+                        )
                 )
             }
             // Color null indicator

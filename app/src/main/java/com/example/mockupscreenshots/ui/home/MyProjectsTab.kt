@@ -81,7 +81,8 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
             is ProjectUiState.MyProjectData -> {
                 val projects = uiState.projects
                 projects?.let {
-                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    LazyColumn(modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)) {
                         items(projects) { project ->
                             ProjectCard(project, onClick = { onProjectSelect(project) })
                         }

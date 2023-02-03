@@ -202,7 +202,7 @@ fun AddScreenshot(navHostController: NavHostController) {
                                 }
                             }
                         })
-                        BottomPanel(modifier = Modifier.padding(10.dp), onPallateClick = {
+                        BottomPanel(modifier = Modifier.padding(10.dp), onPaletteClick = {
                             coroutineScope.launch {
                                 if (sheetState.isVisible) {
                                     sheetState.hide()
@@ -224,7 +224,7 @@ fun AddScreenshot(navHostController: NavHostController) {
                             }
                         }, onSaveClick = {
                             if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                val filePath = screenshotView.value.capture().saveScreenshot()
+                                val filePath = screenshotView.value.capture().saveScreenshot(context)
                                 navHostController.previousBackStackEntry?.savedStateHandle?.set(
                                     "filePath",
                                     filePath
@@ -278,7 +278,7 @@ fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit) {
 @Composable
 fun BottomPanel(
     modifier: Modifier,
-    onPallateClick: () -> Unit,
+    onPaletteClick: () -> Unit,
     onPhoneClick: () -> Unit,
     onSaveClick: () -> Unit,
     onAddImageClick: () -> Unit,
@@ -292,7 +292,7 @@ fun BottomPanel(
     ) {
         Icon(
             modifier = Modifier
-                .clickable(onClick = onPallateClick)
+                .clickable(onClick = onPaletteClick)
                 .padding(10.dp)
                 .size(40.dp),
             painter = painterResource(id = R.drawable.pallete),

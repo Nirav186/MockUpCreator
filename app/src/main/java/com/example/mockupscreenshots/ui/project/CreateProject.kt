@@ -1,6 +1,8 @@
 package com.example.mockupscreenshots.ui.project
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +26,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -51,9 +54,7 @@ fun CreateProject(
     val createViewModel: CreateViewModel = hiltViewModel()
     val projectViewModel: ProjectViewModel = hiltViewModel()
 
-    var projectName by remember { mutableStateOf("") }
-    var projectDes by remember { mutableStateOf("") }
-    var device by remember { mutableStateOf("Device") }
+    val context = LocalContext.current
 
     val result = navController
         .currentBackStackEntry
@@ -66,7 +67,6 @@ fun CreateProject(
             createViewModel.screenshots.value.add(it)
         }
     }
-
 
     Column(
         modifier = Modifier
@@ -119,9 +119,9 @@ fun CreateProject(
                     shape = RoundedCornerShape(14.dp)
                 )
         ) {
-            TextField(value = projectName,
+            TextField(value = createViewModel.projectName,
                 onValueChange = {
-                    projectName = it
+                    createViewModel.projectName = it
                 }, placeholder = {
                     Text(
                         "Project Name", color = Color.Gray
@@ -147,9 +147,9 @@ fun CreateProject(
                 )
         ) {
             TextField(
-                value = projectDes,
+                value = createViewModel.projectDes,
                 onValueChange = {
-                    projectDes = it
+                    createViewModel.projectDes = it
                 }, placeholder = {
                     Text(
                         "Project Description", color = Color.Gray
@@ -167,9 +167,9 @@ fun CreateProject(
         DropDownMenu(
             modifier = Modifier,
             items = listOf("Android", "iOS"),
-            selectedItem = device,
+            selectedItem = createViewModel.device,
             onItemSelect = {
-                device = it
+                createViewModel.device = it
             }
         )
         LazyVerticalGrid(
@@ -215,17 +215,37 @@ fun CreateProject(
             .width(200.dp),
             buttonText = "Save",
             onClick = {
-                projectViewModel.addProject(
-                    Project(
-                        name = projectName,
-                        description = projectDes,
-                        device = device,
+                saveProject(
+                    context = context,
+                    project = Project(
+                        name = createViewModel.projectName,
+                        description = createViewModel.projectDes,
+                        device = createViewModel.device,
                         screenshots = createViewModel.screenshots.value
-                    )
+                    ),
+                    projectViewModel = projectViewModel,
+                    navController = navController
                 )
-                navController.navigateUp()
             })
     }
+}
+
+fun saveProject(
+    context: Context,
+    project: Project,
+    projectViewModel: ProjectViewModel,
+    navController: NavHostController
+) {
+    if (project.name.trim().isEmpty()) {
+        Toast.makeText(context, "Please enter Project Name", Toast.LENGTH_SHORT).show()
+        return
+    }
+    if (project.description.isEmpty()) {
+        Toast.makeText(context, "Please enter Project Description", Toast.LENGTH_SHORT).show()
+        return
+    }
+    projectViewModel.addProject(project)
+    navController.navigateUp()
 }
 
 fun Modifier.dashedBorder(strokeWidth: Dp, color: Color, cornerRadiusDp: Dp) = composed(factory = {

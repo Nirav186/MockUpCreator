@@ -1,31 +1,60 @@
 package com.example.mockupscreenshots.ui.project
 
+import android.os.Environment
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.components.AppButton
+import com.example.mockupscreenshots.core.utils.copyFile
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
+import java.io.File
 
 @Composable
-fun ProjectPage(project: Project, onBackPressed: () -> Unit) {
+fun ProjectPage(
+    navController: NavHostController,
+    project: Project, onBackPressed: () -> Unit,
+    onAddScreenshotClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val result = navController
+        .currentBackStackEntry
+        ?.savedStateHandle
+        ?.getLiveData<String>("filePath")?.observeAsState()
+
+    result?.value?.let {
+        Log.e("TAG000", "CreateProject: " + result.value)
+        if (project.screenshots.contains(it).not()) {
+            project.screenshots.add(it)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -150,16 +179,44 @@ fun ProjectPage(project: Project, onBackPressed: () -> Unit) {
                 modifier = Modifier.weight(1f),
                 buttonText = "Export",
                 onClick = {
-
+                    Log.e("TAG111", "ProjectPage: " + project.screenshots[0])
+                    Log.e("TAG111", "ProjectPage: " + project.screenshots[0].split("/").last())
+                    val destPath =
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath +
+                                    File.separator + context.getString(R.string.app_name)
+                    project.screenshots.forEach {
+                        copyFile(
+                            inputFile = it,
+                            outputPath = destPath
+                        )
+                    }
+                    Toast.makeText(context, "Export successfully", Toast.LENGTH_SHORT).show()
                 }
             )
             AppButton(
                 modifier = Modifier.weight(1f),
                 buttonText = "Add Screenshot",
-                onClick = {
-
-                }
+                onClick = onAddScreenshotClick
             )
         }
+
+        LazyVerticalGrid(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .weight(1f),
+            columns = GridCells.Fixed(3),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            content = {
+                items(project.screenshots) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .height(120.dp)
+                            .padding(horizontal = 5.dp)
+                            .clickable(onClick = {}),
+                        model = it,
+                        contentDescription = null
+                    )
+                }
+            })
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.os.Environment
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.mockupscreenshots.R
 import java.io.File
 import java.io.FileOutputStream
 
@@ -71,8 +71,9 @@ fun Context.saveBitmap(bitmap: Bitmap) {
     fOut.close()
 }
 
-fun Bitmap.saveScreenshot():String {
-    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+fun Bitmap.saveScreenshot(context: Context): String {
+//    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+    val path = context.cacheDir.absolutePath
     val fileName = "mockup_${System.currentTimeMillis()}.png"
     val tempFile = File(path, fileName)
     val fOut = FileOutputStream(tempFile)
