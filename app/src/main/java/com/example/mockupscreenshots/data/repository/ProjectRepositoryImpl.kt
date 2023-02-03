@@ -10,6 +10,7 @@ import javax.inject.Singleton
 class ProjectRepositoryImpl @Inject constructor(
     private val projectDao: ProjectDao
 ) : ProjectRepository {
-    override suspend fun addNewProject(project: Project) =  projectDao.addNewProject(project)
-    override suspend fun getMyProjects() = projectDao.getAllProjects()
+    override suspend fun addNewProject(project: Project) = projectDao.addNewProject(project)
+    override fun getProjectById(projectId: Long) = projectDao.getProjectById(projectId)
+    override fun getMyProjects() = projectDao.getAllProjects()
 }

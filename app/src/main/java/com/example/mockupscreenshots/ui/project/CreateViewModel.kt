@@ -15,5 +15,6 @@ class CreateViewModel @Inject constructor() : ViewModel() {
     var projectName by  mutableStateOf("")
     var projectDes by  mutableStateOf("")
     var device by  mutableStateOf("Android")
+    var projectId by  mutableStateOf(0L)
 
 }

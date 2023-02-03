@@ -25,12 +25,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.components.AppButton
 import com.example.mockupscreenshots.core.utils.copyFile
-import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
@@ -39,19 +39,30 @@ import java.io.File
 @Composable
 fun ProjectPage(
     navController: NavHostController,
-    project: Project, onBackPressed: () -> Unit,
-    onAddScreenshotClick: () -> Unit
+    projectId: Long,
+    onBackPressed: () -> Unit,
+    onAddScreenshotClick: () -> Unit,
+    onEdit: () -> Unit
 ) {
+    val projectViewModel: ProjectViewModel = hiltViewModel()
     val context = LocalContext.current
     val result = navController
         .currentBackStackEntry
         ?.savedStateHandle
         ?.getLiveData<String>("filePath")?.observeAsState()
 
+//    val projectResult = navController
+//        .currentBackStackEntry
+//        ?.savedStateHandle
+//        ?.getLiveData<Project>("project")?.observeAsState()
+
+    projectViewModel.getProjectById(projectId = projectId)
+
     result?.value?.let {
         Log.e("TAG000", "CreateProject: " + result.value)
-        if (project.screenshots.contains(it).not()) {
-            project.screenshots.add(it)
+        if (projectViewModel.project.screenshots.contains(it).not()) {
+            projectViewModel.project.screenshots.add(it)
+            projectViewModel.addProject(projectViewModel.project)
         }
     }
 
@@ -88,7 +99,7 @@ fun ProjectPage(
             }
             Text(
                 modifier = Modifier.weight(1f),
-                text = project.name,
+                text = projectViewModel.project.name,
                 style = TextStyle(
                     color = Color.Black,
                     fontSize = 18.sp,
@@ -108,7 +119,7 @@ fun ProjectPage(
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_unselect_my_projects),
+                    painter = painterResource(id = R.drawable.ic_delete),
                     contentDescription = null,
                     tint = Color.Black
                 )
@@ -126,7 +137,7 @@ fun ProjectPage(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = project.name,
+                        text = projectViewModel.project.name,
                         style = TextStyle(
                             color = Color.Black,
                             fontSize = 20.sp,
@@ -135,7 +146,7 @@ fun ProjectPage(
                     )
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = project.device,
+                        text = projectViewModel.project.device,
                         style = TextStyle(
                             color = SecondaryColor,
                             fontSize = 16.sp,
@@ -147,6 +158,7 @@ fun ProjectPage(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(RoundedCornerShape(6.dp))
+                        .clickable(onClick = onEdit)
                         .background(Color(0xFFf3f3f3)),
                     contentAlignment = Alignment.Center
                 ) {
@@ -161,7 +173,7 @@ fun ProjectPage(
                 }
             }
             Text(
-                text = project.description,
+                text = projectViewModel.project.description,
                 style = TextStyle(
                     color = SecondaryColor,
                     fontSize = 16.sp
@@ -179,12 +191,15 @@ fun ProjectPage(
                 modifier = Modifier.weight(1f),
                 buttonText = "Export",
                 onClick = {
-                    Log.e("TAG111", "ProjectPage: " + project.screenshots[0])
-                    Log.e("TAG111", "ProjectPage: " + project.screenshots[0].split("/").last())
+                    Log.e("TAG111", "ProjectPage: " + projectViewModel.project.screenshots[0])
+                    Log.e(
+                        "TAG111",
+                        "ProjectPage: " + projectViewModel.project.screenshots[0].split("/").last()
+                    )
                     val destPath =
-                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath +
-                                    File.separator + context.getString(R.string.app_name)
-                    project.screenshots.forEach {
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath +
+                                File.separator + context.getString(R.string.app_name)
+                    projectViewModel.project.screenshots.forEach {
                         copyFile(
                             inputFile = it,
                             outputPath = destPath
@@ -207,7 +222,7 @@ fun ProjectPage(
             columns = GridCells.Fixed(3),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             content = {
-                items(project.screenshots) {
+                items(projectViewModel.project.screenshots) {
                     AsyncImage(
                         modifier = Modifier
                             .height(120.dp)

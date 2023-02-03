@@ -47,7 +47,7 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(color = Color.White)
-                .padding(vertical = 10.dp, horizontal = 20.dp),
+                .padding(vertical = 20.dp, horizontal = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
@@ -60,29 +60,15 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
                     fontFamily = AppFonts
                 )
             )
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color(0xFFf3f3f3)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_download),
-                    contentDescription = null,
-                    tint = Color.Black
-                )
-            }
         }
         when (uiState) {
             is ProjectUiState.MyProjectData -> {
                 val projects = uiState.projects
                 projects?.let {
-                    LazyColumn(modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
                         items(projects) { project ->
                             ProjectCard(project, onClick = { onProjectSelect(project) })
                         }
@@ -128,7 +114,7 @@ private fun ProjectCard(project: Project, onClick: () -> Unit) {
             }
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(34.dp)
                     .clip(RoundedCornerShape(6.dp))
                     .background(AppColor),
                 contentAlignment = Alignment.Center

@@ -26,8 +26,10 @@ fun NavigationGraph(navController: NavHostController) {
             })
         }
         composable(route = NavigationTarget.CreateProject.route) {
+            val project = Gson().fromJson(it.getString("project"), Project::class.java)
             CreateProject(
                 navController = navController,
+                project = project,
                 onAddScreenshotClick = {
                     navController.navigate(NavigationTarget.AddScreenshot.route)
                 }
@@ -37,10 +39,13 @@ fun NavigationGraph(navController: NavHostController) {
             val project = Gson().fromJson(it.getString("project"), Project::class.java)
             ProjectPage(
                 navController = navController,
-                project = project,
+                projectId = project.projectId,
                 onBackPressed = { navController.popBackStack() },
                 onAddScreenshotClick = {
                     navController.navigate(NavigationTarget.AddScreenshot.route)
+                },
+                onEdit = {
+                    navController.navigate(buildCreateProjectRoute(project))
                 }
             )
         }

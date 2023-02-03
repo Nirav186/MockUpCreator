@@ -1,8 +1,10 @@
 package com.example.mockupscreenshots.domain
 
 import com.example.mockupscreenshots.data.model.Project
+import kotlinx.coroutines.flow.Flow
 
 interface ProjectRepository {
     suspend fun addNewProject(project: Project): Long
-    suspend fun getMyProjects(): List<Project>
+    fun getProjectById(projectId: Long): Flow<Project>
+    fun getMyProjects(): Flow<List<Project>>
 }

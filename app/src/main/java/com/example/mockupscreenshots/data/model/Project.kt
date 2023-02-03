@@ -7,8 +7,8 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "Projects")
 data class Project(
     @PrimaryKey(autoGenerate = true) @SerializedName("projectId") val projectId: Long = 0L,
-    @SerializedName("name") val name: String,
-    @SerializedName("description") val description: String,
-    @SerializedName("device") val device: String,
-    @SerializedName("screenshots") val screenshots: MutableList<String>
+    @SerializedName("name") val name: String="",
+    @SerializedName("description") val description: String="",
+    @SerializedName("device") val device: String="",
+    @SerializedName("screenshots") val screenshots: MutableList<String> = mutableListOf()
 )

@@ -15,7 +15,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,12 +49,21 @@ import com.example.mockupscreenshots.ui.theme.SecondaryColor
 @Composable
 fun CreateProject(
     navController: NavHostController,
+    project: Project?,
     onAddScreenshotClick: () -> Unit
 ) {
 
     val createViewModel: CreateViewModel = hiltViewModel()
     val projectViewModel: ProjectViewModel = hiltViewModel()
-
+    LaunchedEffect(key1 = true, block = {
+        project?.let {
+            createViewModel.projectName = project.name
+            createViewModel.device = project.device
+            createViewModel.projectDes = project.description
+            createViewModel.screenshots.value = project.screenshots
+            createViewModel.projectId = project.projectId
+        }
+    })
     val context = LocalContext.current
 
     val result = navController
@@ -161,7 +171,8 @@ fun CreateProject(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
-                )
+                ),
+                maxLines = 1
             )
         }
         DropDownMenu(
@@ -218,6 +229,7 @@ fun CreateProject(
                 saveProject(
                     context = context,
                     project = Project(
+                        projectId = createViewModel.projectId,
                         name = createViewModel.projectName,
                         description = createViewModel.projectDes,
                         device = createViewModel.device,
