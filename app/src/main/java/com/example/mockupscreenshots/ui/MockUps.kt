@@ -28,27 +28,42 @@ fun FullMockUps() {
     val context = LocalContext.current
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
     val frames = deviceFrameViewModel.state.frameItems
-//    val deviceFrameView: MutableState<DeviceFrameView>? = null
     if (frames.isNotEmpty()) {
         var currentFrame by remember {
-            mutableStateOf(0)
+            mutableStateOf(39)
         }
         val frame by remember(currentFrame) {
             mutableStateOf(frames[currentFrame])
         }
         Column(modifier = Modifier.fillMaxSize()) {
-//            AndroidView(modifier = Modifier.weight(1f), factory = {
-//                DeviceFrameView(
-//                    context = it,
-//                    modifier = Modifier.weight(1f),
-//                    frame = frame
-//                ).apply {
-//                    post {
-//                        deviceFrameView?.value = this
-//                    }
-//                }
-//            })
-//            DeviceFrame(modifier = Modifier.weight(1f), frame)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(), contentAlignment = Alignment.Center
+            ) {
+                Box(
+                    modifier = Modifier
+                        .width((frame.width).dp)
+                        .height((frame.height).dp)
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(frame.getPadding()),
+                        painter = painterResource(id = R.drawable.sss),
+                        contentDescription = "ScreenShot",
+                        contentScale = ContentScale.FillBounds
+                    )
+                    context.getImageFromAsset(frame.frameId)?.let {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            bitmap = it,
+                            contentDescription = "Frame",
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

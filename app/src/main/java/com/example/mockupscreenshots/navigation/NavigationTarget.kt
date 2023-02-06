@@ -10,6 +10,7 @@ sealed class NavigationTarget(var route: String) {
     object CreateProject : NavigationTarget("app://createProject?project={project}")
     object ProjectPage : NavigationTarget("app://projectPage?project={project}")
     object AddScreenshot : NavigationTarget("app://addScreenshot")
+    object Temp : NavigationTarget("app://temp")
 }
 
 fun buildProjectPageRoute(project: Project): String {

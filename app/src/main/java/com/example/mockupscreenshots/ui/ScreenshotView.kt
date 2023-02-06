@@ -66,6 +66,7 @@ class ScreenshotView @JvmOverloads constructor(
             ) {
                 Text(
                     modifier = Modifier
+                        .padding(top = 20.dp)
                         .padding(horizontal = 20.dp)
                         .fillMaxWidth(),
                     text = title.value,
@@ -87,10 +88,12 @@ class ScreenshotView @JvmOverloads constructor(
                         fontWeight = FontWeight.Normal
                     )
                 )
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 if (deviceFrameView.value.width > 0 && deviceFrameView.value.height > 0) {
                     Image(
-                        modifier = Modifier.align(Alignment.CenterHorizontally),
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(vertical = 10.dp),
                         bitmap = bitmap.value.asImageBitmap(),
                         contentDescription = null
                     )

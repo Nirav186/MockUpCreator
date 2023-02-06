@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.mockupscreenshots.core.ext.composableWithArgs
 import com.example.mockupscreenshots.core.ext.getString
 import com.example.mockupscreenshots.data.model.Project
+import com.example.mockupscreenshots.ui.FullMockUps
 import com.example.mockupscreenshots.ui.addscreenshot.AddScreenshot
 import com.example.mockupscreenshots.ui.home.Home
 import com.example.mockupscreenshots.ui.project.CreateProject
@@ -51,6 +52,9 @@ fun NavigationGraph(navController: NavHostController) {
         }
         composable(route = NavigationTarget.AddScreenshot.route) {
             AddScreenshot(navController)
+        }
+        composable(route = NavigationTarget.Temp.route) {
+            FullMockUps()
         }
     }
 }
