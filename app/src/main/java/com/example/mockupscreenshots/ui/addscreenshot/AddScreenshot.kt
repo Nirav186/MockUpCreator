@@ -3,6 +3,7 @@ package com.example.mockupscreenshots.ui.addscreenshot
 import android.graphics.Bitmap
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -47,9 +48,9 @@ import com.example.mockupscreenshots.core.ext.saveScreenshot
 import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
-import com.example.mockupscreenshots.ui.DeviceFrameView
+import com.example.mockupscreenshots.ui.view.DeviceFrameView
 import com.example.mockupscreenshots.ui.DeviceFrameViewModel
-import com.example.mockupscreenshots.ui.ScreenshotView
+import com.example.mockupscreenshots.ui.view.ScreenshotView
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
@@ -67,9 +68,11 @@ fun AddScreenshot(navHostController: NavHostController) {
         val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
             confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded })
 
-        val title = remember { mutableStateOf("Mockup Android App") }
-        val subTitle =
-            remember { mutableStateOf("Edit the src configuration to match your needs and run it edit the src configuration to match your needs and run it") }
+//        val title = remember { mutableStateOf("Mockup Android App") }
+        val title = remember { mutableStateOf("App name") }
+//        val subTitle =
+//            remember { mutableStateOf("Edit the src configuration to match your needs and run it edit the src configuration to match your needs and run it") }
+        val subTitle = remember { mutableStateOf("Add app description here") }
 
         val selectedBgColor = remember { mutableStateOf(Color(0xFFAE1B2B)) }
         val selectedTextColor = remember { mutableStateOf(Color.White) }
@@ -198,46 +201,55 @@ fun AddScreenshot(navHostController: NavHostController) {
                                 }
                             }
                         })
-                        BottomPanel(modifier = Modifier.padding(10.dp), onPaletteClick = {
-                            coroutineScope.launch {
-                                if (sheetState.isVisible) {
-                                    sheetState.hide()
-                                } else {
-                                    selectedBottomSheetOption =
-                                        BottomPanelSelectedOption.BG_COLOR_SELECTION
-                                    sheetState.show()
+                        BottomPanel(modifier = Modifier.padding(10.dp),
+                            onPaletteClick = {
+                                coroutineScope.launch {
+                                    if (sheetState.isVisible) {
+                                        sheetState.hide()
+                                    } else {
+                                        selectedBottomSheetOption =
+                                            BottomPanelSelectedOption.BG_COLOR_SELECTION
+                                        sheetState.show()
+                                    }
                                 }
-                            }
-                        }, onPhoneClick = {
-                            coroutineScope.launch {
-                                if (sheetState.isVisible) {
-                                    sheetState.hide()
-                                } else {
-                                    selectedBottomSheetOption =
-                                        BottomPanelSelectedOption.DEVICE_FRAME_SELECTION
-                                    sheetState.show()
+                            },
+                            onPhoneClick = {
+                                coroutineScope.launch {
+                                    if (sheetState.isVisible) {
+                                        sheetState.hide()
+                                    } else {
+                                        selectedBottomSheetOption =
+                                            BottomPanelSelectedOption.DEVICE_FRAME_SELECTION
+                                        sheetState.show()
+                                    }
                                 }
-                            }
-                        }, onSaveClick = {
-                            val filePath =
-                                screenshotView.value.capture().saveScreenshot(context)
-                            navHostController.previousBackStackEntry?.savedStateHandle?.set(
-                                "filePath",
-                                filePath
-                            )
-                            navHostController.navigateUp()
-                        }, onAddImageClick = {
-                            galleryLauncher.launch("image/*")
-                        }, onAddText = {
-                            coroutineScope.launch {
-                                if (sheetState.isVisible) {
-                                    sheetState.hide()
-                                } else {
-                                    selectedBottomSheetOption = BottomPanelSelectedOption.TEXT_EDIT
-                                    sheetState.show()
+                            },
+                            onSaveClick = {
+                                Log.e("TAG_555", "AddScreenshot: FRAME ID "+selectedFrame.value.frameId)
+                                Log.e("TAG_555", "AddScreenshot: BG COLOR "+selectedBgColor.value.value)
+                                val filePath =
+                                    screenshotView.value.capture().saveScreenshot(context)
+                                navHostController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "filePath",
+                                    filePath
+                                )
+                                Log.e("TAG_555", "AddScreenshot: FILE PATH $filePath")
+                                navHostController.navigateUp()
+                            },
+                            onAddImageClick = {
+                                galleryLauncher.launch("image/*")
+                            },
+                            onAddText = {
+                                coroutineScope.launch {
+                                    if (sheetState.isVisible) {
+                                        sheetState.hide()
+                                    } else {
+                                        selectedBottomSheetOption =
+                                            BottomPanelSelectedOption.TEXT_EDIT
+                                        sheetState.show()
+                                    }
                                 }
-                            }
-                        })
+                            })
                     }
                 }
             }
@@ -572,58 +584,58 @@ fun DeviceFrameBottomSheet(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(), text = "Choose Frame", style = TextStyle(
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
-                    textAlign = TextAlign.Center
-                )
-            )
-        }
-        Row(
-            modifier = Modifier
-                .width(170.dp)
-                .padding(end = 10.dp)
-                .align(Alignment.End)
-                .clip(RoundedCornerShape(8.dp))
-                .background(color = AppColor),
+                .padding(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier
-                    .weight(0.5f)
-                    .padding(1.dp)
-                    .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
-                    .background(if (selectedTabPos == 0) AppColor else Color.White)
-                    .clickable(onClick = {
-                        selectedTabPos = 0
-                    })
-                    .padding(6.dp),
-                text = "Android",
+                modifier = Modifier.weight(1f),
+                text = "Choose Frame",
                 style = TextStyle(
-                    textAlign = TextAlign.Center
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp
                 )
             )
-            Text(
+            Row(
                 modifier = Modifier
-                    .weight(0.5f)
-                    .padding(1.dp)
-                    .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
-                    .background(if (selectedTabPos == 0) Color.White else AppColor)
-                    .clickable(onClick = {
-                        selectedTabPos = 1
-                    })
-                    .padding(6.dp),
-                text = "iOS",
-                style = TextStyle(
-                    textAlign = TextAlign.Center
+                    .width(140.dp)
+                    .padding(end = 10.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(color = AppColor),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .padding(1.dp)
+                        .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+                        .background(if (selectedTabPos == 0) AppColor else Color.White)
+                        .clickable(onClick = {
+                            selectedTabPos = 0
+                        })
+                        .padding(6.dp),
+                    text = "Android",
+                    style = TextStyle(
+                        textAlign = TextAlign.Center
+                    )
                 )
-            )
+                Text(
+                    modifier = Modifier
+                        .weight(0.5f)
+                        .padding(1.dp)
+                        .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
+                        .background(if (selectedTabPos == 0) Color.White else AppColor)
+                        .clickable(onClick = {
+                            selectedTabPos = 1
+                        })
+                        .padding(6.dp),
+                    text = "iOS",
+                    style = TextStyle(
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
         }
-        Spacer(modifier = Modifier.height(10.dp))
         if (selectedTabPos == 0) {
             LazyRow(
                 modifier = Modifier

@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.domain.usecase
 
 import com.example.mockupscreenshots.core.Resource
 import com.example.mockupscreenshots.core.UseCase

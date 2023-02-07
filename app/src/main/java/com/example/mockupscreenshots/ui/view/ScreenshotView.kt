@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.ui.view
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -66,8 +66,8 @@ class ScreenshotView @JvmOverloads constructor(
             ) {
                 Text(
                     modifier = Modifier
-                        .padding(top = 20.dp)
-                        .padding(horizontal = 20.dp)
+                        .padding(top = 30.dp)
+                        .padding(horizontal = 30.dp)
                         .fillMaxWidth(),
                     text = title.value,
                     style = TextStyle(
@@ -79,7 +79,7 @@ class ScreenshotView @JvmOverloads constructor(
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
                     modifier = Modifier
-                        .padding(horizontal = 20.dp)
+                        .padding(horizontal = 30.dp)
                         .fillMaxWidth(),
                     text = subTitle.value,
                     style = TextStyle(
@@ -93,7 +93,7 @@ class ScreenshotView @JvmOverloads constructor(
                     Image(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(vertical = 10.dp),
+                            .padding(top = 20.dp, bottom = 40.dp),
                         bitmap = bitmap.value.asImageBitmap(),
                         contentDescription = null
                     )

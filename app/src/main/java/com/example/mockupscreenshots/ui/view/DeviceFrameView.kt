@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.ui.view
 
 import android.content.Context
 import android.graphics.Bitmap

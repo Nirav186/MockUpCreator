@@ -3,6 +3,7 @@ package com.example.mockupscreenshots.ui.project
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -21,7 +22,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
@@ -45,6 +45,7 @@ import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
+import java.io.File
 
 @Composable
 fun CreateProject(
@@ -78,6 +79,14 @@ fun CreateProject(
         }
     }
 
+    BackHandler {
+        createViewModel.screenshots.value.forEach {
+            val delete = File(it).delete()
+            Log.e("TAG141", "CreateProject: $delete")
+            navController.navigateUp()
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -102,22 +111,6 @@ fun CreateProject(
                     fontFamily = AppFonts
                 )
             )
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(Color(0xFFf3f3f3)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_unselect_home),
-                    contentDescription = null,
-                    tint = Color.Black
-                )
-            }
         }
         Row(
             modifier = Modifier
