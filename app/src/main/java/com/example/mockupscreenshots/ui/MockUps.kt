@@ -30,7 +30,7 @@ fun FullMockUps() {
     val frames = deviceFrameViewModel.state.frameItems
     if (frames.isNotEmpty()) {
         var currentFrame by remember {
-            mutableStateOf(39)
+            mutableStateOf(56)
         }
         val frame by remember(currentFrame) {
             mutableStateOf(frames[currentFrame])

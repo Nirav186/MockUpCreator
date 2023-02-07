@@ -1,7 +1,5 @@
 package com.example.mockupscreenshots.ui.addscreenshot
 
-import android.Manifest
-import android.app.Activity
 import android.graphics.Bitmap
 import android.os.Looper
 import android.provider.MediaStore
@@ -39,14 +37,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.components.ColorPicker
 import com.example.mockupscreenshots.core.ext.capture
-import com.example.mockupscreenshots.core.ext.hasPermissions
 import com.example.mockupscreenshots.core.ext.saveScreenshot
 import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
@@ -223,20 +219,13 @@ fun AddScreenshot(navHostController: NavHostController) {
                                 }
                             }
                         }, onSaveClick = {
-                            if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                val filePath = screenshotView.value.capture().saveScreenshot(context)
-                                navHostController.previousBackStackEntry?.savedStateHandle?.set(
-                                    "filePath",
-                                    filePath
-                                )
-                                navHostController.navigateUp()
-                            } else {
-                                ActivityCompat.requestPermissions(
-                                    context as Activity,
-                                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                    1
-                                )
-                            }
+                            val filePath =
+                                screenshotView.value.capture().saveScreenshot(context)
+                            navHostController.previousBackStackEntry?.savedStateHandle?.set(
+                                "filePath",
+                                filePath
+                            )
+                            navHostController.navigateUp()
                         }, onAddImageClick = {
                             galleryLauncher.launch("image/*")
                         }, onAddText = {
@@ -573,6 +562,9 @@ fun ColorBottomSheet(
 fun DeviceFrameBottomSheet(
     frames: List<DeviceFrameItem>, onFrameSelect: (DeviceFrameItem) -> Unit
 ) {
+    var selectedTabPos by remember {
+        mutableStateOf(0)
+    }
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -591,17 +583,74 @@ fun DeviceFrameBottomSheet(
                 )
             )
         }
-        LazyRow(
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 20.dp),
-            contentPadding = PaddingValues(horizontal = 10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                .width(170.dp)
+                .padding(end = 10.dp)
+                .align(Alignment.End)
+                .clip(RoundedCornerShape(8.dp))
+                .background(color = AppColor),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            items(frames) {
-                SmallFrameImg(it, onClick = {
-                    onFrameSelect(it)
-                })
+            Text(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .padding(1.dp)
+                    .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+                    .background(if (selectedTabPos == 0) AppColor else Color.White)
+                    .clickable(onClick = {
+                        selectedTabPos = 0
+                    })
+                    .padding(6.dp),
+                text = "Android",
+                style = TextStyle(
+                    textAlign = TextAlign.Center
+                )
+            )
+            Text(
+                modifier = Modifier
+                    .weight(0.5f)
+                    .padding(1.dp)
+                    .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
+                    .background(if (selectedTabPos == 0) Color.White else AppColor)
+                    .clickable(onClick = {
+                        selectedTabPos = 1
+                    })
+                    .padding(6.dp),
+                text = "iOS",
+                style = TextStyle(
+                    textAlign = TextAlign.Center
+                )
+            )
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        if (selectedTabPos == 0) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(frames.filter { it.deviceType.equals("Android", ignoreCase = true) }) {
+                    SmallFrameImg(it, onClick = {
+                        onFrameSelect(it)
+                    })
+                }
+            }
+        } else {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                items(frames.filter { it.deviceType.equals("iOS", ignoreCase = true) }) {
+                    SmallFrameImg(it, onClick = {
+                        onFrameSelect(it)
+                    })
+                }
             }
         }
     }
