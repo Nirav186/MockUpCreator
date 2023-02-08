@@ -7,4 +7,5 @@ interface ProjectRepository {
     suspend fun addNewProject(project: Project): Long
     fun getProjectById(projectId: Long): Flow<Project>
     fun getMyProjects(): Flow<List<Project>>
+    fun deleteProjects(mIds:ArrayList<Long>)
 }

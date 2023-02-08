@@ -1,6 +1,7 @@
 package com.example.mockupscreenshots.ui.project
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.domain.ProjectRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -23,6 +25,7 @@ class ProjectViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     var project by mutableStateOf(Project())
+    var selectedProjects = mutableStateListOf<Project>()
 
     init {
         getMyProjects()
@@ -47,6 +50,13 @@ class ProjectViewModel @Inject constructor(
             projectRepository.getMyProjects().collectLatest {
                 _uiState.value = ProjectUiState.MyProjectData(projects = it)
             }
+        }
+    }
+
+    fun deleteSelectedProjects() {
+        viewModelScope.launch(Dispatchers.IO) {
+            projectRepository.deleteProjects(selectedProjects.map { it.projectId } as ArrayList<Long>)
+            selectedProjects.clear()
         }
     }
 

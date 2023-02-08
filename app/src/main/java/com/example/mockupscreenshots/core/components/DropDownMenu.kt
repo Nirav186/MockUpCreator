@@ -40,7 +40,8 @@ fun DropDownMenu(
                 .fillMaxWidth()
                 .padding(horizontal = 20.dp)
                 .border(
-                    width = 2.dp, color = Color(0xFFD2E0ED),
+                    width = 2.dp,
+                    color = Color(0xFFD2E0ED),
                     shape = RoundedCornerShape(14.dp)
                 )
                 .clickable { mExpanded = !mExpanded }

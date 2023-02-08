@@ -1,7 +1,9 @@
 package com.example.mockupscreenshots.ui.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -60,6 +63,26 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
                     fontFamily = AppFonts
                 )
             )
+            Box(
+                modifier = Modifier
+                    .alpha(if (projectViewModel.selectedProjects.isEmpty()) 0f else 1f)
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(Color(0xFFf3f3f3))
+                    .clickable(onClick = {
+                        projectViewModel.deleteSelectedProjects()
+                    }),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .padding(8.dp)
+                        .fillMaxSize(),
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            }
         }
         when (uiState) {
             is ProjectUiState.MyProjectData -> {
@@ -67,10 +90,20 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
                 projects?.let {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                        verticalArrangement = Arrangement.spacedBy(0.dp)
                     ) {
                         items(projects) { project ->
-                            ProjectCard(project, onClick = { onProjectSelect(project) })
+                            ProjectCard(
+                                project = project,
+                                isSelected = projectViewModel.selectedProjects.contains(project),
+                                onClick = { onProjectSelect(project) },
+                                onLongClick = {
+                                    if (projectViewModel.selectedProjects.contains(project)) {
+                                        projectViewModel.selectedProjects.remove(project)
+                                    } else {
+                                        projectViewModel.selectedProjects.add(project)
+                                    }
+                                })
                         }
                     }
                 }
@@ -81,62 +114,88 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun ProjectCard(project: Project, onClick: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = 20.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(color = Color.White)
-            .clickable(onClick = onClick)
-            .padding(10.dp)
-    ) {
-        Row(modifier = Modifier) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = project.name,
-                    style = TextStyle(
-                        color = Color.Black,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+private fun ProjectCard(
+    project: Project,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
+) {
+    val projectViewModel: ProjectViewModel = hiltViewModel()
+    Box {
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(color = Color.White)
+                .combinedClickable(
+                    onClick = {
+                        if (projectViewModel.selectedProjects.isEmpty()) onClick()
+                        else onLongClick()
+                    },
+                    onLongClick = onLongClick
                 )
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = project.device,
-                    style = TextStyle(
-                        color = SecondaryColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
+                .padding(10.dp)
+        ) {
+            Row(modifier = Modifier) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = project.name,
+                        style = TextStyle(
+                            color = Color.Black,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     )
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .size(34.dp)
-                    .clip(RoundedCornerShape(6.dp))
-                    .background(AppColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = project.device,
+                        style = TextStyle(
+                            color = SecondaryColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    )
+                }
+                Box(
                     modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_download),
-                    contentDescription = null,
-                    tint = Color.White
-                )
+                        .size(34.dp)
+                        .clip(RoundedCornerShape(6.dp))
+                        .background(AppColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .fillMaxSize(),
+                        painter = painterResource(id = R.drawable.ic_download),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             }
+            Text(
+                text = project.description,
+                style = TextStyle(
+                    color = SecondaryColor,
+                    fontSize = 16.sp
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
-        Text(
-            text = project.description,
-            style = TextStyle(
-                color = SecondaryColor,
-                fontSize = 16.sp
-            ),
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
+        if (isSelected) {
+            Icon(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+                    .size(32.dp)
+                    .align(Alignment.TopStart),
+                painter = painterResource(id = R.drawable.ic_check),
+                contentDescription = null,
+                tint = AppColor
+            )
+        }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.mockupscreenshots.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.mockupscreenshots.data.model.Project
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +14,8 @@ interface ProjectDao {
 
     @Query("select * from Projects")
     fun getAllProjects(): Flow<List<Project>>
+
+    @Query("delete from Projects where projectId in (:mIds)")
+    fun deleteProjects(mIds:ArrayList<Long>)
+
 }

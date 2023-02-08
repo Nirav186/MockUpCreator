@@ -83,8 +83,8 @@ fun CreateProject(
         createViewModel.screenshots.value.forEach {
             val delete = File(it).delete()
             Log.e("TAG141", "CreateProject: $delete")
-            navController.navigateUp()
         }
+        navController.navigateUp()
     }
 
     Column(

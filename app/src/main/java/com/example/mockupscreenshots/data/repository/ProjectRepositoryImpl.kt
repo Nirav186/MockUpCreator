@@ -13,4 +13,5 @@ class ProjectRepositoryImpl @Inject constructor(
     override suspend fun addNewProject(project: Project) = projectDao.addNewProject(project)
     override fun getProjectById(projectId: Long) = projectDao.getProjectById(projectId)
     override fun getMyProjects() = projectDao.getAllProjects()
+    override fun deleteProjects(mIds:ArrayList<Long>) = projectDao.deleteProjects(mIds)
 }
