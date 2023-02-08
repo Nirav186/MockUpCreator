@@ -9,6 +9,7 @@ data class DeviceFrameItem(
     @SerializedName("deviceName") val deviceName: String,
     @SerializedName("deviceType") val deviceType: String,
     @SerializedName("frameId") val frameId: String,
+    @SerializedName("frameUrl") val frameUrl: String,
     @SerializedName("height") val height: Double,
     @SerializedName("id") val id: Int,
     @SerializedName("originalHeight") val originalHeight: Int,

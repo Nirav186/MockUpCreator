@@ -11,8 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.AbstractComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.mockupscreenshots.core.getImageFromAsset
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
 
 class DeviceFrameView @JvmOverloads constructor(
@@ -45,14 +48,30 @@ class DeviceFrameView @JvmOverloads constructor(
                     contentScale = ContentScale.FillBounds
                 )
             }
-            context.getImageFromAsset(frame.frameId)?.let {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    bitmap = it,
-                    contentDescription = "Frame",
-                    contentScale = ContentScale.FillBounds
-                )
-            }
+//            context.getImageFromAsset(frame.frameId)?.let {
+//                Image(
+//                    modifier = Modifier.fillMaxSize(),
+//                    bitmap = it,
+//                    contentDescription = "Frame",
+//                    contentScale = ContentScale.FillBounds
+//                )
+//            }
+//            AsyncImage(
+//                modifier = Modifier.fillMaxSize(),
+//                model = frame.frameUrl,
+//                contentDescription = null,
+//                contentScale = ContentScale.FillBounds
+//            )
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = frame.frameUrl)
+                        .allowHardware(false)
+                        .build()
+                ),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
+            )
         }
     }
 }
