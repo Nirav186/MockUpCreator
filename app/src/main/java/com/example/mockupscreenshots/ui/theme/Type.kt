@@ -9,7 +9,12 @@ import androidx.compose.ui.unit.sp
 import com.example.mockupscreenshots.R
 
 val AppFonts = FontFamily(
-    Font(R.font.gilroy_bold, FontWeight.Bold)
+    Font(R.font.gilroy_bold, FontWeight.Bold),
+    Font(R.font.gilroy_semibold, FontWeight.SemiBold),
+)
+
+val FredokaOne = FontFamily(
+    Font(R.font.fredoka_one, FontWeight.Bold)
 )
 
 // Set of Material typography styles to start with

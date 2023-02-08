@@ -258,12 +258,12 @@ fun MockUp1() {
                 contentDescription = "ScreenShot",
                 contentScale = ContentScale.FillBounds
             )
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.frame_basic),
-                contentDescription = "Frame",
-                contentScale = ContentScale.FillBounds
-            )
+//            Image(
+//                modifier = Modifier.fillMaxSize(),
+//                painter = painterResource(id = R.drawable.frame_basic),
+//                contentDescription = "Frame",
+//                contentScale = ContentScale.FillBounds
+//            )
         }
     }
 }
@@ -289,12 +289,12 @@ fun MockUp2() {
                 contentDescription = "ScreenShot",
                 contentScale = ContentScale.FillBounds
             )
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = painterResource(id = R.drawable.frame_basic),
-                contentDescription = "Frame",
-                contentScale = ContentScale.FillBounds
-            )
+//            Image(
+//                modifier = Modifier.fillMaxSize(),
+//                painter = painterResource(id = R.drawable.frame_basic),
+//                contentDescription = "Frame",
+//                contentScale = ContentScale.FillBounds
+//            )
         }
     }
 }

@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -48,13 +49,13 @@ import com.example.mockupscreenshots.core.ext.saveScreenshot
 import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
-import com.example.mockupscreenshots.ui.view.DeviceFrameView
 import com.example.mockupscreenshots.ui.DeviceFrameViewModel
-import com.example.mockupscreenshots.ui.view.ScreenshotView
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColorBG
+import com.example.mockupscreenshots.ui.view.DeviceFrameView
+import com.example.mockupscreenshots.ui.view.ScreenshotView
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -225,8 +226,14 @@ fun AddScreenshot(navHostController: NavHostController) {
                                 }
                             },
                             onSaveClick = {
-                                Log.e("TAG_555", "AddScreenshot: FRAME ID "+selectedFrame.value.frameId)
-                                Log.e("TAG_555", "AddScreenshot: BG COLOR "+selectedBgColor.value.value)
+                                Log.e(
+                                    "TAG_555",
+                                    "AddScreenshot: FRAME ID " + selectedFrame.value.frameId
+                                )
+                                Log.e(
+                                    "TAG_555",
+                                    "AddScreenshot: BG COLOR " + selectedBgColor.value.value
+                                )
                                 val filePath =
                                     screenshotView.value.capture().saveScreenshot(context)
                                 navHostController.previousBackStackEntry?.savedStateHandle?.set(
@@ -270,7 +277,7 @@ fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit) {
             modifier = Modifier
                 .height(100.dp)
                 .padding(horizontal = 5.dp),
-            model = "file:///android_asset/${frame.frameId}",
+            model = frame.frameUrl,
             contentDescription = null
         )
     }
@@ -295,7 +302,7 @@ fun BottomPanel(
             modifier = Modifier
                 .clickable(onClick = onPaletteClick)
                 .padding(10.dp)
-                .size(40.dp),
+                .size(36.dp),
             painter = painterResource(id = R.drawable.pallete),
             contentDescription = null,
             tint = SecondaryColor
@@ -310,8 +317,8 @@ fun BottomPanel(
             modifier = Modifier
                 .clickable(onClick = onPhoneClick)
                 .padding(10.dp)
-                .size(40.dp),
-            painter = painterResource(id = R.drawable.ic_smartphone),
+                .size(36.dp),
+            painter = painterResource(id = R.drawable.ic_mockup),
             contentDescription = null,
             tint = SecondaryColor
         )
@@ -341,8 +348,7 @@ fun BottomPanel(
             modifier = Modifier
                 .clickable(onClick = onAddText)
                 .padding(10.dp)
-                .size(40.dp)
-                .padding(4.dp),
+                .size(40.dp),
             painter = painterResource(id = R.drawable.add_text),
             contentDescription = null,
             tint = SecondaryColor
@@ -402,49 +408,69 @@ fun TextBottomSheet(
                 fontSize = 22.sp, color = Color.Black, fontWeight = FontWeight.Bold
             )
         )
-
-        //Title
-        OutlinedTextField(
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            value = _title,
-            onValueChange = {
-                _title = it
-            },
-            label = { Text("Title") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = AppColor,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = AppColor,
-                focusedLabelColor = AppColor,
-                disabledLabelColor = Color.Gray
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
-        )
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFFD2E0ED),
+                    shape = RoundedCornerShape(14.dp)
+                )
+        ) {
+            TextField(value = _title,
+                onValueChange = {
+                    _title = it
+                }, placeholder = {
+                    Text(
+                        "Project Name", color = Color.Gray
+                    )
+                }, colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Gray,
+                    disabledTextColor = Color.Transparent,
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }
+                )
+            )
+        }
         Spacer(modifier = Modifier.height(14.dp))
-
-        //Sub Title
-        OutlinedTextField(
+        Row(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            value = _subTitle,
-            onValueChange = {
-                _subTitle = it
-            },
-            label = { Text("Sub Title") },
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = AppColor,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = AppColor,
-                focusedLabelColor = AppColor,
-                disabledLabelColor = Color.Gray
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() })
-        )
+                .border(
+                    width = 2.dp,
+                    color = Color(0xFFD2E0ED),
+                    shape = RoundedCornerShape(14.dp)
+                )
+        ) {
+            TextField(value = _subTitle,
+                onValueChange = {
+                    _subTitle = it
+                }, placeholder = {
+                    Text(
+                        text = "Sub Title",
+                        color = Color.Gray
+                    )
+                }, colors = TextFieldDefaults.textFieldColors(
+                    textColor = Color.Gray,
+                    disabledTextColor = Color.Transparent,
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }
+                )
+            )
+        }
+
         Spacer(modifier = Modifier.height(14.dp))
         Box(
             modifier = Modifier
