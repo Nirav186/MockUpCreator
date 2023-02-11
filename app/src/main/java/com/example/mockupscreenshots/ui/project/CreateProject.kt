@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -45,7 +46,6 @@ import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
-import java.io.File
 
 @Composable
 fun CreateProject(
@@ -80,10 +80,10 @@ fun CreateProject(
     }
 
     BackHandler {
-        createViewModel.screenshots.value.forEach {
-            val delete = File(it).delete()
-            Log.e("TAG141", "CreateProject: $delete")
-        }
+//        createViewModel.screenshots.value.forEach {
+//            val delete = File(it).delete()
+//            Log.e("TAG141", "CreateProject: $delete")
+//        }
         navController.navigateUp()
     }
 
@@ -112,33 +112,12 @@ fun CreateProject(
                 )
             )
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFD2E0ED),
-                    shape = RoundedCornerShape(14.dp)
-                )
-        ) {
-            TextField(value = createViewModel.projectName,
-                onValueChange = {
-                    createViewModel.projectName = it
-                }, placeholder = {
-                    Text(
-                        "Project Name", color = Color.Gray
-                    )
-                }, colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Gray,
-                    disabledTextColor = Color.Transparent,
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                )
-            )
-        }
+        CustomTextField(
+            value = createViewModel.projectName,
+            onValueChange = {createViewModel.projectName = it},
+            placeholderText = "Project Name"
+        )
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -271,3 +250,45 @@ fun Modifier.dashedBorder(strokeWidth: Dp, color: Color, cornerRadiusDp: Dp) = c
         }
     })
 })
+
+@Composable
+fun CustomTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    textFieldTextStyle: TextStyle = TextStyle(
+        fontFamily = AppFonts,
+        fontWeight = FontWeight.Medium
+    ),
+    placeholderText:String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .border(
+                width = 2.dp,
+                color = Color(0xFFD2E0ED),
+                shape = RoundedCornerShape(14.dp)
+            )
+    ) {
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = {
+                Text(
+                    text = placeholderText,
+                    color = Color.Gray,
+                    style = textFieldTextStyle
+                )
+            }, colors = TextFieldDefaults.textFieldColors(
+                textColor = Color.Gray,
+                disabledTextColor = Color.Transparent,
+                backgroundColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent
+            ),
+            textStyle = textFieldTextStyle
+        )
+    }
+}

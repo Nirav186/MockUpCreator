@@ -3,7 +3,6 @@ package com.example.mockupscreenshots.ui.addscreenshot
 import android.graphics.Bitmap
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -45,10 +44,12 @@ import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.components.ColorPicker
 import com.example.mockupscreenshots.core.ext.capture
+import com.example.mockupscreenshots.core.ext.saveHomeScreenshot
 import com.example.mockupscreenshots.core.ext.saveScreenshot
 import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
+import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.ui.DeviceFrameViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -60,7 +61,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun AddScreenshot(navHostController: NavHostController) {
+fun AddScreenshot(
+    navHostController: NavHostController,
+    homeFrame: HomeFrame? = null
+) {
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
     val frames = deviceFrameViewModel.state.frameItems
     val context = LocalContext.current
@@ -166,6 +170,17 @@ fun AddScreenshot(navHostController: NavHostController) {
                         }
                     }
 
+                LaunchedEffect(key1 = true, block = {
+                    homeFrame?.let {
+                        frames.find { it.frameId == homeFrame.frameId }?.let {
+                            selectedFrame.value = it
+                            selectedBgColor.value = Color(homeFrame.backgroundColor.toULong())
+                            selectedTextColor.value =
+                                if (homeFrame.textColor == 0) Color.Black else Color.White
+                        }
+                    }
+                })
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -226,21 +241,21 @@ fun AddScreenshot(navHostController: NavHostController) {
                                 }
                             },
                             onSaveClick = {
-                                Log.e(
-                                    "TAG_555",
-                                    "AddScreenshot: FRAME ID " + selectedFrame.value.frameId
-                                )
-                                Log.e(
-                                    "TAG_555",
-                                    "AddScreenshot: BG COLOR " + selectedBgColor.value.value
-                                )
-                                val filePath =
-                                    screenshotView.value.capture().saveScreenshot(context)
-                                navHostController.previousBackStackEntry?.savedStateHandle?.set(
-                                    "filePath",
-                                    filePath
-                                )
-                                Log.e("TAG_555", "AddScreenshot: FILE PATH $filePath")
+                                if (homeFrame == null) {
+                                    val filePath =
+                                        screenshotView.value.capture().saveScreenshot(context)
+                                    navHostController.previousBackStackEntry?.savedStateHandle?.set(
+                                        "filePath",
+                                        filePath
+                                    )
+                                } else {
+                                    val filePath =
+                                        screenshotView.value.capture().saveHomeScreenshot(context)
+//                                    navHostController.previousBackStackEntry?.savedStateHandle?.set(
+//                                        "filePath",
+//                                        filePath
+//                                    )
+                                }
                                 navHostController.navigateUp()
                             },
                             onAddImageClick = {

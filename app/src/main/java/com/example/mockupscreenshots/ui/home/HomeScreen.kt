@@ -19,13 +19,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun Home(onNewProject: () -> Unit, onProjectSelect: (Project) -> Unit) {
+fun Home(
+    onNewProject: () -> Unit,
+    onProjectSelect: (Project) -> Unit,
+    onHomeFrameClick: (HomeFrame) -> Unit,
+    onImagePreview: (String) -> Unit
+) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     Box(
         modifier = Modifier
@@ -33,7 +39,10 @@ fun Home(onNewProject: () -> Unit, onProjectSelect: (Project) -> Unit) {
             .background(color = BgColor)
     ) {
         if (homeViewModel.selectedTab.value == 0) {
-            HomeTab()
+            HomeTab(
+                onHomeFrameClick = onHomeFrameClick,
+                onImagePreview = onImagePreview
+            )
         } else {
             MyProjectsTab(onProjectSelect = onProjectSelect)
         }

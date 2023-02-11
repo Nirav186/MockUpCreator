@@ -1,6 +1,12 @@
 package com.example.mockupscreenshots.core.utils
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
+import androidx.core.content.FileProvider
+import net.lingala.zip4j.ZipFile
 import java.io.*
 
 fun copyFile(inputFile: String, outputPath: String) {
@@ -26,4 +32,32 @@ fun copyFile(inputFile: String, outputPath: String) {
     } catch (e: Exception) {
         Log.e("tag", e.message.toString())
     }
+}
+
+fun Context.saveAndShareZip(screenshots: List<String>, zipName: String) {
+    val destPath =
+        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath +
+                File.separator + zipName.plus(".zip")
+    val listOfFiles = mutableListOf<File>()
+    screenshots.forEach {
+        listOfFiles.add(File(it))
+    }
+    if (File(destPath).exists()) {
+        File(destPath).delete()
+    }
+    ZipFile(destPath).addFiles(listOfFiles)
+    shareZip(File(destPath))
+}
+
+fun Context.shareZip(file: File) {
+    val uri: Uri = FileProvider.getUriForFile(
+        this,
+        packageName.plus(".provider"),
+        file
+    )
+    val share = Intent()
+    share.action = Intent.ACTION_SEND
+    share.type = "application/*"
+    share.putExtra(Intent.EXTRA_STREAM, uri)
+    startActivity(share)
 }

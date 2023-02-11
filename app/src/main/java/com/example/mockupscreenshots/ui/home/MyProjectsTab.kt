@@ -78,9 +78,9 @@ fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
                     modifier = Modifier
                         .padding(8.dp)
                         .fillMaxSize(),
-                    painter = painterResource(id = R.drawable.ic_delete),
+                    painter = painterResource(id = R.drawable.ic_delete_1),
                     contentDescription = null,
-                    tint = Color.Black
+                    tint = Color.Red
                 )
             }
         }
@@ -146,7 +146,8 @@ private fun ProjectCard(
                         style = TextStyle(
                             color = Color.Black,
                             fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = AppFonts
                         )
                     )
                     Text(
@@ -155,7 +156,8 @@ private fun ProjectCard(
                         style = TextStyle(
                             color = SecondaryColor,
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = AppFonts
                         )
                     )
                 }
@@ -180,7 +182,9 @@ private fun ProjectCard(
                 text = project.description,
                 style = TextStyle(
                     color = SecondaryColor,
-                    fontSize = 16.sp
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = AppFonts
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

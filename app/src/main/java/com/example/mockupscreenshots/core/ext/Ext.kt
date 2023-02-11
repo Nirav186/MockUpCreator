@@ -15,9 +15,9 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.mockupscreenshots.R
 import java.io.File
 import java.io.FileOutputStream
+
 
 fun NavGraphBuilder.composableWithArgs(
     route: String,
@@ -82,5 +82,23 @@ fun Bitmap.saveScreenshot(context: Context): String {
     return tempFile.absolutePath
 }
 
+fun Bitmap.saveHomeScreenshot(context: Context): String {
+    val path = context.cacheDir.absolutePath + File.separator + "home_screenshots"
+    if (File(path).exists().not()) {
+        File(path).mkdirs()
+    }
+    val fileName = "mockup_${System.currentTimeMillis()}.png"
+    val tempFile = File(path, fileName)
+    val fOut = FileOutputStream(tempFile)
+    compress(Bitmap.CompressFormat.PNG, 100, fOut)
+    fOut.close()
+    return tempFile.absolutePath
+}
+
 fun Context.hasPermissions(permission: String) =
     run { ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED }
+
+fun Context.getHomeScreenshots(): MutableList<File>? {
+    val folder = File(cacheDir.absolutePath + File.separator + "home_screenshots")
+    return folder.listFiles()?.toMutableList()
+}

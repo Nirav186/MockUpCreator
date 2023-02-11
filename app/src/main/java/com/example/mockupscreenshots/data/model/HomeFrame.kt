@@ -8,5 +8,5 @@ data class HomeFrame(
     @SerializedName("frameId") val frameId: String,
     @SerializedName("id") val id: Int,
     @SerializedName("imageUrl") val imageUrl: String,
-    @SerializedName("textColor") val textColor: String
+    @SerializedName("textColor") val textColor: Int
 )

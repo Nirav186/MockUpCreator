@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.mockupscreenshots.ui.theme.AppColor
+import com.example.mockupscreenshots.ui.theme.AppFonts
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -53,7 +54,8 @@ fun AppButton(
                 Text(
                     text = buttonText, fontSize = 16.sp,
                     style = TextStyle(
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = AppFonts
                     )
                 )
             }

@@ -11,6 +11,8 @@ import com.example.mockupscreenshots.R
 val AppFonts = FontFamily(
     Font(R.font.gilroy_bold, FontWeight.Bold),
     Font(R.font.gilroy_semibold, FontWeight.SemiBold),
+    Font(R.font.gilroy_medium, FontWeight.Medium),
+    Font(R.font.gilroy_regular, FontWeight.Normal),
 )
 
 val FredokaOne = FontFamily(

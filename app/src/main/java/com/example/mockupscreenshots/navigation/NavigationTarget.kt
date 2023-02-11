@@ -1,6 +1,7 @@
 package com.example.mockupscreenshots.navigation
 
 import android.net.Uri
+import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.data.model.Project
 import com.google.gson.Gson
 
@@ -9,7 +10,9 @@ sealed class NavigationTarget(var route: String) {
     object EditScreenShot : NavigationTarget("app://editScreenShot")
     object CreateProject : NavigationTarget("app://createProject?project={project}")
     object ProjectPage : NavigationTarget("app://projectPage?project={project}")
-    object AddScreenshot : NavigationTarget("app://addScreenshot")
+    object AddScreenshot : NavigationTarget("app://addScreenshot?homeFrame={homeFrame}")
+    object ImagePreview : NavigationTarget("app://imagePreview?imagePath={imagePath}")
+    object HomeImagePreview : NavigationTarget("app://homeImagePreview?imagePath={imagePath}")
     object Temp : NavigationTarget("app://temp")
 }
 
@@ -27,6 +30,33 @@ fun buildCreateProjectRoute(project: Project): String {
         .scheme("app")
         .authority("createProject")
         .appendQueryParameter("project", Gson().toJson(project))
+        .build()
+        .toString()
+}
+
+fun buildImagePreviewRoute(imagePath: String): String {
+    return Uri.Builder()
+        .scheme("app")
+        .authority("imagePreview")
+        .appendQueryParameter("imagePath", imagePath)
+        .build()
+        .toString()
+}
+
+fun buildHomeImagePreviewRoute(imagePath: String): String {
+    return Uri.Builder()
+        .scheme("app")
+        .authority("homeImagePreview")
+        .appendQueryParameter("imagePath", imagePath)
+        .build()
+        .toString()
+}
+
+fun buildAddScreenshotRoute(homeFrame: HomeFrame): String {
+    return Uri.Builder()
+        .scheme("app")
+        .authority("addScreenshot")
+        .appendQueryParameter("homeFrame", Gson().toJson(homeFrame))
         .build()
         .toString()
 }
