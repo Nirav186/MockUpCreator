@@ -23,6 +23,7 @@ import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
+import com.example.mockupscreenshots.ui.theme.TabTextStyle
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -30,7 +31,8 @@ fun Home(
     onNewProject: () -> Unit,
     onProjectSelect: (Project) -> Unit,
     onHomeFrameClick: (HomeFrame) -> Unit,
-    onImagePreview: (String) -> Unit
+    onImagePreview: (String) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
     Box(
@@ -39,12 +41,13 @@ fun Home(
             .background(color = BgColor)
     ) {
         if (homeViewModel.selectedTab.value == 0) {
-            HomeTab(
+            HomeTabContent(
                 onHomeFrameClick = onHomeFrameClick,
-                onImagePreview = onImagePreview
+                onImagePreview = onImagePreview,
+                onSettingsClick = onSettingsClick
             )
         } else {
-            MyProjectsTab(onProjectSelect = onProjectSelect)
+            MyProjectsTabContent(onProjectSelect = onProjectSelect)
         }
         Row(
             modifier = Modifier
@@ -108,7 +111,8 @@ fun TabHome(selectedPos: MutableState<Int>) {
             color = if (selectedPos.value == 0)
                 Color.Black
             else
-                Color(0xFF333333).copy(alpha = 0.5f)
+                Color(0xFF333333).copy(alpha = 0.5f),
+            style = TabTextStyle
         )
     }
 }
@@ -138,7 +142,8 @@ fun TabMyProjects(selectedPos: MutableState<Int>) {
             color = if (selectedPos.value == 1)
                 Color.Black
             else
-                Color(0xFF333333).copy(alpha = 0.5f)
+                Color(0xFF333333).copy(alpha = 0.5f),
+            style = TabTextStyle
         )
     }
 }

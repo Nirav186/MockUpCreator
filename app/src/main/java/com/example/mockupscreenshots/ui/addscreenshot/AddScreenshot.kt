@@ -7,33 +7,26 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +35,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
+import com.example.mockupscreenshots.core.components.AppButton
 import com.example.mockupscreenshots.core.components.ColorPicker
+import com.example.mockupscreenshots.core.components.CustomTextField
 import com.example.mockupscreenshots.core.ext.capture
 import com.example.mockupscreenshots.core.ext.saveHomeScreenshot
 import com.example.mockupscreenshots.core.ext.saveScreenshot
@@ -249,12 +244,7 @@ fun AddScreenshot(
                                         filePath
                                     )
                                 } else {
-                                    val filePath =
-                                        screenshotView.value.capture().saveHomeScreenshot(context)
-//                                    navHostController.previousBackStackEntry?.savedStateHandle?.set(
-//                                        "filePath",
-//                                        filePath
-//                                    )
+                                    screenshotView.value.capture().saveHomeScreenshot(context)
                                 }
                                 navHostController.navigateUp()
                             },
@@ -393,7 +383,7 @@ fun BottomPanel(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TextBottomSheet(
     sheetState: ModalBottomSheetState,
@@ -402,112 +392,44 @@ fun TextBottomSheet(
     onDone: (titleString: String, subTitle: String) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    var _title by remember { mutableStateOf(TextFieldValue(title)) }
-    var _subTitle by remember { mutableStateOf(TextFieldValue(subTitle)) }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    var titleText by remember { mutableStateOf(title) }
+    var subTitleText by remember { mutableStateOf(subTitle) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = Color.White)
-            .padding(10.dp)
+            .padding(horizontal = 10.dp, vertical = 26.dp)
     ) {
-
         Text(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp),
+                .padding(10.dp)
+                .fillMaxWidth(),
             text = "Add Text",
             color = Color.Black,
             style = TextStyle(
                 fontSize = 22.sp, color = Color.Black, fontWeight = FontWeight.Bold
             )
         )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFD2E0ED),
-                    shape = RoundedCornerShape(14.dp)
-                )
-        ) {
-            TextField(value = _title,
-                onValueChange = {
-                    _title = it
-                }, placeholder = {
-                    Text(
-                        "Project Name", color = Color.Gray
-                    )
-                }, colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Gray,
-                    disabledTextColor = Color.Transparent,
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }
-                )
-            )
-        }
+        CustomTextField(value = titleText, onValueChange = {
+            titleText = it
+        }, placeholderText = "Project Name")
         Spacer(modifier = Modifier.height(14.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFD2E0ED),
-                    shape = RoundedCornerShape(14.dp)
-                )
-        ) {
-            TextField(value = _subTitle,
-                onValueChange = {
-                    _subTitle = it
-                }, placeholder = {
-                    Text(
-                        text = "Sub Title",
-                        color = Color.Gray
-                    )
-                }, colors = TextFieldDefaults.textFieldColors(
-                    textColor = Color.Gray,
-                    disabledTextColor = Color.Transparent,
-                    backgroundColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    disabledIndicatorColor = Color.Transparent
-                ),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { keyboardController?.hide() }
-                )
-            )
-        }
-
+        CustomTextField(value = subTitleText, onValueChange = {
+            subTitleText = it
+        }, placeholderText = "Sub Title")
         Spacer(modifier = Modifier.height(14.dp))
-        Box(
+        AppButton(
             modifier = Modifier
                 .padding(end = 10.dp)
-                .clickable(onClick = {
-                    coroutineScope.launch {
-                        sheetState.hide()
-                    }
-                    onDone(_title.text, _subTitle.text)
-                })
-                .clip(RoundedCornerShape(30.dp))
-                .background(AppColor)
-                .padding(horizontal = 20.dp, vertical = 10.dp)
-                .align(Alignment.End)
+                .width(150.dp)
+                .align(Alignment.End), buttonText = "Done"
         ) {
-            Text(
-                text = "Done", style = TextStyle(
-                    color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium
-                )
-            )
+            coroutineScope.launch {
+                sheetState.hide()
+            }
+            onDone(titleText, subTitleText)
         }
-        Spacer(modifier = Modifier.height(14.dp))
     }
 }
 

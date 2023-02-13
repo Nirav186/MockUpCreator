@@ -34,7 +34,7 @@ import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
 
 @Composable
-fun MyProjectsTab(onProjectSelect: (Project) -> Unit) {
+fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
     val projectViewModel: ProjectViewModel = hiltViewModel()
 
     val uiState = projectViewModel.uiState.collectAsState().value

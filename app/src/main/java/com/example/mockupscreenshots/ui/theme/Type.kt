@@ -39,3 +39,14 @@ val Typography = Typography(
     )
     */
 )
+
+val TabTextStyle = TextStyle(
+    fontFamily = AppFonts,
+    fontWeight = FontWeight.Medium,
+    fontSize = 16.sp
+)
+
+val CustomTextFieldStyle = TextStyle(
+    fontFamily = AppFonts,
+    fontWeight = FontWeight.Medium
+)

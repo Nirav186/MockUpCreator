@@ -21,19 +21,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,7 +33,9 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.components.AppButton
+import com.example.mockupscreenshots.core.components.CustomTextField
 import com.example.mockupscreenshots.core.components.DropDownMenu
+import com.example.mockupscreenshots.core.components.dashedBorder
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -80,10 +74,6 @@ fun CreateProject(
     }
 
     BackHandler {
-//        createViewModel.screenshots.value.forEach {
-//            val delete = File(it).delete()
-//            Log.e("TAG141", "CreateProject: $delete")
-//        }
         navController.navigateUp()
     }
 
@@ -230,65 +220,4 @@ fun saveProject(
     }
     projectViewModel.addProject(project)
     navController.navigateUp()
-}
-
-fun Modifier.dashedBorder(strokeWidth: Dp, color: Color, cornerRadiusDp: Dp) = composed(factory = {
-    val density = LocalDensity.current
-    val strokeWidthPx = density.run { strokeWidth.toPx() }
-    val cornerRadiusPx = density.run { cornerRadiusDp.toPx() }
-
-    this.then(Modifier.drawWithCache {
-        onDrawBehind {
-            val stroke = Stroke(
-                width = strokeWidthPx,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(20f, 20f), 0f)
-            )
-
-            drawRoundRect(
-                color = color, style = stroke, cornerRadius = CornerRadius(cornerRadiusPx)
-            )
-        }
-    })
-})
-
-@Composable
-fun CustomTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    textFieldTextStyle: TextStyle = TextStyle(
-        fontFamily = AppFonts,
-        fontWeight = FontWeight.Medium
-    ),
-    placeholderText:String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .border(
-                width = 2.dp,
-                color = Color(0xFFD2E0ED),
-                shape = RoundedCornerShape(14.dp)
-            )
-    ) {
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholderText,
-                    color = Color.Gray,
-                    style = textFieldTextStyle
-                )
-            }, colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.Gray,
-                disabledTextColor = Color.Transparent,
-                backgroundColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            textStyle = textFieldTextStyle
-        )
-    }
 }

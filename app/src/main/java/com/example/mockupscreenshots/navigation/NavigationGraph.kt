@@ -15,6 +15,7 @@ import com.example.mockupscreenshots.ui.preview.FullScreenHomeImageView
 import com.example.mockupscreenshots.ui.preview.FullScreenImageView
 import com.example.mockupscreenshots.ui.project.CreateProject
 import com.example.mockupscreenshots.ui.project.ProjectPage
+import com.example.mockupscreenshots.ui.settings.SettingScreen
 import com.google.gson.Gson
 
 @Composable
@@ -31,6 +32,8 @@ fun NavigationGraph(navController: NavHostController) {
                 navController.navigate(buildAddScreenshotRoute(homeFrame))
             }, onImagePreview = {
                 navController.navigate(buildHomeImagePreviewRoute(it))
+            }, onSettingsClick = {
+                navController.navigate(NavigationTarget.Settings.route)
             })
         }
         composable(route = NavigationTarget.CreateProject.route) {
@@ -83,6 +86,11 @@ fun NavigationGraph(navController: NavHostController) {
                     onBackPressed = {
                         navController.navigateUp()
                     })
+            }
+        }
+        composable(route = NavigationTarget.Settings.route) {
+            SettingScreen {
+                navController.popBackStack()
             }
         }
     }

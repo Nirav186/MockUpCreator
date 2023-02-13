@@ -13,6 +13,7 @@ sealed class NavigationTarget(var route: String) {
     object AddScreenshot : NavigationTarget("app://addScreenshot?homeFrame={homeFrame}")
     object ImagePreview : NavigationTarget("app://imagePreview?imagePath={imagePath}")
     object HomeImagePreview : NavigationTarget("app://homeImagePreview?imagePath={imagePath}")
+    object Settings : NavigationTarget("app://settings")
     object Temp : NavigationTarget("app://temp")
 }
 

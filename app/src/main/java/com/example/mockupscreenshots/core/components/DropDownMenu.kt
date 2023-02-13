@@ -11,6 +11,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -44,6 +45,7 @@ fun DropDownMenu(
                     color = Color(0xFFD2E0ED),
                     shape = RoundedCornerShape(14.dp)
                 )
+                .clip(RoundedCornerShape(14.dp))
                 .clickable { mExpanded = !mExpanded }
                 .padding(15.dp),
             verticalAlignment = Alignment.CenterVertically

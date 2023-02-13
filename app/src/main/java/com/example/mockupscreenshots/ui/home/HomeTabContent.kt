@@ -33,9 +33,10 @@ import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.FredokaOne
 
 @Composable
-fun HomeTab(
+fun HomeTabContent(
     onHomeFrameClick: (HomeFrame) -> Unit,
-    onImagePreview: (String) -> Unit
+    onImagePreview: (String) -> Unit,
+    onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
@@ -60,7 +61,11 @@ fun HomeTab(
                 )
             )
             Icon(
-                modifier = Modifier.size(26.dp),
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .clickable(onClick = onSettingsClick)
+                    .size(32.dp)
+                    .padding(4.dp),
                 painter = painterResource(id = R.drawable.ic_setting),
                 contentDescription = null
             )
