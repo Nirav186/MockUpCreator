@@ -29,7 +29,7 @@ fun NavigationGraph(navController: NavHostController) {
             }, onProjectSelect = { project ->
                 navController.navigate(buildProjectPageRoute(project))
             }, onHomeFrameClick = { homeFrame ->
-                navController.navigate(buildAddScreenshotRoute(homeFrame))
+                navController.navigate(buildAddScreenshotRoute(homeFrame,null))
             }, onImagePreview = {
                 navController.navigate(buildHomeImagePreviewRoute(it))
             }, onSettingsClick = {
@@ -52,20 +52,24 @@ fun NavigationGraph(navController: NavHostController) {
                 navController = navController,
                 projectId = project.projectId,
                 onBackPressed = { navController.popBackStack() },
-                onAddScreenshotClick = {
-                    navController.navigate(NavigationTarget.AddScreenshot.route)
+                onAddScreenshotClick = { project ->
+                    navController.navigate(buildAddScreenshotRoute(homeFrame = null, project = project))
                 },
-                onEdit = {
-                    navController.navigate(buildCreateProjectRoute(it))
+                onEdit = { project ->
+                    navController.navigate(buildCreateProjectRoute(project))
                 },
                 onImagePreview = { imagePath ->
                     navController.navigate(buildImagePreviewRoute(imagePath))
                 }
             )
         }
-        composableWithArgs(route = NavigationTarget.AddScreenshot.route, "homeFrame") {
+        composableWithArgs(
+            route = NavigationTarget.AddScreenshot.route,
+            arguments = arrayOf("homeFrame","project")
+        ) {
             val homeFrame = Gson().fromJson(it.getString("homeFrame"), HomeFrame::class.java)
-            AddScreenshot(navController, homeFrame)
+            val project = Gson().fromJson(it.getString("project"), Project::class.java)
+            AddScreenshot(navController, homeFrame, project)
         }
         composable(route = NavigationTarget.Temp.route) {
             FullMockUps()

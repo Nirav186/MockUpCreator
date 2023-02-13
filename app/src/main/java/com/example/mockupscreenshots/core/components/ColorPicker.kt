@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,12 +30,11 @@ import com.google.accompanist.flowlayout.SizeMode
 @Composable
 fun ColorPicker(
     colors: List<ColorPicker?>,
-    selectedColor: ColorPicker,
+    selectedColor: MutableState<Color>,
     onColorSelected: (color: ColorPicker) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-
         FlowRow(
             mainAxisAlignment = MainAxisAlignment.Start,
             mainAxisSize = SizeMode.Wrap,
@@ -43,7 +43,7 @@ fun ColorPicker(
         ) {
             colors.distinct().forEach { color ->
                 ColorItem(
-                    selected = color == selectedColor,
+                    selected = color?.primaryColor == selectedColor.value,
                     color = color?.primaryColor,
                     onClick = {
                         if (color != null) {

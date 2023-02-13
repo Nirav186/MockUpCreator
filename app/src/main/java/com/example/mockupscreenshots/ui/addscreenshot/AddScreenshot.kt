@@ -45,7 +45,9 @@ import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
 import com.example.mockupscreenshots.data.model.HomeFrame
+import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.DeviceFrameViewModel
+import com.example.mockupscreenshots.ui.project.ProjectViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
 import com.example.mockupscreenshots.ui.theme.SecondaryColor
@@ -58,9 +60,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun AddScreenshot(
     navHostController: NavHostController,
-    homeFrame: HomeFrame? = null
+    homeFrame: HomeFrame? = null,
+    project: Project? = null
 ) {
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
+    val projectViewModel = hiltViewModel<ProjectViewModel>()
     val frames = deviceFrameViewModel.state.frameItems
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -74,7 +78,7 @@ fun AddScreenshot(
 //            remember { mutableStateOf("Edit the src configuration to match your needs and run it edit the src configuration to match your needs and run it") }
         val subTitle = remember { mutableStateOf("Add app description here") }
 
-        val selectedBgColor = remember { mutableStateOf(Color(0xFFAE1B2B)) }
+        val selectedBgColor = remember { mutableStateOf(Color(0xFF606c38)) }
         val selectedTextColor = remember { mutableStateOf(Color.White) }
         val selectedBg: MutableState<Int?> = remember { mutableStateOf(null) }
 
@@ -90,14 +94,18 @@ fun AddScreenshot(
             sheetContent = {
                 when (selectedBottomSheetOption) {
                     BottomPanelSelectedOption.BG_COLOR_SELECTION -> {
-                        ColorBottomSheet(sheetState = sheetState, onColorSelected = {
-                            selectedBg.value = null
-                            selectedBgColor.value = it.primaryColor
-                            selectedTextColor.value = it.secondaryColor
-                        }, onBgSelect = {
-                            selectedTextColor.value = Color.White
-                            selectedBg.value = it
-                        })
+                        ColorBottomSheet(
+                            sheetState = sheetState,
+                            onColorSelected = {
+                                selectedBg.value = null
+                                selectedBgColor.value = it.primaryColor
+                                selectedTextColor.value = it.secondaryColor
+                            }, onBgSelect = {
+                                selectedTextColor.value = Color.White
+                                selectedBg.value = it
+                            },
+                            selectedColor = selectedBgColor
+                        )
                     }
                     BottomPanelSelectedOption.TEXT_EDIT -> {
                         TextBottomSheet(
@@ -239,10 +247,10 @@ fun AddScreenshot(
                                 if (homeFrame == null) {
                                     val filePath =
                                         screenshotView.value.capture().saveScreenshot(context)
-                                    navHostController.previousBackStackEntry?.savedStateHandle?.set(
-                                        "filePath",
-                                        filePath
-                                    )
+                                    project?.let {
+                                        project.screenshots.add(filePath)
+                                        projectViewModel.addProject(project)
+                                    }
                                 } else {
                                     screenshotView.value.capture().saveHomeScreenshot(context)
                                 }
@@ -438,11 +446,11 @@ fun TextBottomSheet(
 fun ColorBottomSheet(
     sheetState: ModalBottomSheetState,
     onColorSelected: (color: ColorPicker) -> Unit,
-    onBgSelect: (Int) -> Unit
+    onBgSelect: (Int) -> Unit,
+    selectedColor: MutableState<Color>
 ) {
     val coroutineScope = rememberCoroutineScope()
     val colors = Constants.bgColors
-    val selectedColor = remember { mutableStateOf(colors[0]) }
     Column {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -504,8 +512,11 @@ fun ColorBottomSheet(
         Divider(thickness = 1.dp, color = MaterialTheme.colors.onPrimary)
         ColorPicker(
             colors,
-            selectedColor.value,
-            onColorSelected = onColorSelected,
+            selectedColor,
+            onColorSelected = {
+                onColorSelected(it)
+                selectedColor.value = it.primaryColor
+            },
             modifier = Modifier.padding(12.dp)
         )
         Spacer(modifier = Modifier.height(14.dp))
@@ -535,7 +546,8 @@ fun ColorBottomSheet(
 
 @Composable
 fun DeviceFrameBottomSheet(
-    frames: List<DeviceFrameItem>, onFrameSelect: (DeviceFrameItem) -> Unit
+    frames: List<DeviceFrameItem>,
+    onFrameSelect: (DeviceFrameItem) -> Unit
 ) {
     var selectedTabPos by remember {
         mutableStateOf(0)

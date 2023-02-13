@@ -211,11 +211,11 @@ fun saveProject(
     navController: NavHostController
 ) {
     if (project.name.trim().isEmpty()) {
-        Toast.makeText(context, "Please enter Project Name", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Please Enter Project Name", Toast.LENGTH_SHORT).show()
         return
     }
     if (project.description.isEmpty()) {
-        Toast.makeText(context, "Please enter Project Description", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Please Enter Project Description", Toast.LENGTH_SHORT).show()
         return
     }
     projectViewModel.addProject(project)

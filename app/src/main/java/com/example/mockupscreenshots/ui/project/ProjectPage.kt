@@ -45,7 +45,7 @@ fun ProjectPage(
     navController: NavHostController,
     projectId: Long,
     onBackPressed: () -> Unit,
-    onAddScreenshotClick: () -> Unit,
+    onAddScreenshotClick: (Project) -> Unit,
     onEdit: (Project) -> Unit,
     onImagePreview: (String) -> Unit
 ) {
@@ -56,7 +56,9 @@ fun ProjectPage(
         ?.savedStateHandle
         ?.getLiveData<String>("filePath")?.observeAsState()
 
+//    LaunchedEffect(key1 = true, block = {
     projectViewModel.getProjectById(projectId = projectId)
+//    })
 
     result?.value?.let {
         Log.e("TAG000", "CreateProject: " + result.value)
@@ -205,7 +207,7 @@ fun ProjectPage(
             AppButton(
                 modifier = Modifier.weight(1f),
                 buttonText = "Add Screenshot",
-                onClick = onAddScreenshotClick
+                onClick = { onAddScreenshotClick(projectViewModel.project) }
             )
         }
 
@@ -276,17 +278,20 @@ fun ProjectPage(
                                     .padding(start = 4.dp)
                                     .size(32.dp)
                                     .clickable(onClick = {
-                                        File(screenshot).delete()
-                                        projectViewModel.project.screenshots.remove(screenshot)
-                                        projectViewModel.addProject(projectViewModel.project)
-                                        projectViewModel.getProjectById(projectViewModel.project.projectId)
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "Deleted successfully",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
+                                        val isDeleted =
+                                            projectViewModel.project.screenshots.remove(screenshot)
+                                        if (isDeleted) {
+                                            File(screenshot).delete()
+                                            projectViewModel.addProject(projectViewModel.project)
+                                            projectViewModel.getProjectById(projectViewModel.project.projectId)
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "Deleted successfully",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                        }
                                     }),
                                 painter = painterResource(id = R.drawable.ic_delete_2),
                                 contentDescription = null,

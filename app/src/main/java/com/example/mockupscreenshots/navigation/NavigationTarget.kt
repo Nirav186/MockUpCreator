@@ -10,7 +10,12 @@ sealed class NavigationTarget(var route: String) {
     object EditScreenShot : NavigationTarget("app://editScreenShot")
     object CreateProject : NavigationTarget("app://createProject?project={project}")
     object ProjectPage : NavigationTarget("app://projectPage?project={project}")
-    object AddScreenshot : NavigationTarget("app://addScreenshot?homeFrame={homeFrame}")
+
+    //    object AddScreenshot :
+//        NavigationTarget("app://addScreenshot?homeFrame={homeFrame}?project={project}")
+    object AddScreenshot :
+        NavigationTarget("app://addScreenshot?homeFrame={homeFrame},project={project}")
+
     object ImagePreview : NavigationTarget("app://imagePreview?imagePath={imagePath}")
     object HomeImagePreview : NavigationTarget("app://homeImagePreview?imagePath={imagePath}")
     object Settings : NavigationTarget("app://settings")
@@ -53,11 +58,9 @@ fun buildHomeImagePreviewRoute(imagePath: String): String {
         .toString()
 }
 
-fun buildAddScreenshotRoute(homeFrame: HomeFrame): String {
-    return Uri.Builder()
-        .scheme("app")
-        .authority("addScreenshot")
-        .appendQueryParameter("homeFrame", Gson().toJson(homeFrame))
-        .build()
-        .toString()
+fun buildAddScreenshotRoute(
+    homeFrame: HomeFrame? = null,
+    project: Project? = null
+): String {
+    return "app://addScreenshot?homeFrame=${Gson().toJson(homeFrame)},project=${Gson().toJson(project)}"
 }

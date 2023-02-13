@@ -1,7 +1,6 @@
 package com.example.mockupscreenshots.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -21,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.getImageFromAsset
-import com.example.mockupscreenshots.data.model.DeviceFrameItem
 
 @Composable
 fun FullMockUps() {
@@ -50,7 +48,7 @@ fun FullMockUps() {
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(frame.getPadding()),
-                        painter = painterResource(id = R.drawable.sss),
+                        painter = painterResource(id = R.drawable.s1),
                         contentDescription = "ScreenShot",
                         contentScale = ContentScale.FillBounds
                     )
@@ -234,111 +232,5 @@ fun InclineMockUp() {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun MockUp1() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .width((855 * 1.8 * 0.1876).dp)
-                .height((1658 * 1.8 * 0.1876).dp)
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 14.dp, end = 14.dp, top = 63.dp, bottom = 65.dp),
-                painter = painterResource(id = R.drawable.sss),
-                contentDescription = "ScreenShot",
-                contentScale = ContentScale.FillBounds
-            )
-//            Image(
-//                modifier = Modifier.fillMaxSize(),
-//                painter = painterResource(id = R.drawable.frame_basic),
-//                contentDescription = "Frame",
-//                contentScale = ContentScale.FillBounds
-//            )
-        }
-    }
-}
-
-@Composable
-fun MockUp2() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.White),
-        contentAlignment = Alignment.Center
-    ) {
-        Box(
-            modifier = Modifier
-                .width((855 * 1.8 * 0.1876).dp)
-                .height((1658 * 1.8 * 0.1876).dp)
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 14.dp, end = 14.dp, top = 63.dp, bottom = 65.dp),
-                painter = painterResource(id = R.drawable.sss),
-                contentDescription = "ScreenShot",
-                contentScale = ContentScale.FillBounds
-            )
-//            Image(
-//                modifier = Modifier.fillMaxSize(),
-//                painter = painterResource(id = R.drawable.frame_basic),
-//                contentDescription = "Frame",
-//                contentScale = ContentScale.FillBounds
-//            )
-        }
-    }
-}
-
-@Composable
-fun DeviceFrame(modifier: Modifier, frame: DeviceFrameItem) {
-    val context = LocalContext.current
-    Box(
-        modifier = modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.dog_paws_blue),
-            contentDescription = null
-        )
-        Box(
-            modifier = Modifier
-                .width((frame.width).dp)
-                .height((frame.height).dp)
-        ) {
-            Image(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(frame.getPadding()),
-                painter = painterResource(id = R.drawable.sss),
-                contentDescription = "ScreenShot",
-                contentScale = ContentScale.FillBounds
-            )
-            context.getImageFromAsset(frame.frameId)?.let {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    bitmap = it,
-                    contentDescription = "Frame",
-                    contentScale = ContentScale.FillBounds
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ScreenShotScreen() {
-    Box(modifier = Modifier.fillMaxWidth()) {
-
     }
 }
