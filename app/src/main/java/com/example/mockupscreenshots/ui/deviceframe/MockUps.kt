@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.ui.deviceframe
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mockupscreenshots.R
-import com.example.mockupscreenshots.core.getImageFromAsset
+import com.example.mockupscreenshots.core.utils.getImageFromAsset
 
 @Composable
 fun FullMockUps() {

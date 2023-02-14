@@ -6,6 +6,7 @@ import com.example.mockupscreenshots.data.model.Project
 import com.google.gson.Gson
 
 sealed class NavigationTarget(var route: String) {
+    object Splash : NavigationTarget("app://splash")
     object Home : NavigationTarget("app://home")
     object EditScreenShot : NavigationTarget("app://editScreenShot")
     object CreateProject : NavigationTarget("app://createProject?project={project}")

@@ -1,5 +1,6 @@
 package com.example.mockupscreenshots.ui.project
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
@@ -36,6 +37,7 @@ import com.example.mockupscreenshots.core.components.AppButton
 import com.example.mockupscreenshots.core.components.CustomTextField
 import com.example.mockupscreenshots.core.components.DropDownMenu
 import com.example.mockupscreenshots.core.components.dashedBorder
+import com.example.mockupscreenshots.core.utils.AdManager
 import com.example.mockupscreenshots.data.model.Project
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -218,6 +220,7 @@ fun saveProject(
         Toast.makeText(context, "Please Enter Project Description", Toast.LENGTH_SHORT).show()
         return
     }
+    AdManager().showInterstitial(context as Activity)
     projectViewModel.addProject(project)
     navController.navigateUp()
 }

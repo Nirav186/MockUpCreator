@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.ui.deviceframe
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

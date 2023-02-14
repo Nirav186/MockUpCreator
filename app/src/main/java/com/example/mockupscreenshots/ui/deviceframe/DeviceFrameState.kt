@@ -1,4 +1,4 @@
-package com.example.mockupscreenshots.ui
+package com.example.mockupscreenshots.ui.deviceframe
 
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
 import com.example.mockupscreenshots.data.model.HomeFrame

@@ -31,22 +31,11 @@ object Constants {
         ColorPicker(Color(0xFF735751), Color.White),
         ColorPicker(Color(0xFFb75d69), Color.White),
         ColorPicker(Color(0xFF05668d), Color.White),
-//        ColorPicker(Color(0xFFAE1B2B), Color.White),
-//        ColorPicker(Color(0xFF6C8A68), Color.White),
-//        ColorPicker(Color(0xFF8ecae6), Color.Black),
-//        ColorPicker(Color(0xFF3C6D98), Color.White),
-//        ColorPicker(Color(0xFF061E3E), Color.White),
-//        ColorPicker(Color(0xFF251E3E), Color.White),
-//        ColorPicker(Color(0xFF451E3E), Color.White),
-//        ColorPicker(Color(0xFF651E3E), Color.White),
-//        ColorPicker(Color(0xFF851E3E), Color.White),
-//        ColorPicker(Color(0xFF343434), Color.White),
-//        ColorPicker(Color(0xFF0F421F), Color.White),
-//        ColorPicker(Color(0xFF790000), Color.White),
-//        ColorPicker(Color(0xFF3C2F2F), Color.White),
-//        ColorPicker(Color(0xFF854442), Color.White),
-//        ColorPicker(Color(0xFF4B3832), Color.White),
     )
+
+    var isInterReadyToShow = true
+    const val MOCK_DATA_JSON_NAME = "device_frames.json"
+    const val HOME_DATA_JSON_NAME = "home_frames.json"
 
 }
 

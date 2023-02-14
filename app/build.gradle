@@ -100,4 +100,8 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.0')
 
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
+
+    //yodo 1 ads
+    implementation 'com.yodo1.mas:lite:4.8.3'
+    //yodo 1 ads
 }

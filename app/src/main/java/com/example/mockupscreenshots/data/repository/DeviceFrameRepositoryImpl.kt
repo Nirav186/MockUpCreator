@@ -1,8 +1,8 @@
 package com.example.mockupscreenshots.data.repository
 
 import com.example.mockupscreenshots.App
-import com.example.mockupscreenshots.core.Constants
 import com.example.mockupscreenshots.core.Resource
+import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
 import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.domain.DeviceFrameRepository

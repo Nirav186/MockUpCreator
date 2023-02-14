@@ -1,5 +1,6 @@
 package com.example.mockupscreenshots.ui.home
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,14 +24,18 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.mockupscreenshots.R
 import com.example.mockupscreenshots.core.ext.getHomeScreenshots
 import com.example.mockupscreenshots.data.model.HomeFrame
-import com.example.mockupscreenshots.ui.DeviceFrameViewModel
+import com.example.mockupscreenshots.ui.deviceframe.DeviceFrameViewModel
 import com.example.mockupscreenshots.ui.theme.AppFonts
 import com.example.mockupscreenshots.ui.theme.FredokaOne
+import com.yodo1.mas.banner.Yodo1MasBannerAdListener
+import com.yodo1.mas.banner.Yodo1MasBannerAdView
+import com.yodo1.mas.error.Yodo1MasError
 
 @Composable
 fun HomeTabContent(
@@ -100,6 +105,39 @@ fun HomeTabContent(
                     }
                 })
         }
+        AndroidView(modifier = Modifier
+            .fillMaxWidth(), factory = { context ->
+            Yodo1MasBannerAdView(context).apply {
+                loadAd()
+                setAdListener(object : Yodo1MasBannerAdListener {
+                    override fun onBannerAdLoaded(bannerAdView: Yodo1MasBannerAdView?) {
+                        Log.e("TAGBankSelection", "onBannerAdLoaded: ")
+                    }
+
+                    override fun onBannerAdFailedToLoad(
+                        bannerAdView: Yodo1MasBannerAdView?,
+                        error: Yodo1MasError
+                    ) {
+                        Log.e("TAGBankSelection", "onBannerAdFailedToLoad: ")
+                    }
+
+                    override fun onBannerAdOpened(bannerAdView: Yodo1MasBannerAdView?) {
+                        Log.e("TAGBankSelection", "onBannerAdOpened: ")
+                    }
+
+                    override fun onBannerAdFailedToOpen(
+                        bannerAdView: Yodo1MasBannerAdView?,
+                        error: Yodo1MasError
+                    ) {
+                        Log.e("TAGBankSelection", "onBannerAdFailedToOpen: ")
+                    }
+
+                    override fun onBannerAdClosed(bannerAdView: Yodo1MasBannerAdView?) {
+                        Log.e("TAGBankSelection", "onBannerAdClosed: ")
+                    }
+                })
+            }
+        })
         Text(
             modifier = Modifier.padding(10.dp),
             text = "Templates",

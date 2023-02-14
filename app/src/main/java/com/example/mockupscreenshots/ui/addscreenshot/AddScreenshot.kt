@@ -1,5 +1,6 @@
 package com.example.mockupscreenshots.ui.addscreenshot
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.os.Looper
 import android.provider.MediaStore
@@ -41,12 +42,13 @@ import com.example.mockupscreenshots.core.components.CustomTextField
 import com.example.mockupscreenshots.core.ext.capture
 import com.example.mockupscreenshots.core.ext.saveHomeScreenshot
 import com.example.mockupscreenshots.core.ext.saveScreenshot
+import com.example.mockupscreenshots.core.utils.AdManager
 import com.example.mockupscreenshots.core.utils.ColorPicker
 import com.example.mockupscreenshots.core.utils.Constants
 import com.example.mockupscreenshots.data.model.DeviceFrameItem
 import com.example.mockupscreenshots.data.model.HomeFrame
 import com.example.mockupscreenshots.data.model.Project
-import com.example.mockupscreenshots.ui.DeviceFrameViewModel
+import com.example.mockupscreenshots.ui.deviceframe.DeviceFrameViewModel
 import com.example.mockupscreenshots.ui.project.ProjectViewModel
 import com.example.mockupscreenshots.ui.theme.AppColor
 import com.example.mockupscreenshots.ui.theme.BgColor
@@ -244,6 +246,7 @@ fun AddScreenshot(
                                 }
                             },
                             onSaveClick = {
+                                AdManager().showInterstitial(context as Activity)
                                 if (homeFrame == null) {
                                     val filePath =
                                         screenshotView.value.capture().saveScreenshot(context)
