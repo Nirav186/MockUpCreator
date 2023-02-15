@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MockUpScreenShots</string>
+    <string name="app_name">Mockup Generator</string>
     <string name="home">Home</string>
     <string name="my_projects">My Projects</string>
 </resources>

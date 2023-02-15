@@ -2,6 +2,7 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -90,8 +91,12 @@ fun Home(
 
 @Composable
 fun TabHome(selectedPos: MutableState<Int>) {
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
-        modifier = Modifier.clickable(onClick = {
+        modifier = Modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = {
             selectedPos.value = 0
         }),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -121,8 +126,12 @@ fun TabHome(selectedPos: MutableState<Int>) {
 
 @Composable
 fun TabMyProjects(selectedPos: MutableState<Int>) {
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
-        modifier = Modifier.clickable(onClick = {
+        modifier = Modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = {
             selectedPos.value = 1
         }),
         horizontalAlignment = Alignment.CenterHorizontally
