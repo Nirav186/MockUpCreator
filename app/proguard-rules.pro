@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepclassmembers  public class com.example.mockupscreenshots.data.model** { *;}
+-keepclassmembers  public class com.mobileappxperts.mockupgenerator.mockupmaker.data.model** { *;}
 
 #-renamesourcefileattribute SourceFile
 -ignorewarnings

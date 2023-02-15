@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.mockupscreenshots'
+    namespace 'com.mobileappxperts.mockupgenerator.mockupmaker'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.mockupscreenshots"
+        applicationId "com.mobileappxperts.mockupgenerator.mockupmaker"
         minSdk 21
         targetSdk 33
         versionCode 1
