@@ -29,10 +29,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
         </activity>
 
         <provider
@@ -47,6 +43,9 @@
             </meta-data>
         </provider>
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-5580537606944457~4465578836" />
     </application>
 
 </manifest>

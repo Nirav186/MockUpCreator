@@ -40,7 +40,7 @@ fun Context.moreApp() {
 
 fun Context.privacyPolicy() {
     try {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mobapp-privacy-policy/policy"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/mobapp-privacy-policy/policy?pli=1"))
         startActivity(intent)
     }catch (e:Exception){
         e.printStackTrace()
