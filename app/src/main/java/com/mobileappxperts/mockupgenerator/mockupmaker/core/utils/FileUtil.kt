@@ -46,10 +46,10 @@ fun Context.saveAndShareZip(screenshots: List<String>, zipName: String) {
         File(destPath).delete()
     }
     ZipFile(destPath).addFiles(listOfFiles)
-    shareZip(File(destPath))
+    shareFile(File(destPath))
 }
 
-fun Context.shareZip(file: File) {
+fun Context.shareFile(file: File) {
     val uri: Uri = FileProvider.getUriForFile(
         this,
         packageName.plus(".provider"),

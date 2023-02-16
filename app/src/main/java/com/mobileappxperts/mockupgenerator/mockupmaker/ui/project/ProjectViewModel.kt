@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,21 +33,23 @@ class ProjectViewModel @Inject constructor(
     }
 
     fun addProject(project: Project) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             projectRepository.addNewProject(project)
         }
     }
 
     fun getProjectById(projectId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             projectRepository.getProjectById(projectId).collectLatest {
-                project = it
+                withContext(Dispatchers.Main) {
+                    project = it
+                }
             }
         }
     }
 
     private fun getMyProjects() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             projectRepository.getMyProjects().collectLatest {
                 _uiState.value = ProjectUiState.MyProjectData(projects = it)
             }

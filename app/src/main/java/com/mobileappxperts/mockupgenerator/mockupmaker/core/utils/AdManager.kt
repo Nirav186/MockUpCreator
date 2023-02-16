@@ -157,7 +157,7 @@ class AdManager {
             }
 
             override fun onMasInitFailed(error: Yodo1MasError) {
-                Log.e("YODO 1 Ads :: ", "onMasInitFailed: error==>"+error.message)
+                Log.e("YODO 1 Ads :: ", "onMasInitFailed: error==>" + error.message)
             }
         })
     }

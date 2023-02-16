@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectUiState
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectViewModel
@@ -92,6 +95,11 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(0.dp)
                     ) {
+                        if (projects.isNotEmpty()) {
+                            item {
+                                NativeBanner()
+                            }
+                        }
                         items(projects) { project ->
                             ProjectCard(
                                 project = project,
@@ -122,6 +130,7 @@ private fun ProjectCard(
     onClick: () -> Unit,
     onLongClick: () -> Unit
 ) {
+    val context = LocalContext.current
     val projectViewModel: ProjectViewModel = hiltViewModel()
     Box {
         Column(
@@ -165,14 +174,20 @@ private fun ProjectCard(
                     modifier = Modifier
                         .size(34.dp)
                         .clip(RoundedCornerShape(6.dp))
-                        .background(AppColor),
+                        .background(AppColor)
+                        .clickable(onClick = {
+                            context.saveAndShareZip(
+                                screenshots = project.screenshots,
+                                zipName = project.name
+                            )
+                        }),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         modifier = Modifier
                             .padding(8.dp)
                             .fillMaxSize(),
-                        painter = painterResource(id = R.drawable.ic_download),
+                        painter = painterResource(id = R.drawable.ic_send_2),
                         contentDescription = null,
                         tint = Color.White
                     )

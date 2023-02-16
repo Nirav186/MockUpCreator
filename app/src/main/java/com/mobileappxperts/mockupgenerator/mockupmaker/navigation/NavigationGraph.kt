@@ -1,12 +1,14 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.navigation
 
 import android.app.Activity
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.gson.Gson
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.composableWithArgs
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getString
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.AdManager
@@ -22,12 +24,11 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.CreateProject
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectPage
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.settings.SettingScreen
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.splash.SplashScreen
-import com.google.gson.Gson
 import com.yodo1.mas.interstitial.Yodo1MasInterstitialAd
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
-    val activity = LocalContext.current as Activity
+    val activity = LocalContext.current as ComponentActivity
     NavHost(
         navController = navController, startDestination = NavigationTarget.Splash.route
     ) {

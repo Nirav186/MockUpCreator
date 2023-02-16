@@ -28,6 +28,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getHomeScreenshots
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.DeviceFrameViewModel
@@ -105,39 +106,7 @@ fun HomeTabContent(
                     }
                 })
         }
-        AndroidView(modifier = Modifier
-            .fillMaxWidth(), factory = { context ->
-            Yodo1MasBannerAdView(context).apply {
-                loadAd()
-                setAdListener(object : Yodo1MasBannerAdListener {
-                    override fun onBannerAdLoaded(bannerAdView: Yodo1MasBannerAdView?) {
-                        Log.e("TAGBankSelection", "onBannerAdLoaded: ")
-                    }
-
-                    override fun onBannerAdFailedToLoad(
-                        bannerAdView: Yodo1MasBannerAdView?,
-                        error: Yodo1MasError
-                    ) {
-                        Log.e("TAGBankSelection", "onBannerAdFailedToLoad: ")
-                    }
-
-                    override fun onBannerAdOpened(bannerAdView: Yodo1MasBannerAdView?) {
-                        Log.e("TAGBankSelection", "onBannerAdOpened: ")
-                    }
-
-                    override fun onBannerAdFailedToOpen(
-                        bannerAdView: Yodo1MasBannerAdView?,
-                        error: Yodo1MasError
-                    ) {
-                        Log.e("TAGBankSelection", "onBannerAdFailedToOpen: ")
-                    }
-
-                    override fun onBannerAdClosed(bannerAdView: Yodo1MasBannerAdView?) {
-                        Log.e("TAGBankSelection", "onBannerAdClosed: ")
-                    }
-                })
-            }
-        })
+        NativeBanner(modifier = Modifier.padding(top = 10.dp))
         Text(
             modifier = Modifier.padding(10.dp),
             text = "Templates",

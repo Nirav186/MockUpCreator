@@ -1,9 +1,9 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.project
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,7 +57,7 @@ fun CreateProject(
             createViewModel.projectName = project.name
             createViewModel.device = project.device
             createViewModel.projectDes = project.description
-            createViewModel.screenshots.value = project.screenshots
+            createViewModel.screenshots = project.screenshots
             createViewModel.projectId = project.projectId
         }
     })
@@ -70,8 +70,8 @@ fun CreateProject(
 
     result?.value?.let {
         Log.e("TAG000", "CreateProject: " + result.value)
-        if (createViewModel.screenshots.value.contains(it).not()) {
-            createViewModel.screenshots.value.add(it)
+        if (createViewModel.screenshots.contains(it).not()) {
+            createViewModel.screenshots.add(it)
         }
     }
 
@@ -135,8 +135,7 @@ fun CreateProject(
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
                     disabledIndicatorColor = Color.Transparent
-                ),
-                maxLines = 1
+                )
             )
         }
         DropDownMenu(
@@ -174,7 +173,7 @@ fun CreateProject(
                         )
                     }
                 }
-                items(createViewModel.screenshots.value) {
+                items(createViewModel.screenshots) {
                     AsyncImage(
                         modifier = Modifier
                             .height(120.dp)
@@ -197,7 +196,7 @@ fun CreateProject(
                         name = createViewModel.projectName,
                         description = createViewModel.projectDes,
                         device = createViewModel.device,
-                        screenshots = createViewModel.screenshots.value
+                        screenshots = createViewModel.screenshots
                     ),
                     projectViewModel = projectViewModel,
                     navController = navController
@@ -220,7 +219,7 @@ fun saveProject(
         Toast.makeText(context, "Please Enter Project Description", Toast.LENGTH_SHORT).show()
         return
     }
-    AdManager().showInterstitial(context as Activity)
+    AdManager().showInterstitial(context as ComponentActivity)
     projectViewModel.addProject(project)
     navController.navigateUp()
 }

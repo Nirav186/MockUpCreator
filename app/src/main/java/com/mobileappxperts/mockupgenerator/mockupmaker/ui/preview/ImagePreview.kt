@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.copyFile
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import java.io.File
 
 @Composable
@@ -113,25 +114,26 @@ fun FullScreenHomeImageView(
                 modifier = Modifier
                     .size(44.dp)
                     .clickable(onClick = {
-                        val destPath =
-                            Environment.getExternalStoragePublicDirectory(
-                                Environment.DIRECTORY_PICTURES
-                            ).absolutePath +
-                                    File.separator +
-                                    context.getString(R.string.app_name)
-                        copyFile(
-                            inputFile = imagePath,
-                            outputPath = destPath
-                        )
-                        Toast
-                            .makeText(
-                                context,
-                                "Downloaded at $destPath",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+//                        val destPath =
+//                            Environment.getExternalStoragePublicDirectory(
+//                                Environment.DIRECTORY_PICTURES
+//                            ).absolutePath +
+//                                    File.separator +
+//                                    context.getString(R.string.app_name)
+//                        copyFile(
+//                            inputFile = imagePath,
+//                            outputPath = destPath
+//                        )
+//                        Toast
+//                            .makeText(
+//                                context,
+//                                "Downloaded at $destPath",
+//                                Toast.LENGTH_SHORT
+//                            )
+//                            .show()
+                        context.shareFile(File(imagePath))
                     }),
-                painter = painterResource(id = R.drawable.ic_download_2),
+                painter = painterResource(id = R.drawable.ic_share),
                 contentDescription = null,
                 tint = Color.Gray
             )

@@ -6,9 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.contentColorFor
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -20,12 +18,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.ColorPicker
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
+import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.ColorPicker
+import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
+import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.MaterialDialogButtons
+import com.vanpra.composematerialdialogs.MaterialDialogScope
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ColorPicker(
@@ -128,4 +134,53 @@ fun ColorItem(
             )
         }
     }
+}
+
+@Composable
+fun DialogAndShowButton(
+    buttonText: String,
+    buttons: @Composable MaterialDialogButtons.() -> Unit = {},
+    content: @Composable MaterialDialogScope.() -> Unit
+) {
+    val dialogState = rememberMaterialDialogState()
+
+    MaterialDialog(dialogState = dialogState, buttons = buttons) {
+        content()
+    }
+
+    TextButton(
+        onClick = { dialogState.show() },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .background(MaterialTheme.colors.primaryVariant)
+    ) {
+        Text(
+            buttonText,
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.Center),
+            color = MaterialTheme.colors.onPrimary
+        )
+    }
+}
+
+@Composable
+fun MaterialDialogButtons.defaultColorDialogButtons() {
+    positiveButton(
+        text = "Done",
+        textStyle = TextStyle(
+            color = AppColor,
+            fontWeight = FontWeight.Bold,
+            fontFamily = AppFonts
+        )
+    )
+    negativeButton(
+        text = "Cancel",
+        textStyle = TextStyle(
+            color = Color.Gray,
+            fontWeight = FontWeight.Bold,
+            fontFamily = AppFonts
+        )
+    )
 }

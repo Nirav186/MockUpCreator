@@ -1,5 +1,9 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.project
 
+import android.Manifest
+import android.app.Activity
+import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
@@ -13,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,13 +32,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.hasPermissions
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.copyFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
@@ -60,11 +69,17 @@ fun ProjectPage(
     projectViewModel.getProjectById(projectId = projectId)
 //    })
 
-    result?.value?.let {
-        Log.e("TAG000", "CreateProject: " + result.value)
-        if (projectViewModel.project.screenshots.contains(it).not()) {
-            projectViewModel.project.screenshots.add(it)
-            projectViewModel.addProject(projectViewModel.project)
+    LaunchedEffect(key1 = true) {
+        result?.value?.let {
+            Log.e("TAG000", "CreateProject: " + result.value)
+            projectViewModel.getProjectById(projectId = projectId)
+            if (File(it).exists()) {
+                Log.e("TAG000", "ProjectPage: exists==>" + result.value)
+                if (projectViewModel.project.screenshots.contains(it).not()) {
+                    projectViewModel.project.screenshots.add(it)
+                    projectViewModel.addProject(projectViewModel.project)
+                }
+            }
         }
     }
 
@@ -187,6 +202,9 @@ fun ProjectPage(
             )
         }
 
+
+        NativeBanner()
+
         Row(
             modifier = Modifier
                 .padding(horizontal = 20.dp)
@@ -198,10 +216,23 @@ fun ProjectPage(
                 buttonText = "Export",
                 onClick = {
                     if (projectViewModel.project.screenshots.isNotEmpty()) {
-                        context.saveAndShareZip(
-                            screenshots = projectViewModel.project.screenshots,
-                            zipName = projectViewModel.project.name
-                        )
+                        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            context.saveAndShareZip(
+                                screenshots = projectViewModel.project.screenshots,
+                                zipName = projectViewModel.project.name
+                            )
+                        } else if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            context.saveAndShareZip(
+                                screenshots = projectViewModel.project.screenshots,
+                                zipName = projectViewModel.project.name
+                            )
+                        } else {
+                            ActivityCompat.requestPermissions(
+                                context as Activity,
+                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                                1
+                            )
+                        }
                     }
                 })
             AppButton(
@@ -238,7 +269,7 @@ fun ProjectPage(
                             Icon(
                                 modifier = Modifier
                                     .padding(start = 4.dp)
-                                    .size(32.dp)
+                                    .size(28.dp)
                                     .clickable(onClick = {
                                         onImagePreview(screenshot)
                                     }),
@@ -249,38 +280,43 @@ fun ProjectPage(
                             Icon(
                                 modifier = Modifier
                                     .padding(start = 4.dp)
-                                    .size(32.dp)
+                                    .size(28.dp)
                                     .clickable(onClick = {
-                                        val destPath =
-                                            Environment.getExternalStoragePublicDirectory(
-                                                Environment.DIRECTORY_PICTURES
-                                            ).absolutePath +
-                                                    File.separator +
-                                                    context.getString(R.string.app_name)
-                                        copyFile(
-                                            inputFile = screenshot,
-                                            outputPath = destPath
-                                        )
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "Downloaded at $destPath",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
+//                                        val destPath =
+//                                            Environment.getExternalStoragePublicDirectory(
+//                                                Environment.DIRECTORY_PICTURES
+//                                            ).absolutePath +
+//                                                    File.separator +
+//                                                    context.getString(R.string.app_name)
+//                                        copyFile(
+//                                            inputFile = screenshot,
+//                                            outputPath = destPath
+//                                        )
+//                                        Toast
+//                                            .makeText(
+//                                                context,
+//                                                "Downloaded at $destPath",
+//                                                Toast.LENGTH_SHORT
+//                                            )
+//                                            .show()
+                                        context.shareFile(File(screenshot))
                                     }),
-                                painter = painterResource(id = R.drawable.ic_download_2),
+                                painter = painterResource(id = R.drawable.ic_share),
                                 contentDescription = null,
                                 tint = Color.Gray
                             )
                             Icon(
                                 modifier = Modifier
                                     .padding(start = 4.dp)
-                                    .size(32.dp)
+                                    .size(28.dp)
                                     .clickable(onClick = {
                                         val isDeleted =
                                             projectViewModel.project.screenshots.remove(screenshot)
                                         if (isDeleted) {
+                                            Log.e(
+                                                "TAG000",
+                                                "ProjectPage: isDeleted==>$screenshot"
+                                            )
                                             File(screenshot).delete()
                                             projectViewModel.addProject(projectViewModel.project)
                                             projectViewModel.getProjectById(projectViewModel.project.projectId)

@@ -104,4 +104,9 @@ dependencies {
     //yodo 1 ads
     implementation 'com.yodo1.mas:lite:4.8.3'
     //yodo 1 ads
+
+    //color sheet
+//    implementation "dev.sasikanth:colorsheet:1.0.0"
+    implementation "io.github.vanpra.compose-material-dialogs:color:0.9.0"
+//    implementation 'com.maxkeppeler.sheets:info:2.3.1'
 }
