@@ -7,11 +7,12 @@ import android.provider.MediaStore
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -35,8 +36,9 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.ColorPicker
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomTextField
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.defaultColorDialogButtons
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.capture
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveHomeScreenshot
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveScreenshot
@@ -47,16 +49,12 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.DeviceFrameViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectViewModel
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColorBG
+import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.*
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.DeviceFrameView
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.ScreenshotView
+import com.raedapps.alwan.ui.AlwanDialog
 import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.color.colorChooser
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import com.vanpra.composematerialdialogs.title
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -79,7 +77,7 @@ fun AddScreenshot(
         val title = remember { mutableStateOf("App name") }
         val subTitle = remember { mutableStateOf("Add app description here") }
 
-        val selectedBgColor = remember { mutableStateOf(Color(0xFF606c38)) }
+        val selectedBgColor: MutableState<Color?> = remember { mutableStateOf(Color(0xFF606c38)) }
         val selectedTextColor = remember { mutableStateOf(Color.White) }
         val selectedBg: MutableState<Int?> = remember { mutableStateOf(null) }
 
@@ -94,6 +92,20 @@ fun AddScreenshot(
             sheetShape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
             sheetContent = {
                 when (selectedBottomSheetOption) {
+                    BottomPanelSelectedOption.BG_COLOR_SELECTION -> {
+                        ColorBottomSheet(
+                            sheetState = sheetState,
+                            onColorSelected = {
+                                selectedBg.value = null
+                                selectedBgColor.value = it
+                            }, onBgSelect = {
+                                selectedTextColor.value = Color.White
+                                selectedBg.value = it
+                            },
+                            selectedColor = selectedBgColor,
+                            selectedBg = selectedBg
+                        )
+                    }
                     BottomPanelSelectedOption.TEXT_EDIT -> {
                         TextBottomSheet(
                             sheetState, title.value, subTitle.value
@@ -120,7 +132,9 @@ fun AddScreenshot(
                 val deviceFrameView: MutableState<DeviceFrameView> = remember {
                     mutableStateOf(
                         DeviceFrameView(
-                            context = context, bitmap = null, frame = selectedFrame
+                            context = context,
+                            bitmap = null,
+                            frame = selectedFrame
                         )
                     )
                 }
@@ -159,9 +173,6 @@ fun AddScreenshot(
                             }, 100)
                         }
                     }
-
-                val dialogState = rememberMaterialDialogState()
-
                 LaunchedEffect(key1 = true, block = {
                     homeFrame?.let {
                         frames.find { it.frameId == homeFrame.frameId }?.let {
@@ -172,28 +183,11 @@ fun AddScreenshot(
                         }
                     }
                 })
-
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(BgColor)
                 ) {
-                    MaterialDialog(
-                        dialogState = dialogState,
-                        buttons = { defaultColorDialogButtons() }
-                    ) {
-                        title("Select a Color")
-                        colorChooser(
-                            colors = Constants.bgColors.map { it.primaryColor },
-                            waitForPositiveButton = true
-                        ) { color ->
-                            selectedBgColor.value = color
-                            selectedTextColor.value =
-                                (Constants.bgColors.find { it.primaryColor == color }
-                                    ?: Constants.bgColors[1]).secondaryColor
-                        }
-                    }
-
                     key(selectedFrame.value) {
                         AndroidView(modifier = Modifier.alpha(0f), factory = {
                             DeviceFrameView(
@@ -228,7 +222,13 @@ fun AddScreenshot(
                         BottomPanel(modifier = Modifier.padding(10.dp),
                             onPaletteClick = {
                                 coroutineScope.launch {
-                                    dialogState.show()
+                                    if (sheetState.isVisible) {
+                                        sheetState.hide()
+                                    } else {
+                                        selectedBottomSheetOption =
+                                            BottomPanelSelectedOption.BG_COLOR_SELECTION
+                                        sheetState.show()
+                                    }
                                 }
                             },
                             onPhoneClick = {
@@ -282,21 +282,31 @@ fun AddScreenshot(
 }
 
 @Composable
-fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit) {
+fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit, isPaid: Boolean) {
     Box(
         modifier = Modifier
             .clip(RoundedCornerShape(6.dp))
             .clickable(onClick = onClick)
             .background(SecondaryColorBG.copy(alpha = 0.35f))
-            .padding(10.dp)
     ) {
         AsyncImage(
             modifier = Modifier
+                .padding(10.dp)
                 .height(100.dp)
                 .padding(horizontal = 5.dp),
             model = frame.frameUrl,
-            contentDescription = null
+            contentDescription = null,
+            placeholder = painterResource(id = R.drawable.placeholder_frame)
         )
+        if (isPaid) {
+            Image(
+                modifier = Modifier
+                    .size(32.dp)
+                    .align(Alignment.TopEnd),
+                painter = painterResource(id = R.drawable.ic_ads),
+                contentDescription = null
+            )
+        }
     }
 }
 
@@ -315,64 +325,60 @@ fun BottomPanel(
             .clip(RoundedCornerShape(12.dp))
             .background(color = Color.White), verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
+        Image(
             modifier = Modifier
                 .clickable(onClick = onPaletteClick)
                 .padding(10.dp)
-                .size(36.dp),
-            painter = painterResource(id = R.drawable.pallete),
-            contentDescription = null,
-            tint = SecondaryColor
+                .size(30.dp),
+            painter = painterResource(id = R.drawable.palette),
+            contentDescription = null
         )
         Divider(
             color = SecondaryColor, modifier = Modifier
-                .height(50.dp)
+                .height(44.dp)
                 .width(1.dp)
                 .alpha(0.4f)
         )
-        Icon(
+        Image(
             modifier = Modifier
                 .clickable(onClick = onPhoneClick)
                 .padding(10.dp)
-                .size(36.dp),
+                .size(30.dp),
             painter = painterResource(id = R.drawable.ic_mockup),
-            contentDescription = null,
-            tint = SecondaryColor
+            contentDescription = null
         )
         Divider(
-            color = SecondaryColor, modifier = Modifier
-                .height(50.dp)
+            color = SecondaryColor,
+            modifier = Modifier
+                .height(44.dp)
                 .width(1.dp)
                 .alpha(0.4f)
         )
-        Icon(
+        Image(
             modifier = Modifier
                 .clickable(onClick = onAddImageClick)
                 .padding(10.dp)
-                .size(40.dp)
-                .padding(4.dp),
+                .size(30.dp),
             painter = painterResource(id = R.drawable.insert_image),
-            contentDescription = null,
-            tint = SecondaryColor
+            contentDescription = null
         )
         Divider(
             color = SecondaryColor, modifier = Modifier
-                .height(50.dp)
+                .height(44.dp)
                 .width(1.dp)
                 .alpha(0.4f)
         )
-        Icon(
+        Image(
             modifier = Modifier
                 .clickable(onClick = onAddText)
                 .padding(10.dp)
-                .size(40.dp),
+                .size(30.dp),
             painter = painterResource(id = R.drawable.add_text),
-            contentDescription = null,
-            tint = SecondaryColor
+            contentDescription = null
         )
         Divider(
             color = SecondaryColor, modifier = Modifier
-                .height(50.dp)
+                .height(44.dp)
                 .width(1.dp)
                 .alpha(0.4f)
         )
@@ -450,6 +456,8 @@ fun DeviceFrameBottomSheet(
     frames: List<DeviceFrameItem>,
     onFrameSelect: (DeviceFrameItem) -> Unit
 ) {
+    val androidFrames = frames.filter { it.deviceType.equals("android", ignoreCase = true) }
+    val iosFrames = frames.filter { it.deviceType.equals("ios", ignoreCase = true) }
     var selectedTabPos by remember {
         mutableStateOf(0)
     }
@@ -520,10 +528,14 @@ fun DeviceFrameBottomSheet(
                 contentPadding = PaddingValues(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(frames.filter { it.deviceType.equals("Android", ignoreCase = true) }) {
-                    SmallFrameImg(it, onClick = {
-                        onFrameSelect(it)
-                    })
+                items(androidFrames.size) {
+                    SmallFrameImg(
+                        frame = androidFrames[it],
+                        onClick = {
+                            onFrameSelect(androidFrames[it])
+                        },
+                        isPaid = it > 2
+                    )
                 }
             }
         } else {
@@ -534,16 +546,143 @@ fun DeviceFrameBottomSheet(
                 contentPadding = PaddingValues(horizontal = 10.dp),
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                items(frames.filter { it.deviceType.equals("iOS", ignoreCase = true) }) {
-                    SmallFrameImg(it, onClick = {
-                        onFrameSelect(it)
-                    })
+                items(iosFrames.size) {
+                    SmallFrameImg(
+                        frame = iosFrames[it],
+                        onClick = {
+                            onFrameSelect(iosFrames[it])
+                        },
+                        isPaid = it > 2
+                    )
                 }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun ColorBottomSheet(
+    sheetState: ModalBottomSheetState,
+    onColorSelected: (color: Color?) -> Unit,
+    onBgSelect: (Int?) -> Unit,
+    selectedColor: MutableState<Color?>,
+    selectedBg: MutableState<Int?>
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val interactionSource = remember { MutableInteractionSource() }
+    val colors = Constants.bgColors
+    val backgrounds =
+        listOf(R.drawable.dog_paws_blue, R.drawable.dog_paws_green, R.drawable.dog_paws_yellow)
+    val dialogState = rememberMaterialDialogState()
+    var selectedColorFromDialog by remember {
+        mutableStateOf(Color(0xFFFFFFFF))
+    }
+    MaterialDialog(
+        dialogState = dialogState
+    ) {
+        AlwanDialog(
+            onDismissRequest = { },
+            onColorChanged = {
+                selectedColorFromDialog = it
+            },
+            positiveButtonText = "Ok",
+            onPositiveButtonClick = {
+                coroutineScope.launch {
+                    dialogState.hide()
+                    sheetState.hide()
+                }
+                onColorSelected(selectedColorFromDialog)
+            },
+            negativeButtonText = "Cancel",
+            onNegativeButtonClick = {
+                dialogState.hide()
+            },
+        )
+    }
+    Column {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "Select background",
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(12.dp)
+        )
+        BgPicker(
+            bgs = backgrounds,
+            selectedBg = selectedBg,
+            onBgSelected = {
+                onBgSelect(it)
+                selectedBg.value = it
+                selectedColor.value = null
+            },
+            modifier = Modifier.padding(12.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 12.dp),
+                text = "Select color",
+                style = MaterialTheme.typography.h6
+            )
+            Text(
+                modifier = Modifier
+                    .padding(start = 10.dp, end = 30.dp)
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                        onClick = {
+                            dialogState.show()
+                        }),
+                text = "more...",
+                style = TextStyle(
+                    color = AppColor,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
+                    fontFamily = AppFonts,
+                    textAlign = TextAlign.End
+                )
+            )
+        }
+        Divider(thickness = 1.dp, color = MaterialTheme.colors.onPrimary)
+        ColorPicker(
+            colors,
+            selectedColor,
+            onColorSelected = {
+                onColorSelected(it)
+                selectedColor.value = it
+                selectedBg.value = null
+            },
+            modifier = Modifier.padding(12.dp)
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+        Box(
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .clickable(onClick = {
+                    coroutineScope.launch {
+                        sheetState.hide()
+                    }
+                })
+                .clip(RoundedCornerShape(30.dp))
+                .background(AppColor)
+                .padding(horizontal = 20.dp, vertical = 10.dp)
+                .align(Alignment.End)
+        ) {
+            Text(
+                text = "Done", style = TextStyle(
+                    color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Medium
+                )
+            )
+        }
+        Spacer(modifier = Modifier.height(14.dp))
+    }
+}
+
 enum class BottomPanelSelectedOption {
-    DEVICE_FRAME_SELECTION, TEXT_EDIT
+    BG_COLOR_SELECTION, DEVICE_FRAME_SELECTION, TEXT_EDIT
 }

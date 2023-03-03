@@ -46,7 +46,7 @@ fun SettingScreen(onBackPressed: () -> Unit) {
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(36.dp)
                     .clip(RoundedCornerShape(6.dp))
                     .background(Color(0xFFf3f3f3))
                     .clickable(onClick = onBackPressed),
@@ -113,6 +113,7 @@ private fun SettingRow(
     Row(
         modifier = Modifier
             .clickable(onClick = onClick)
+            .padding(start = 14.dp)
             .fillMaxWidth()
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically

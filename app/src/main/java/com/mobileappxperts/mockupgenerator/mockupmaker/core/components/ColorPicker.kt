@@ -1,12 +1,11 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.core.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
@@ -18,26 +17,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import com.google.accompanist.flowlayout.SizeMode
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.ColorPicker
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
-import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
-import com.vanpra.composematerialdialogs.MaterialDialog
-import com.vanpra.composematerialdialogs.MaterialDialogButtons
-import com.vanpra.composematerialdialogs.MaterialDialogScope
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 @Composable
 fun ColorPicker(
-    colors: List<ColorPicker?>,
-    selectedColor: MutableState<Color>,
-    onColorSelected: (color: ColorPicker) -> Unit,
+    colors: List<Color?>,
+    selectedColor: MutableState<Color?>,
+    onColorSelected: (Color?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
@@ -49,12 +39,10 @@ fun ColorPicker(
         ) {
             colors.distinct().forEach { color ->
                 ColorItem(
-                    selected = color?.primaryColor == selectedColor.value,
-                    color = color?.primaryColor,
+                    selected = color == selectedColor.value,
+                    color = color,
                     onClick = {
-                        if (color != null) {
-                            onColorSelected(color)
-                        }
+                        onColorSelected(color)
                     }
                 )
             }
@@ -76,32 +64,21 @@ fun ColorItem(
             .clickable(onClick = onClick)
     ) {
         if (color != null) {
-            // Transparent background pattern
             Box(
                 modifier = Modifier
                     .width(20.dp)
                     .fillMaxHeight()
                     .background(Color(0xFFBDBDBD))
             )
-            // Color indicator
-            val colorModifier =
-//                if (/*color.luminance() < 0.4 || */color.luminance() > 0.7) {
-                if (color.luminance() < 0.1 || color.luminance() > 0.9) {
-                    Modifier
-                        .fillMaxSize()
-                        .background(color)
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colors.onSurface,
-                            shape = CircleShape
-                        )
-                } else {
-                    Modifier
-                        .fillMaxSize()
-                        .background(color)
-                }
             Box(
-                modifier = colorModifier
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color)
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = CircleShape
+                    )
             ) {
                 if (selected) {
                     Icon(
@@ -119,13 +96,12 @@ fun ColorItem(
                         .fillMaxSize()
                         .align(Alignment.Center)
                         .background(
-                            if (isSystemInDarkTheme()) Color(0x33FFFFFF) else Color(
-                                0x33000000
-                            )
+                            if (isSystemInDarkTheme())
+                                Color(0x33FFFFFF)
+                            else Color(0x33000000)
                         )
                 )
             }
-            // Color null indicator
             Icon(
                 painterResource(R.drawable.ic_color_off_24dp),
                 contentDescription = Icons.Default.Clear.name,
@@ -137,50 +113,88 @@ fun ColorItem(
 }
 
 @Composable
-fun DialogAndShowButton(
-    buttonText: String,
-    buttons: @Composable MaterialDialogButtons.() -> Unit = {},
-    content: @Composable MaterialDialogScope.() -> Unit
+fun BgPicker(
+    bgs: List<Int?>,
+    selectedBg: MutableState<Int?>,
+    onBgSelected: (Int?) -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    val dialogState = rememberMaterialDialogState()
-
-    MaterialDialog(dialogState = dialogState, buttons = buttons) {
-        content()
-    }
-
-    TextButton(
-        onClick = { dialogState.show() },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .background(MaterialTheme.colors.primaryVariant)
-    ) {
-        Text(
-            buttonText,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentSize(Alignment.Center),
-            color = MaterialTheme.colors.onPrimary
-        )
+    Column(modifier = modifier) {
+        FlowRow(
+            mainAxisAlignment = MainAxisAlignment.Start,
+            mainAxisSize = SizeMode.Wrap,
+            crossAxisSpacing = 4.dp,
+            mainAxisSpacing = 4.dp
+        ) {
+            bgs.distinct().forEach { bg ->
+                BgItem(selected = selectedBg.value == bg, bg = bg, onClick = {
+                    onBgSelected(bg)
+                })
+            }
+        }
     }
 }
 
 @Composable
-fun MaterialDialogButtons.defaultColorDialogButtons() {
-    positiveButton(
-        text = "Done",
-        textStyle = TextStyle(
-            color = AppColor,
-            fontWeight = FontWeight.Bold,
-            fontFamily = AppFonts
-        )
-    )
-    negativeButton(
-        text = "Cancel",
-        textStyle = TextStyle(
-            color = Color.Gray,
-            fontWeight = FontWeight.Bold,
-            fontFamily = AppFonts
-        )
-    )
+fun BgItem(
+    selected: Boolean,
+    bg: Int?,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .padding(4.dp)
+            .clip(CircleShape)
+            .requiredSize(40.dp)
+            .clickable(onClick = onClick)
+    ) {
+        if (bg != null) {
+            Box(
+                modifier = Modifier
+                    .width(20.dp)
+                    .fillMaxHeight()
+                    .background(Color(0xFFBDBDBD))
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .border(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.onSurface,
+                        shape = CircleShape
+                    )
+            ) {
+                Image(
+                    painter = painterResource(id = bg), contentDescription = null
+                )
+                if (selected) {
+                    Icon(
+                        Icons.Default.Check,
+                        contentDescription = Icons.Default.Check.name,
+                        tint = Color.Black,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        } else {
+            if (selected) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                        .background(
+                            if (isSystemInDarkTheme())
+                                Color(0x33FFFFFF)
+                            else Color(0x33000000)
+                        )
+                )
+            }
+            Icon(
+                painterResource(R.drawable.ic_color_off_24dp),
+                contentDescription = Icons.Default.Clear.name,
+                modifier = Modifier.align(Alignment.Center),
+                tint = contentColorFor(MaterialTheme.colors.surface)
+            )
+        }
+    }
 }

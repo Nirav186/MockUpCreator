@@ -30,7 +30,7 @@ class ScreenshotView @JvmOverloads constructor(
     val subTitle: MutableState<String>,
     val deviceFrameView: MutableState<DeviceFrameView>,
     val bitmap: MutableState<Bitmap>,
-    val selectedBgColor: MutableState<Color>,
+    val selectedBgColor: MutableState<Color?>,
     val selectedBg: MutableState<Int?>,
     val textColor: MutableState<Color>
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
@@ -60,7 +60,7 @@ class ScreenshotView @JvmOverloads constructor(
                     .background(
                         color = if (selectedBg.value != null) {
                             Color.Transparent
-                        } else selectedBgColor.value
+                        } else selectedBgColor.value ?: Color.White
                     ),
                 verticalArrangement = Arrangement.Center
             ) {
@@ -101,6 +101,5 @@ class ScreenshotView @JvmOverloads constructor(
             }
         }
     }
-
 
 }

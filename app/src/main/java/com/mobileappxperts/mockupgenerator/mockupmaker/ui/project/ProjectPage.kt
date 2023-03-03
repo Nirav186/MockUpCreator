@@ -4,20 +4,22 @@ import android.Manifest
 import android.app.Activity
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,11 +27,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
@@ -38,9 +42,9 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DropdownMenuNoPaddingVertical
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.hasPermissions
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.copyFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
@@ -48,6 +52,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
 import java.io.File
+
 
 @Composable
 fun ProjectPage(
@@ -60,14 +65,11 @@ fun ProjectPage(
 ) {
     val projectViewModel: ProjectViewModel = hiltViewModel()
     val context = LocalContext.current
-    val result = navController
-        .currentBackStackEntry
-        ?.savedStateHandle
-        ?.getLiveData<String>("filePath")?.observeAsState()
+    val result =
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<String>("filePath")
+            ?.observeAsState()
 
-//    LaunchedEffect(key1 = true, block = {
     projectViewModel.getProjectById(projectId = projectId)
-//    })
 
     LaunchedEffect(key1 = true) {
         result?.value?.let {
@@ -99,7 +101,7 @@ fun ProjectPage(
         ) {
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(36.dp)
                     .clip(RoundedCornerShape(6.dp))
                     .background(Color(0xFFf3f3f3))
                     .clickable(onClick = onBackPressed),
@@ -178,12 +180,11 @@ fun ProjectPage(
                         .size(40.dp)
                         .clip(RoundedCornerShape(6.dp))
                         .clickable(onClick = { onEdit(projectViewModel.project) })
-                        .background(Color(0xFFf3f3f3)),
-                    contentAlignment = Alignment.Center
+                        .background(Color(0xFFf3f3f3)), contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(10.dp)
                             .fillMaxSize(),
                         painter = painterResource(id = R.drawable.ic_edit),
                         contentDescription = null,
@@ -192,8 +193,7 @@ fun ProjectPage(
                 }
             }
             Text(
-                text = projectViewModel.project.description,
-                style = TextStyle(
+                text = projectViewModel.project.description, style = TextStyle(
                     color = SecondaryColor,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Normal,
@@ -211,35 +211,30 @@ fun ProjectPage(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            AppButton(
-                modifier = Modifier.weight(1f),
-                buttonText = "Export",
-                onClick = {
-                    if (projectViewModel.project.screenshots.isNotEmpty()) {
-                        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            context.saveAndShareZip(
-                                screenshots = projectViewModel.project.screenshots,
-                                zipName = projectViewModel.project.name
-                            )
-                        } else if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                            context.saveAndShareZip(
-                                screenshots = projectViewModel.project.screenshots,
-                                zipName = projectViewModel.project.name
-                            )
-                        } else {
-                            ActivityCompat.requestPermissions(
-                                context as Activity,
-                                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                                1
-                            )
-                        }
+            AppButton(modifier = Modifier.weight(1f), buttonText = "Export", onClick = {
+                if (projectViewModel.project.screenshots.isNotEmpty()) {
+                    if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        context.saveAndShareZip(
+                            screenshots = projectViewModel.project.screenshots,
+                            zipName = projectViewModel.project.name
+                        )
+                    } else if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                        context.saveAndShareZip(
+                            screenshots = projectViewModel.project.screenshots,
+                            zipName = projectViewModel.project.name
+                        )
+                    } else {
+                        ActivityCompat.requestPermissions(
+                            context as Activity,
+                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                            1
+                        )
                     }
-                })
-            AppButton(
-                modifier = Modifier.weight(1f),
+                }
+            })
+            AppButton(modifier = Modifier.weight(1f),
                 buttonText = "Add Screenshot",
-                onClick = { onAddScreenshotClick(projectViewModel.project) }
-            )
+                onClick = { onAddScreenshotClick(projectViewModel.project) })
         }
 
         LazyVerticalGrid(modifier = Modifier
@@ -250,92 +245,118 @@ fun ProjectPage(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
             content = {
                 items(projectViewModel.project.screenshots) { screenshot ->
-                    Column(modifier = Modifier.wrapContentSize()) {
-                        AsyncImage(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(RoundedCornerShape(10.dp))
-                                .clickable(onClick = {}),
-                            model = screenshot,
-                            contentDescription = null,
-                            contentScale = ContentScale.Fit
-                        )
-                        Row(
-                            modifier = Modifier
-                                .padding(top = 4.dp),
-                            horizontalArrangement = Arrangement.End,
-                        ) {
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .size(28.dp)
-                                    .clickable(onClick = {
-                                        onImagePreview(screenshot)
-                                    }),
-                                painter = painterResource(id = R.drawable.ic_preview),
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .size(28.dp)
-                                    .clickable(onClick = {
-//                                        val destPath =
-//                                            Environment.getExternalStoragePublicDirectory(
-//                                                Environment.DIRECTORY_PICTURES
-//                                            ).absolutePath +
-//                                                    File.separator +
-//                                                    context.getString(R.string.app_name)
-//                                        copyFile(
-//                                            inputFile = screenshot,
-//                                            outputPath = destPath
-//                                        )
-//                                        Toast
-//                                            .makeText(
-//                                                context,
-//                                                "Downloaded at $destPath",
-//                                                Toast.LENGTH_SHORT
-//                                            )
-//                                            .show()
-                                        context.shareFile(File(screenshot))
-                                    }),
-                                painter = painterResource(id = R.drawable.ic_share),
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                            Icon(
-                                modifier = Modifier
-                                    .padding(start = 4.dp)
-                                    .size(28.dp)
-                                    .clickable(onClick = {
-                                        val isDeleted =
-                                            projectViewModel.project.screenshots.remove(screenshot)
-                                        if (isDeleted) {
-                                            Log.e(
-                                                "TAG000",
-                                                "ProjectPage: isDeleted==>$screenshot"
-                                            )
-                                            File(screenshot).delete()
-                                            projectViewModel.addProject(projectViewModel.project)
-                                            projectViewModel.getProjectById(projectViewModel.project.projectId)
-                                            Toast
-                                                .makeText(
-                                                    context,
-                                                    "Deleted successfully",
-                                                    Toast.LENGTH_SHORT
-                                                )
-                                                .show()
-                                        }
-                                    }),
-                                painter = painterResource(id = R.drawable.ic_delete_2),
-                                contentDescription = null,
-                                tint = Color.Gray
-                            )
-                        }
-                    }
+                    ScreenShotPreview(screenshot = screenshot, onImagePreview = onImagePreview)
                 }
             })
     }
 }
+
+@Composable
+private fun ScreenShotPreview(
+    screenshot: String, onImagePreview: (String) -> Unit
+) {
+    val projectViewModel: ProjectViewModel = hiltViewModel()
+    val context = LocalContext.current
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.wrapContentSize()) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(10.dp)),
+            model = screenshot,
+            contentDescription = null,
+            contentScale = ContentScale.Fit
+        )
+        Box(modifier = Modifier.align(Alignment.TopEnd)) {
+            Image(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .layoutId("popupAnchor")
+                    .clickable(onClick = {
+                        expanded = !expanded
+                    })
+                    .align(Alignment.TopEnd),
+                painter = painterResource(id = R.drawable.ic_more),
+                contentDescription = null,
+            )
+            MaterialTheme(shapes = MaterialTheme.shapes.copy(medium = RoundedCornerShape(16.dp))) {
+                DropdownMenuNoPaddingVertical(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd),
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    DropdownMenuItem(
+                        onClick = { onImagePreview(screenshot) }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_view),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "View")
+                    }
+                    DropdownMenuItem(onClick = { context.shareFile(File(screenshot)) }) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_send_2),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "Share")
+                    }
+                    DropdownMenuItem(onClick = {
+                        val isDeleted =
+                            projectViewModel.project.screenshots.remove(screenshot)
+                        if (isDeleted) {
+                            Log.e(
+                                "TAG000",
+                                "ProjectPage: isDeleted==>$screenshot"
+                            )
+                            File(screenshot).delete()
+                            projectViewModel.addProject(projectViewModel.project)
+                            projectViewModel.getProjectById(projectViewModel.project.projectId)
+                            Toast
+                                .makeText(
+                                    context,
+                                    "Deleted successfully",
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        }
+                    }) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_delete_2),
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(text = "Delete")
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun ActionPopup() {
+    Box(
+        modifier = Modifier
+            .width(100.dp)
+            .padding(10.dp)
+            .background(Color.White)
+    ) {
+        Column {
+            Text(text = "View")
+            Text(text = "Share")
+            Text(text = "Delete")
+        }
+    }
+}
+

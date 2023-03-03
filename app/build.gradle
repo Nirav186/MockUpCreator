@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.mobileappxperts.mockupgenerator.mockupmaker"
-        minSdk 21
+        minSdk 23
         targetSdk 33
         versionCode 1
         versionName "1.0"
@@ -94,7 +94,6 @@ dependencies {
     implementation "androidx.room:room-ktx:2.5.0"
     //room
 
-//    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.1"
     implementation("io.coil-kt:coil-compose:2.2.2")
 
     implementation "com.google.accompanist:accompanist-flowlayout:0.15.0"
@@ -106,7 +105,6 @@ dependencies {
     //yodo 1 ads
 
     //color sheet
-//    implementation "dev.sasikanth:colorsheet:1.0.0"
     implementation "io.github.vanpra.compose-material-dialogs:color:0.9.0"
-//    implementation 'com.maxkeppeler.sheets:info:2.3.1'
+    implementation 'com.raedapps:alwan:1.0.0'
 }
