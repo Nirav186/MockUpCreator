@@ -150,7 +150,7 @@ class AdManager {
         val config = Yodo1MasAdBuildConfig.Builder().enableUserPrivacyDialog(true).build()
         Yodo1Mas.getInstance().setAdBuildConfig(config)
 
-        Yodo1Mas.getInstance().initMas(activity, "y3F1PSpfGy", object : Yodo1Mas.InitListener {
+        Yodo1Mas.getInstance().initMas(activity, "0bC8jD2mBw", object : Yodo1Mas.InitListener {
             override fun onMasInitSuccessful() {
                 Log.e("YODO 1 Ads :: ", "onMasInitSuccessful: ")
                 Yodo1MasInterstitialAd.getInstance().loadAd(activity)

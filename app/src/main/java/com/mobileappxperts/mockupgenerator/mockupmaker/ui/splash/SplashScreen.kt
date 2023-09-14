@@ -53,6 +53,7 @@ fun Splash() {
                 .height(80.dp),
             contentScale = ContentScale.FillBounds
         )
+        
 //        Column(horizontalAlignment = Alignment.CenterHorizontally) {
 //            Image(
 //                modifier = Modifier

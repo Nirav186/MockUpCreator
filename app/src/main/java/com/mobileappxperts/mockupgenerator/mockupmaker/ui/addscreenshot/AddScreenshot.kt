@@ -33,7 +33,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
@@ -106,6 +107,7 @@ fun AddScreenshot(
                             selectedBg = selectedBg
                         )
                     }
+
                     BottomPanelSelectedOption.TEXT_EDIT -> {
                         TextBottomSheet(
                             sheetState, title.value, subTitle.value
@@ -114,6 +116,7 @@ fun AddScreenshot(
                             subTitle.value = subTitleString
                         }
                     }
+
                     BottomPanelSelectedOption.DEVICE_FRAME_SELECTION -> {
                         DeviceFrameBottomSheet(frames = frames) {
                             selectedFrame.value = it
@@ -134,7 +137,8 @@ fun AddScreenshot(
                         DeviceFrameView(
                             context = context,
                             bitmap = null,
-                            frame = selectedFrame
+                            frame = selectedFrame,
+                            onLoading = {}
                         )
                     )
                 }
@@ -147,6 +151,7 @@ fun AddScreenshot(
                         bitmap.value
                     }
 
+                val isLoading = remember { mutableStateOf(false) }
                 val screenshotView: MutableState<ScreenshotView> = remember {
                     mutableStateOf(
                         ScreenshotView(
@@ -158,7 +163,8 @@ fun AddScreenshot(
                             bitmap = bitmap,
                             selectedBgColor = selectedBgColor,
                             selectedBg = selectedBg,
-                            textColor = selectedTextColor
+                            textColor = selectedTextColor,
+                            isLoading = isLoading
                         )
                     )
                 }
@@ -191,7 +197,12 @@ fun AddScreenshot(
                     key(selectedFrame.value) {
                         AndroidView(modifier = Modifier.alpha(0f), factory = {
                             DeviceFrameView(
-                                context = it, frame = selectedFrame, bitmap = bitmap
+                                context = it,
+                                frame = selectedFrame,
+                                bitmap = bitmap,
+                                onLoading = {
+                                    isLoading.value = it
+                                }
                             ).apply {
                                 post {
                                     deviceFrameView.value = this
@@ -200,25 +211,42 @@ fun AddScreenshot(
                         })
                     }
                     Column(modifier = Modifier.fillMaxSize()) {
-                        AndroidView(modifier = Modifier
-                            .weight(1f)
-                            .alpha(1f), factory = {
-                            ScreenshotView(
-                                modifier = Modifier.weight(1f),
-                                context = it,
-                                title = title,
-                                subTitle = subTitle,
-                                deviceFrameView = deviceFrameView,
-                                bitmap = imageBitmap,
-                                selectedBgColor = selectedBgColor,
-                                selectedBg = selectedBg,
-                                textColor = selectedTextColor
-                            ).apply {
-                                post {
-                                    screenshotView.value = this
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .alpha(1f)
+                        ) {
+                            AndroidView(modifier = Modifier
+                                .fillMaxSize()
+                                .alpha(1f), factory = {
+                                ScreenshotView(
+                                    modifier = Modifier.fillMaxSize(),
+                                    context = it,
+                                    title = title,
+                                    subTitle = subTitle,
+                                    deviceFrameView = deviceFrameView,
+                                    bitmap = imageBitmap,
+                                    selectedBgColor = selectedBgColor,
+                                    selectedBg = selectedBg,
+                                    textColor = selectedTextColor,
+                                    isLoading = isLoading
+                                ).apply {
+                                    post {
+                                        screenshotView.value = this
+                                    }
                                 }
-                            }
-                        })
+                            })
+//                            val bMap = Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8)
+//                            if (bitmap.value.sameAs(bMap)) {
+//                                Image(
+//                                    painter = painterResource(id = R.drawable.add_image_icon),
+//                                    contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(60.dp)
+//                                        .align(Alignment.Center)
+//                                )
+//                            }
+                        }
                         BottomPanel(modifier = Modifier.padding(10.dp),
                             onPaletteClick = {
                                 coroutineScope.launch {
@@ -289,14 +317,23 @@ fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit, isPaid: Boolean) 
             .clickable(onClick = onClick)
             .background(SecondaryColorBG.copy(alpha = 0.35f))
     ) {
-        AsyncImage(
+        SubcomposeAsyncImage(
             modifier = Modifier
                 .padding(10.dp)
                 .height(100.dp)
                 .padding(horizontal = 5.dp),
-            model = frame.frameUrl,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(frame.frameUrl)
+                .build(),
             contentDescription = null,
-            placeholder = painterResource(id = R.drawable.placeholder_frame)
+            loading = {
+                Box(modifier = Modifier.fillMaxHeight()) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.Center),
+                        color = AppColor
+                    )
+                }
+            }
         )
         if (isPaid) {
             Image(

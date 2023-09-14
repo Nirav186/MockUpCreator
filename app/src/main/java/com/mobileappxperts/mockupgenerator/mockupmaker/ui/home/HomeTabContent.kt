@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +28,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getHomeScreenshots
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.DeviceFrameViewModel
+import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.FredokaOne
 import com.yodo1.mas.banner.Yodo1MasBannerAdListener
@@ -137,13 +141,27 @@ fun HomeTabContent(
 
 @Composable
 fun HomeFrameItem(frame: HomeFrame, onClick: () -> Unit) {
-    AsyncImage(
+    SubcomposeAsyncImage(
         modifier = Modifier
             .fillMaxSize()
             .clip(RoundedCornerShape(10.dp))
             .clickable(onClick = onClick),
-        model = frame.imageUrl,
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(frame.imageUrl)
+            .build(),
         contentDescription = null,
-        contentScale = ContentScale.Fit
+        contentScale = ContentScale.Fit,
+        loading = {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(0.68f)
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center),
+                    color = AppColor
+                )
+            }
+        }
     )
 }
