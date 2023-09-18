@@ -30,7 +30,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.getImageFromAsset
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 
 class ScreenshotView @JvmOverloads constructor(
@@ -42,10 +45,9 @@ class ScreenshotView @JvmOverloads constructor(
     val subTitle: MutableState<String>,
     val deviceFrameView: MutableState<DeviceFrameView>,
     val bitmap: MutableState<Bitmap>,
-    val selectedBgColor: MutableState<Color?>,
-    val selectedBg: MutableState<Int?>,
     val textColor: MutableState<Color>,
-    val isLoading: MutableState<Boolean>
+    val isLoading: MutableState<Boolean>,
+    val backgroundState: MutableState<BackgroundState>
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
 
     @Composable
@@ -59,21 +61,61 @@ class ScreenshotView @JvmOverloads constructor(
             modifier = modifier,
             contentAlignment = Alignment.Center
         ) {
-            selectedBg.value?.let {
-                Image(
-                    modifier = Modifier.fillMaxSize(),
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    contentScale = ContentScale.FillBounds
-                )
+            when (val state = backgroundState.value) {
+                is BackgroundState.Background -> {
+                    val painter = rememberAsyncImagePainter(
+                        model = "file:///android_asset/${state.backgroundModel?.name}"
+                    )
+//                    AsyncImage(
+//                        modifier = Modifier.fillMaxSize(),
+//                        model = "file:///android_asset/${state.backgroundModel?.name}",
+//                        contentDescription = null,
+//                        contentScale = ContentScale.FillBounds
+//                    )
+                    context.getImageFromAsset(state.backgroundModel?.name.toString())?.let {
+                        Image(
+                            modifier = Modifier.fillMaxSize(),
+                            bitmap = it,
+                            contentDescription = null,
+                            contentScale = ContentScale.FillBounds
+                        )
+                    }
+                }
+
+                is BackgroundState.BackgroundGradient -> {
+                    Image(
+                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(id = state.gradient),
+                        contentDescription = null,
+                        contentScale = ContentScale.FillBounds
+                    )
+                }
             }
+//            selectedBg.value?.let {
+//                AsyncImage(
+//                    modifier = Modifier.fillMaxSize(),
+//                    model = "file:///android_asset/${selectedBg.value?.name}",
+//                    contentDescription = null,
+//                    contentScale = ContentScale.FillBounds
+//                )
+//            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(
-                        color = if (selectedBg.value != null) {
-                            Color.Transparent
-                        } else selectedBgColor.value ?: Color.White
+                        color = when (val state = backgroundState.value) {
+                            is BackgroundState.Background -> {
+                                Color.Transparent
+                            }
+
+                            is BackgroundState.BackgroundColor -> {
+                                state.color ?: Color.White
+                            }
+
+                            else -> {
+                                Color.Transparent
+                            }
+                        }
                     ),
                 verticalArrangement = Arrangement.Center
             ) {
@@ -133,5 +175,4 @@ class ScreenshotView @JvmOverloads constructor(
             }
         }
     }
-
 }

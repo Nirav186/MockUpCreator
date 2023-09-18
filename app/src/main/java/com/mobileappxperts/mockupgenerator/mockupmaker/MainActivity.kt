@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.navigation.NavigationGraph
+import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.FullMockUps
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.MockUpScreenShotsTheme
 import dagger.hilt.android.AndroidEntryPoint
 

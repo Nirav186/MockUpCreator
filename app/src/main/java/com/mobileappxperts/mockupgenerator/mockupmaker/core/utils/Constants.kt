@@ -1,6 +1,8 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.core.utils
 
 import androidx.compose.ui.graphics.Color
+import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
+import com.mobileappxperts.mockupgenerator.mockupmaker.R
 
 object Constants {
 
@@ -66,7 +68,63 @@ object Constants {
     const val MOCK_DATA_JSON_NAME = "device_frames.json"
     const val HOME_DATA_JSON_NAME = "home_frames.json"
 
+    val bgs = listOf(
+        BackgroundModel("bg1.png",1),
+        BackgroundModel("bg2.png",1),
+        BackgroundModel("bg3.png",1),
+        BackgroundModel("bg4.png",1),
+        BackgroundModel("bg5.png",1),
+        BackgroundModel("bg6.png",1),
+        BackgroundModel("bg7.png",1),
+        BackgroundModel("bg8.png",1),
+        BackgroundModel("bg9.png",1),
+        BackgroundModel("bg10.png",1),
+        BackgroundModel("bg11.png",1),
+        BackgroundModel("bg12.png",1),
+        BackgroundModel("bg13.png",1),
+        BackgroundModel("bg14.png",1),
+        BackgroundModel("bg15.png",1),
+        BackgroundModel("bg16.png",1),
+        BackgroundModel("bg17.png",1),
+        BackgroundModel("bg18.png",1),
+        BackgroundModel("bg19.png",1),
+        BackgroundModel("bg20.png",1),
+        BackgroundModel("bg21.png",1),
+        BackgroundModel("bg22.png",1),
+    )
+
+    val gradients = listOf(
+        R.drawable.gr1,
+        R.drawable.gr2,
+        R.drawable.gr3,
+        R.drawable.gr4,
+        R.drawable.gr5,
+        R.drawable.gr6,
+        R.drawable.gr7,
+        R.drawable.gr8,
+        R.drawable.gr9,
+        R.drawable.gr10,
+        R.drawable.gr11,
+        R.drawable.gr12,
+        R.drawable.gr13,
+        R.drawable.gr14,
+        R.drawable.gr15,
+        R.drawable.gr16,
+        R.drawable.gr17,
+        R.drawable.gr18,
+        R.drawable.gr19,
+        R.drawable.gr20,
+        R.drawable.gr21,
+        R.drawable.gr22,
+        R.drawable.gr23,
+        R.drawable.gr24,
+        R.drawable.gr25,
+        R.drawable.gr26,
+    )
+
 }
+
+
 
 data class ColorPicker(
     val primaryColor: Color,

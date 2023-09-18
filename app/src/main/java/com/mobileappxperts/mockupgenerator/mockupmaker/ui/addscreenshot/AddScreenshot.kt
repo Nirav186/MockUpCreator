@@ -2,8 +2,11 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.ui.addscreenshot
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.os.Build
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,8 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,16 +41,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.mobileappxperts.mockupgenerator.mockupmaker.BuildConfig
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.ColorPicker
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomDialog
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomTextField
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.GradientPicker
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.capture
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveHomeScreenshot
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveScreenshot
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.Constants
+import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.DeviceFrameItem
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
@@ -78,9 +89,11 @@ fun AddScreenshot(
         val title = remember { mutableStateOf("App name") }
         val subTitle = remember { mutableStateOf("Add app description here") }
 
-        val selectedBgColor: MutableState<Color?> = remember { mutableStateOf(Color(0xFF606c38)) }
         val selectedTextColor = remember { mutableStateOf(Color.White) }
-        val selectedBg: MutableState<Int?> = remember { mutableStateOf(null) }
+
+        val backgroundState: MutableState<BackgroundState> = remember {
+            mutableStateOf(BackgroundState.BackgroundColor(Color(0xFF606c38)))
+        }
 
         var selectedBottomSheetOption by remember {
             mutableStateOf(BottomPanelSelectedOption.DEVICE_FRAME_SELECTION)
@@ -97,14 +110,14 @@ fun AddScreenshot(
                         ColorBottomSheet(
                             sheetState = sheetState,
                             onColorSelected = {
-                                selectedBg.value = null
-                                selectedBgColor.value = it
+                                backgroundState.value = BackgroundState.BackgroundColor(it)
                             }, onBgSelect = {
-                                selectedTextColor.value = Color.White
-                                selectedBg.value = it
+                                backgroundState.value = BackgroundState.Background(it)
                             },
-                            selectedColor = selectedBgColor,
-                            selectedBg = selectedBg
+                            onGradientSelect = {
+                                backgroundState.value = BackgroundState.BackgroundGradient(it)
+                            },
+                            backgroundState = backgroundState.value
                         )
                     }
 
@@ -161,10 +174,9 @@ fun AddScreenshot(
                             subTitle = subTitle,
                             deviceFrameView = deviceFrameView,
                             bitmap = bitmap,
-                            selectedBgColor = selectedBgColor,
-                            selectedBg = selectedBg,
                             textColor = selectedTextColor,
-                            isLoading = isLoading
+                            isLoading = isLoading,
+                            backgroundState = backgroundState
                         )
                     )
                 }
@@ -183,12 +195,46 @@ fun AddScreenshot(
                     homeFrame?.let {
                         frames.find { it.frameId == homeFrame.frameId }?.let {
                             selectedFrame.value = it
-                            selectedBgColor.value = Color(homeFrame.backgroundColor.toULong())
+                            homeFrame.backgroundColor?.let {
+                                backgroundState.value =
+                                    BackgroundState.BackgroundColor(Color(homeFrame.backgroundColor.toULong()))
+                            }
+                            homeFrame.backgroundGradient?.let {
+                                backgroundState.value =
+                                    BackgroundState.BackgroundGradient(homeFrame.backgroundGradient)
+                            }
+                            homeFrame.background?.let {
+                                backgroundState.value = BackgroundState.Background(
+                                    BackgroundModel(
+                                        homeFrame.background,
+                                        homeFrame.textColor
+                                    )
+                                )
+                            }
                             selectedTextColor.value =
                                 if (homeFrame.textColor == 0) Color.Black else Color.White
                         }
                     }
                 })
+
+                var isDebugDialogShow by remember {
+                    mutableStateOf(false)
+                }
+
+                var debugString by remember {
+                    mutableStateOf("")
+                }
+
+                val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+                if (isDebugDialogShow) {
+                    CustomDialog(text = debugString) {
+                        clipboardManager.setText(AnnotatedString(debugString))
+                        Toast.makeText(context, "Copied!!", Toast.LENGTH_SHORT).show()
+                        navHostController.navigateUp()
+                    }
+                }
+
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -226,26 +272,15 @@ fun AddScreenshot(
                                     subTitle = subTitle,
                                     deviceFrameView = deviceFrameView,
                                     bitmap = imageBitmap,
-                                    selectedBgColor = selectedBgColor,
-                                    selectedBg = selectedBg,
                                     textColor = selectedTextColor,
-                                    isLoading = isLoading
+                                    isLoading = isLoading,
+                                    backgroundState = backgroundState
                                 ).apply {
                                     post {
                                         screenshotView.value = this
                                     }
                                 }
                             })
-//                            val bMap = Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8)
-//                            if (bitmap.value.sameAs(bMap)) {
-//                                Image(
-//                                    painter = painterResource(id = R.drawable.add_image_icon),
-//                                    contentDescription = null,
-//                                    modifier = Modifier
-//                                        .size(60.dp)
-//                                        .align(Alignment.Center)
-//                                )
-//                            }
                         }
                         BottomPanel(modifier = Modifier.padding(10.dp),
                             onPaletteClick = {
@@ -271,6 +306,14 @@ fun AddScreenshot(
                                 }
                             },
                             onSaveClick = {
+                                Log.e(
+                                    "TAG123",
+                                    "AddScreenshot: Selected Frame==>" + selectedFrame.value.frameId
+                                )
+                                Log.e(
+                                    "TAG123",
+                                    "AddScreenshot: Selected Color==>" + backgroundState.value
+                                )
                                 AdManager().showInterstitial(context as ComponentActivity)
                                 if (homeFrame == null) {
                                     val filePath =
@@ -284,9 +327,25 @@ fun AddScreenshot(
                                         filePath
                                     )
                                 } else {
-                                    screenshotView.value.capture().saveHomeScreenshot(context)
+                                    val tempString =
+                                        screenshotView.value.capture().saveHomeScreenshot(context)
+                                    if (BuildConfig.DEBUG) {
+                                        isDebugDialogShow = true
+                                        val secondaryString =
+                                            if (backgroundState.value is BackgroundState.BackgroundColor) {
+                                                (backgroundState.value as BackgroundState.BackgroundColor).color?.value
+                                            } else {
+                                                backgroundState.value
+                                            }
+                                        debugString =
+                                            "$tempString\nFrame==> ${selectedFrame.value.frameId}\nBackground==>$secondaryString"
+                                    }
                                 }
-                                navHostController.navigateUp()
+                                if (BuildConfig.DEBUG) {
+
+                                } else {
+                                    navHostController.navigateUp()
+                                }
                             },
                             onAddImageClick = {
                                 galleryLauncher.launch("image/*")
@@ -364,20 +423,6 @@ fun BottomPanel(
     ) {
         Image(
             modifier = Modifier
-                .clickable(onClick = onPaletteClick)
-                .padding(10.dp)
-                .size(30.dp),
-            painter = painterResource(id = R.drawable.palette),
-            contentDescription = null
-        )
-        Divider(
-            color = SecondaryColor, modifier = Modifier
-                .height(44.dp)
-                .width(1.dp)
-                .alpha(0.4f)
-        )
-        Image(
-            modifier = Modifier
                 .clickable(onClick = onPhoneClick)
                 .padding(10.dp)
                 .size(30.dp),
@@ -411,6 +456,20 @@ fun BottomPanel(
                 .padding(10.dp)
                 .size(30.dp),
             painter = painterResource(id = R.drawable.add_text),
+            contentDescription = null
+        )
+        Divider(
+            color = SecondaryColor, modifier = Modifier
+                .height(44.dp)
+                .width(1.dp)
+                .alpha(0.4f)
+        )
+        Image(
+            modifier = Modifier
+                .clickable(onClick = onPaletteClick)
+                .padding(10.dp)
+                .size(30.dp),
+            painter = painterResource(id = R.drawable.palette),
             contentDescription = null
         )
         Divider(
@@ -602,15 +661,13 @@ fun DeviceFrameBottomSheet(
 fun ColorBottomSheet(
     sheetState: ModalBottomSheetState,
     onColorSelected: (color: Color?) -> Unit,
-    onBgSelect: (Int?) -> Unit,
-    selectedColor: MutableState<Color?>,
-    selectedBg: MutableState<Int?>
+    onBgSelect: (BackgroundModel?) -> Unit,
+    onGradientSelect: (Int) -> Unit,
+    backgroundState: BackgroundState
 ) {
     val coroutineScope = rememberCoroutineScope()
     val interactionSource = remember { MutableInteractionSource() }
     val colors = Constants.bgColors
-    val backgrounds =
-        listOf(R.drawable.dog_paws_blue, R.drawable.dog_paws_green, R.drawable.dog_paws_yellow)
     val dialogState = rememberMaterialDialogState()
     var selectedColorFromDialog by remember {
         mutableStateOf(Color(0xFFFFFFFF))
@@ -638,21 +695,31 @@ fun ColorBottomSheet(
         )
     }
     Column {
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(18.dp))
         Text(
             "Select background",
             style = MaterialTheme.typography.h6,
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(horizontal = 12.dp)
         )
         BgPicker(
-            bgs = backgrounds,
-            selectedBg = selectedBg,
+            bgs = Constants.bgs,
+            backgroundState = backgroundState,
             onBgSelected = {
                 onBgSelect(it)
-                selectedBg.value = it
-                selectedColor.value = null
             },
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(vertical = 6.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            "Select Gradient",
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.padding(horizontal = 12.dp)
+        )
+        GradientPicker(
+            gradients = Constants.gradients,
+            backgroundState = backgroundState,
+            onGradientSelected = onGradientSelect,
+            modifier = Modifier.padding(vertical = 6.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
@@ -687,14 +754,12 @@ fun ColorBottomSheet(
         }
         Divider(thickness = 1.dp, color = MaterialTheme.colors.onPrimary)
         ColorPicker(
-            colors,
-            selectedColor,
+            colors = colors,
+            backgroundState = backgroundState,
             onColorSelected = {
                 onColorSelected(it)
-                selectedColor.value = it
-                selectedBg.value = null
             },
-            modifier = Modifier.padding(12.dp)
+            modifier = Modifier.padding(vertical = 6.dp)
         )
         Spacer(modifier = Modifier.height(14.dp))
         Box(
