@@ -25,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -668,7 +667,7 @@ fun ColorBottomSheet(
     sheetState: ModalBottomSheetState,
     onColorSelected: (color: Color?) -> Unit,
     onBgSelect: (BackgroundModel?) -> Unit,
-    onGradientSelect: (Int) -> Unit,
+    onGradientSelect: (String) -> Unit,
     backgroundState: BackgroundState
 ) {
     val coroutineScope = rememberCoroutineScope()

@@ -1,6 +1,7 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -21,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,6 +92,33 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
         when (uiState) {
             is ProjectUiState.MyProjectData -> {
                 val projects = uiState.projects
+                if (projects.isNullOrEmpty()) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .padding(horizontal = 20.dp)
+                                .fillMaxWidth(),
+                            painter = painterResource(id = R.drawable.no_data),
+                            contentDescription = null
+                        )
+                        Text(
+                            modifier = Modifier
+                                .padding(20.dp)
+                                .fillMaxWidth(),
+                            text = "Click + to add new project",
+                            style = TextStyle(
+                                color = AppColor,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = AppFonts,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                    }
+                }
                 projects?.let {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
@@ -116,6 +145,7 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
                     }
                 }
             }
+
             is ProjectUiState.Loading -> {}
             is ProjectUiState.Error -> {}
         }

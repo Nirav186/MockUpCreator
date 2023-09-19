@@ -12,12 +12,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -207,8 +209,8 @@ fun BgItem(
 
 @Composable
 fun GradientPicker(
-    gradients: List<Int>,
-    onGradientSelected: (Int) -> Unit,
+    gradients: List<String>,
+    onGradientSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
     backgroundState: BackgroundState
 ) {
@@ -221,7 +223,7 @@ fun GradientPicker(
                 }
                 GradientItem(
                     selected = selected,
-                    gradient = gradient,
+                    gradientName = gradient,
                     onClick = {
                         onGradientSelected(gradient)
                     })
@@ -234,9 +236,10 @@ fun GradientPicker(
 @Composable
 fun GradientItem(
     selected: Boolean,
-    gradient: Int?,
+    gradientName: String?,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -244,7 +247,7 @@ fun GradientItem(
             .requiredSize(40.dp)
             .clickable(onClick = onClick)
     ) {
-        if (gradient != null) {
+        if (gradientName != null) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -254,10 +257,17 @@ fun GradientItem(
                         shape = CircleShape
                     )
             ) {
+                val drawableId = remember(gradientName) {
+                    context.resources.getIdentifier(
+                        gradientName,
+                        "drawable",
+                        context.packageName
+                    )
+                }
                 Image(
                     modifier = Modifier
                         .fillMaxSize(),
-                    painter = painterResource(id = gradient),
+                    painter = painterResource(id = drawableId),
                     contentDescription = null,
                     contentScale = ContentScale.FillBounds
                 )

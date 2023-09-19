@@ -19,6 +19,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -75,9 +76,16 @@ class ScreenshotView @JvmOverloads constructor(
                 }
 
                 is BackgroundState.BackgroundGradient -> {
+                    val drawableId = remember(state.gradient) {
+                        context.resources.getIdentifier(
+                            state.gradient.toString(),
+                            "drawable",
+                            context.packageName
+                        )
+                    }
                     Image(
                         modifier = Modifier.fillMaxSize(),
-                        painter = painterResource(id = state.gradient),
+                        painter = painterResource(id = drawableId),
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds
                     )

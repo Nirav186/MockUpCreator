@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 data class HomeFrame(
     @SerializedName("background") val background: String?,
-    @SerializedName("backgroundGradient") val backgroundGradient: Int?,
+    @SerializedName("backgroundGradient") val backgroundGradient: String?,
     @SerializedName("backgroundColor") val backgroundColor: String?,
     @SerializedName("frameId") val frameId: String,
     @SerializedName("id") val id: Int,

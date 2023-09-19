@@ -5,5 +5,187 @@
     "background": "bg1.png",
     "textColor": 1,
     "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695032536378.jpeg?alt=media&token=2c9ef5b5-ce94-4085-854e-467ff2912e56"
+  },
+  {
+    "id": 2,
+    "frameId": "frame2.png",
+    "background": "bg2.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695096746880.jpeg?alt=media&token=32eeb454-5332-48c7-829f-29bd666294d7"
+  },
+  {
+    "id": 3,
+    "frameId": "frame1.png",
+    "background": "bg5.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695096947492.jpg?alt=media&token=2326ca49-f209-458e-84eb-fb450fc36c40"
+  },
+  {
+    "id": 4,
+    "frameId": "Google Pixel 3 XL Clearly White.png",
+    "background": "bg21.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097038649.jpg?alt=media&token=5ce6321e-d311-42d6-878d-0f26d2a52288"
+  },
+  {
+    "id": 5,
+    "frameId": "Samsung Galaxy S10+ Prism Black.png",
+    "backgroundGradient": "gr6",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097118482.jpg?alt=media&token=89e459cd-e253-4c64-88d9-4cfe6f062125"
+  },
+  {
+    "id": 6,
+    "frameId": "unknown9",
+    "background": "bg9.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097190188.jpg?alt=media&token=9717b4ea-f20e-4730-9dd6-269188b2fba6"
+  },
+  {
+    "id": 7,
+    "frameId": "Apple iPhone 11 Pro Max Midnight Green.png",
+    "backgroundGradient": "gr13",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097300646.jpg?alt=media&token=edcf067a-081b-41a9-95d1-ae959551cee6"
+  },
+  {
+    "id": 8,
+    "frameId": "Apple iPhone 11 Pro Max Midnight Green.png",
+    "background": "bg16.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097350582.jpg?alt=media&token=e4588878-90e5-497f-836c-bd37ce06a6e6"
+  },
+  {
+    "id": 9,
+    "frameId": "Apple iPhone 11 Pro Space Gray.png",
+    "backgroundGradient": "gr1",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097419749.jpg?alt=media&token=0bd7d0c7-4e27-4b63-8250-dd3cb620639f"
+  },
+  {
+    "id": 10,
+    "frameId": "Apple iPhone XS Max Silver.png",
+    "backgroundGradient": "gr2",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097515573.jpg?alt=media&token=47d8cbef-3f09-42fe-86cc-1dfa34f40d04"
+  },
+  {
+    "id": 11,
+    "frameId": "Apple iPhone XS Max Space Gray.png",
+    "backgroundGradient": "gr21",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097588899.jpg?alt=media&token=17a9c6e2-bbe8-4df7-986e-f30e3c0cc37b"
+  },
+  {
+    "id": 12,
+    "frameId": "Apple iPhone XS Max Gold.png",
+    "backgroundGradient": "gr25",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097670745.jpg?alt=media&token=07b087dd-4fb7-4d51-9138-023b1e2d55eb"
+  },
+  {
+    "id": 13,
+    "frameId": "Apple iPhone 12 Mini Green.png",
+    "backgroundColor": "18391695477876719616",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097721015.jpg?alt=media&token=cc758a6a-2b0c-47c0-a4db-f0617a6146e2"
+  },
+  {
+    "id": 14,
+    "frameId": "frame3.png",
+    "backgroundColor": "18405237956437606400",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097764350.jpg?alt=media&token=3bb237f0-9ebe-4468-874f-9d0215545138"
+  },
+  {
+    "id": 15,
+    "frameId": "Apple iPhone 11 Purple.png",
+    "backgroundColor": "18401443370011459584",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097843920.jpg?alt=media&token=5e732e6e-5737-4ddf-bb82-23ad53a612a5"
+  },
+  {
+    "id": 16,
+    "frameId": "Apple iPhone 12 Blue.png",
+    "backgroundColor": "18432587702588145664",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695097991651.jpg?alt=media&token=0c7ea033-0772-4fd7-a2aa-73aa4525b578"
+  },
+  {
+    "id": 17,
+    "frameId": "unknown1",
+    "background": "bg13.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695098205188.jpg?alt=media&token=ac832619-900d-4f28-bd11-81584d3f216d"
+  },
+  {
+    "id": 18,
+    "frameId": "google_pixel_3_not_pink.png",
+    "backgroundColor": "18412516001858977792",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695098332701.jpg?alt=media&token=d289d969-0774-45ac-80ee-ea3791aafa20"
+  },
+  {
+    "id": 19,
+    "frameId": "unknown3",
+    "backgroundGradient": "gr10",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695098386776.jpg?alt=media&token=e7943250-0d90-4ef9-bc7e-c2f0ef37beb8"
+  },
+  {
+    "id": 20,
+    "frameId": "unknown8",
+    "backgroundGradient": "gr18",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695098506878.jpg?alt=media&token=abbb7163-3e8e-4117-ad86-5fc67444ddaf"
+  },
+  {
+    "id": 20,
+    "frameId": "Apple iPhone XS Max Silver.png",
+    "background": "bg3.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695099054304.jpg?alt=media&token=31a84b9f-b465-4b94-9b48-86d45d276b8b"
+  },
+  {
+    "id": 21,
+    "frameId": "Apple iPhone 13 Midnight.png",
+    "background": "bg1.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695099180036.jpg?alt=media&token=91fa92b4-6d00-41da-81e1-d2cdfbb2d79e"
+  },
+  {
+    "id": 22,
+    "frameId": "Apple iPhone 12 Mini White.png",
+    "background": "bg10.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695099254329.jpg?alt=media&token=974b1d35-6554-4ffd-ae4d-14af605eeb7b"
+  },
+  {
+    "id": 23,
+    "frameId": "Apple iPhone 12 Green.png",
+    "background": "bg14.png",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695099376339.jpg?alt=media&token=16ac0c61-329a-45a1-a7cd-daf7c6684e32"
+  },
+  {
+    "id": 24,
+    "frameId": "unknown5",
+    "backgroundGradient": "gr16",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_169509944312.jpg?alt=media&token=b3cdac26-3590-4f0c-b7f6-ce79a04ff2ba"
+  },
+  {
+    "id": 25,
+    "frameId": "Apple iPhone 13 Pink.png",
+    "backgroundColor": "18389693095403847680",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_169509949024.jpg?alt=media&token=15a1d93c-9cf5-41d7-96cd-69ae137fe111"
+  },
+  {
+    "id": 26,
+    "frameId": "Apple iPhone XR Silver.png",
+    "backgroundGradient": "gr3",
+    "textColor": 1,
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/mockup-app-49df8.appspot.com/o/Home%20Frames%2Fmockup_1695099753145.jpg?alt=media&token=a9e79469-bc54-4ca2-826d-e06fa0b7e5d7"
   }
 ]

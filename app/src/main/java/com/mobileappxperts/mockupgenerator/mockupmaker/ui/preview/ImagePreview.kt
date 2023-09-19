@@ -104,38 +104,21 @@ fun FullScreenHomeImageView(
             horizontalArrangement = Arrangement.End,
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            Icon(
+            Image(
                 modifier = Modifier
-                    .size(44.dp)
+                    .size(40.dp)
                     .clickable(onClick = {
-//                        val destPath =
-//                            Environment.getExternalStoragePublicDirectory(
-//                                Environment.DIRECTORY_PICTURES
-//                            ).absolutePath +
-//                                    File.separator +
-//                                    context.getString(R.string.app_name)
-//                        copyFile(
-//                            inputFile = imagePath,
-//                            outputPath = destPath
-//                        )
-//                        Toast
-//                            .makeText(
-//                                context,
-//                                "Downloaded at $destPath",
-//                                Toast.LENGTH_SHORT
-//                            )
-//                            .show()
                         context.shareFile(File(imagePath))
                     }),
-                painter = painterResource(id = R.drawable.ic_share),
-                contentDescription = null,
-                tint = Color.Gray
+                painter = painterResource(id = R.drawable.share_btn),
+                contentDescription = null
             )
-            Icon(
+            Image(
                 modifier = Modifier
                     .padding(start = 10.dp)
-                    .size(44.dp)
+                    .size(40.dp)
                     .clickable(onClick = {
+//todo:delete popup
                         onBackPressed()
                         File(imagePath).delete()
                         Toast
@@ -146,9 +129,8 @@ fun FullScreenHomeImageView(
                             )
                             .show()
                     }),
-                painter = painterResource(id = R.drawable.ic_delete_2),
-                contentDescription = null,
-                tint = Color.Gray
+                painter = painterResource(id = R.drawable.delete_btn),
+                contentDescription = null
             )
         }
     }

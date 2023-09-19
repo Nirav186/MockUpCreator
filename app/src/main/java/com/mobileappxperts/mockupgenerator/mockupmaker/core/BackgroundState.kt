@@ -6,5 +6,5 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundMode
 sealed class BackgroundState {
     data class Background(val backgroundModel: BackgroundModel?) : BackgroundState()
     data class BackgroundColor(val color: Color?) : BackgroundState()
-    data class BackgroundGradient(val gradient: Int) : BackgroundState()
+    data class BackgroundGradient(val gradient: String) : BackgroundState()
 }
