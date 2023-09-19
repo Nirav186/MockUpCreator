@@ -40,7 +40,7 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getHomeScreenshots
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.DeviceFrameViewModel
@@ -116,7 +116,7 @@ fun HomeTabContent(
                     }
                 })
         }
-        NativeBanner(modifier = Modifier.padding(top = 10.dp))
+        AdmobBanner(modifier = Modifier.fillMaxWidth().padding(top = 10.dp))
         Text(
             modifier = Modifier.padding(10.dp),
             text = "Templates",

@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.util.AttributeSet
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.getImageFromAsset
@@ -47,7 +47,8 @@ class ScreenshotView @JvmOverloads constructor(
     val bitmap: MutableState<Bitmap>,
     val textColor: MutableState<Color>,
     val isLoading: MutableState<Boolean>,
-    val backgroundState: MutableState<BackgroundState>
+    val backgroundState: MutableState<BackgroundState>,
+    val onTextClick: () -> Unit
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
 
     @Composable
@@ -63,15 +64,6 @@ class ScreenshotView @JvmOverloads constructor(
         ) {
             when (val state = backgroundState.value) {
                 is BackgroundState.Background -> {
-                    val painter = rememberAsyncImagePainter(
-                        model = "file:///android_asset/${state.backgroundModel?.name}"
-                    )
-//                    AsyncImage(
-//                        modifier = Modifier.fillMaxSize(),
-//                        model = "file:///android_asset/${state.backgroundModel?.name}",
-//                        contentDescription = null,
-//                        contentScale = ContentScale.FillBounds
-//                    )
                     context.getImageFromAsset(state.backgroundModel?.name.toString())?.let {
                         Image(
                             modifier = Modifier.fillMaxSize(),
@@ -89,6 +81,10 @@ class ScreenshotView @JvmOverloads constructor(
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds
                     )
+                }
+
+                else -> {
+
                 }
             }
 //            selectedBg.value?.let {
@@ -123,7 +119,8 @@ class ScreenshotView @JvmOverloads constructor(
                     modifier = Modifier
                         .padding(top = 30.dp)
                         .padding(horizontal = 30.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable(onClick = onTextClick),
                     text = title.value,
                     style = TextStyle(
                         color = textColor.value,
@@ -135,7 +132,8 @@ class ScreenshotView @JvmOverloads constructor(
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 30.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .clickable(onClick = onTextClick),
                     text = subTitle.value,
                     style = TextStyle(
                         color = textColor.value,

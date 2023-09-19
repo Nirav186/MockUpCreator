@@ -100,11 +100,9 @@ dependencies {
 
     implementation 'net.lingala.zip4j:zip4j:2.11.3'
 
-    //yodo 1 ads
-    implementation 'com.yodo1.mas:full:4.8.7'
-    //yodo 1 ads
-
     //color sheet
     implementation "io.github.vanpra.compose-material-dialogs:color:0.9.0"
     implementation 'com.raedapps:alwan:1.0.0'
+
+    implementation 'com.google.android.gms:play-services-ads:22.0.0'
 }

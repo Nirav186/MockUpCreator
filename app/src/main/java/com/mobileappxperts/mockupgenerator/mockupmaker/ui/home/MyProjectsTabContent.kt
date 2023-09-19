@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.NativeBanner
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectUiState
@@ -97,7 +97,7 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
                     ) {
                         if (projects.isNotEmpty()) {
                             item {
-                                NativeBanner()
+                                AdmobBanner(modifier = Modifier.fillMaxWidth())
                             }
                         }
                         items(projects) { project ->

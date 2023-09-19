@@ -1,10 +1,16 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.preview
 
-import android.os.Environment
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
@@ -18,7 +24,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.copyFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import java.io.File
 
@@ -84,25 +89,14 @@ fun FullScreenHomeImageView(
             contentDescription = null,
             contentScale = ContentScale.Fit
         )
-        Box(
+        Image(
             modifier = Modifier
                 .padding(20.dp)
                 .size(40.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(Color.Gray.copy(0.5f))
-                .clickable(onClick = onBackPressed)
-                .align(Alignment.TopStart),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxSize(),
-                painter = painterResource(id = R.drawable.ic_back),
-                contentDescription = null,
-                tint = Color.Gray
-            )
-        }
+                .clickable(onClick = onBackPressed),
+            painter = painterResource(id = R.drawable.back_btn),
+            contentDescription = null
+        )
         Row(
             modifier = Modifier
                 .padding(20.dp)

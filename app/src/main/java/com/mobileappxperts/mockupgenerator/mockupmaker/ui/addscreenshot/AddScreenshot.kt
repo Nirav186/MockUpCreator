@@ -2,11 +2,8 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.ui.addscreenshot
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.os.Build
 import android.os.Looper
 import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,11 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -41,19 +36,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.mobileappxperts.mockupgenerator.mockupmaker.BuildConfig
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.ColorPicker
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomDialog
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomTextField
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.GradientPicker
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.capture
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveHomeScreenshot
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.saveScreenshot
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.Constants
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.DeviceFrameItem
@@ -86,8 +79,8 @@ fun AddScreenshot(
         val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
             confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded })
 
-        val title = remember { mutableStateOf("App name") }
-        val subTitle = remember { mutableStateOf("Add app description here") }
+        val title = remember { mutableStateOf(context.getString(R.string.default_title_text)) }
+        val subTitle = remember { mutableStateOf(context.getString(R.string.default_des_text)) }
 
         val selectedTextColor = remember { mutableStateOf(Color.White) }
 
@@ -131,10 +124,16 @@ fun AddScreenshot(
                     }
 
                     BottomPanelSelectedOption.DEVICE_FRAME_SELECTION -> {
-                        DeviceFrameBottomSheet(frames = frames) {
-                            selectedFrame.value = it
+                        DeviceFrameBottomSheet(frames = frames) { frame, isPaid ->
                             coroutineScope.launch {
                                 sheetState.hide()
+                            }
+                            if (isPaid) {
+                                AdManager.showRewardAd(context as ComponentActivity) {
+                                    selectedFrame.value = frame
+                                }
+                            } else {
+                                selectedFrame.value = frame
                             }
                         }
                     }
@@ -176,7 +175,14 @@ fun AddScreenshot(
                             bitmap = bitmap,
                             textColor = selectedTextColor,
                             isLoading = isLoading,
-                            backgroundState = backgroundState
+                            backgroundState = backgroundState,
+                            onTextClick = {
+                                coroutineScope.launch {
+                                    selectedBottomSheetOption =
+                                        BottomPanelSelectedOption.TEXT_EDIT
+                                    sheetState.show()
+                                }
+                            }
                         )
                     )
                 }
@@ -217,23 +223,23 @@ fun AddScreenshot(
                     }
                 })
 
-                var isDebugDialogShow by remember {
-                    mutableStateOf(false)
-                }
-
-                var debugString by remember {
-                    mutableStateOf("")
-                }
-
-                val clipboardManager: ClipboardManager = LocalClipboardManager.current
-
-                if (isDebugDialogShow) {
-                    CustomDialog(text = debugString) {
-                        clipboardManager.setText(AnnotatedString(debugString))
-                        Toast.makeText(context, "Copied!!", Toast.LENGTH_SHORT).show()
-                        navHostController.navigateUp()
-                    }
-                }
+//                var isDebugDialogShow by remember {
+//                    mutableStateOf(false)
+//                }
+//
+//                var debugString by remember {
+//                    mutableStateOf("")
+//                }
+//
+//                val clipboardManager: ClipboardManager = LocalClipboardManager.current
+//
+//                if (isDebugDialogShow) {
+//                    CustomDialog(text = debugString) {
+//                        clipboardManager.setText(AnnotatedString(debugString))
+//                        Toast.makeText(context, "Copied!!", Toast.LENGTH_SHORT).show()
+//                        navHostController.navigateUp()
+//                    }
+//                }
 
                 Box(
                     modifier = Modifier
@@ -274,7 +280,14 @@ fun AddScreenshot(
                                     bitmap = imageBitmap,
                                     textColor = selectedTextColor,
                                     isLoading = isLoading,
-                                    backgroundState = backgroundState
+                                    backgroundState = backgroundState,
+                                    onTextClick = {
+                                        coroutineScope.launch {
+                                            selectedBottomSheetOption =
+                                                BottomPanelSelectedOption.TEXT_EDIT
+                                            sheetState.show()
+                                        }
+                                    }
                                 ).apply {
                                     post {
                                         screenshotView.value = this
@@ -306,15 +319,7 @@ fun AddScreenshot(
                                 }
                             },
                             onSaveClick = {
-                                Log.e(
-                                    "TAG123",
-                                    "AddScreenshot: Selected Frame==>" + selectedFrame.value.frameId
-                                )
-                                Log.e(
-                                    "TAG123",
-                                    "AddScreenshot: Selected Color==>" + backgroundState.value
-                                )
-                                AdManager().showInterstitial(context as ComponentActivity)
+                                AdManager.showInterstitialAd(context as ComponentActivity)
                                 if (homeFrame == null) {
                                     val filePath =
                                         screenshotView.value.capture().saveScreenshot(context)
@@ -329,23 +334,24 @@ fun AddScreenshot(
                                 } else {
                                     val tempString =
                                         screenshotView.value.capture().saveHomeScreenshot(context)
-                                    if (BuildConfig.DEBUG) {
-                                        isDebugDialogShow = true
-                                        val secondaryString =
-                                            if (backgroundState.value is BackgroundState.BackgroundColor) {
-                                                (backgroundState.value as BackgroundState.BackgroundColor).color?.value
-                                            } else {
-                                                backgroundState.value
-                                            }
-                                        debugString =
-                                            "$tempString\nFrame==> ${selectedFrame.value.frameId}\nBackground==>$secondaryString"
-                                    }
+//                                    if (BuildConfig.DEBUG) {
+//                                        isDebugDialogShow = true
+//                                        val secondaryString =
+//                                            if (backgroundState.value is BackgroundState.BackgroundColor) {
+//                                                (backgroundState.value as BackgroundState.BackgroundColor).color?.value.toString()
+//                                            } else {
+//                                                backgroundState.value.toString()
+//                                            }
+//                                        debugString =
+//                                            "$tempString\nFrame==> ${selectedFrame.value.frameId}\nBackground==>$secondaryString"
+//                                    }
                                 }
-                                if (BuildConfig.DEBUG) {
-
-                                } else {
-                                    navHostController.navigateUp()
-                                }
+                                navHostController.navigateUp()
+//                                if (BuildConfig.DEBUG) {
+//
+//                                } else {
+//                                    navHostController.navigateUp()
+//                                }
                             },
                             onAddImageClick = {
                                 galleryLauncher.launch("image/*")
@@ -550,7 +556,7 @@ fun TextBottomSheet(
 @Composable
 fun DeviceFrameBottomSheet(
     frames: List<DeviceFrameItem>,
-    onFrameSelect: (DeviceFrameItem) -> Unit
+    onFrameSelect: (frame: DeviceFrameItem, isPaid: Boolean) -> Unit
 ) {
     val androidFrames = frames.filter { it.deviceType.equals("android", ignoreCase = true) }
     val iosFrames = frames.filter { it.deviceType.equals("ios", ignoreCase = true) }
@@ -628,9 +634,9 @@ fun DeviceFrameBottomSheet(
                     SmallFrameImg(
                         frame = androidFrames[it],
                         onClick = {
-                            onFrameSelect(androidFrames[it])
+                            onFrameSelect(androidFrames[it], it > 4)
                         },
-                        isPaid = it > 2
+                        isPaid = it > 4
                     )
                 }
             }
@@ -646,9 +652,9 @@ fun DeviceFrameBottomSheet(
                     SmallFrameImg(
                         frame = iosFrames[it],
                         onClick = {
-                            onFrameSelect(iosFrames[it])
+                            onFrameSelect(iosFrames[it], it > 4)
                         },
-                        isPaid = it > 2
+                        isPaid = it > 4
                     )
                 }
             }
