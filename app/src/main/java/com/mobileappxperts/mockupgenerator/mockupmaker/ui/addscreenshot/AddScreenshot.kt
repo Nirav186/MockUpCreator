@@ -91,6 +91,7 @@ fun AddScreenshot(
             mutableStateOf(BottomPanelSelectedOption.DEVICE_FRAME_SELECTION)
         }
         val selectedFrame = remember(frames) { mutableStateOf(frames[0]) }
+        val isPaidFrame = remember { mutableStateOf(false) }
 
         ModalBottomSheetLayout(
             modifier = Modifier.fillMaxSize(),
@@ -127,13 +128,8 @@ fun AddScreenshot(
                             coroutineScope.launch {
                                 sheetState.hide()
                             }
-                            if (isPaid) {
-                                AdManager.showRewardAd(context as ComponentActivity) {
-                                    selectedFrame.value = frame
-                                }
-                            } else {
-                                selectedFrame.value = frame
-                            }
+                            isPaidFrame.value = isPaid
+                            selectedFrame.value = frame
                         }
                     }
                 }
@@ -181,6 +177,15 @@ fun AddScreenshot(
                                         BottomPanelSelectedOption.TEXT_EDIT
                                     sheetState.show()
                                 }
+                            },
+                            selectedFrame = selectedFrame,
+                            isPaid = isPaidFrame,
+                            onAdClick = {
+                                AdManager.showRewardAd(
+                                    context as ComponentActivity,
+                                    onRewardEarned = {
+                                        isPaidFrame.value = false
+                                    })
                             }
                         )
                     )
@@ -286,6 +291,15 @@ fun AddScreenshot(
                                                 BottomPanelSelectedOption.TEXT_EDIT
                                             sheetState.show()
                                         }
+                                    },
+                                    selectedFrame = selectedFrame,
+                                    isPaid = isPaidFrame,
+                                    onAdClick = {
+                                        AdManager.showRewardAd(
+                                            context as ComponentActivity,
+                                            onRewardEarned = {
+                                                isPaidFrame.value = false
+                                            })
                                     }
                                 ).apply {
                                     post {

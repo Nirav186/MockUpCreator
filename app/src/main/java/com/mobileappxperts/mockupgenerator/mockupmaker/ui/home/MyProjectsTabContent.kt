@@ -1,5 +1,6 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.home
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -13,6 +14,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -30,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DeleteConfirmationDialog
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectUiState
@@ -42,8 +48,23 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
 @Composable
 fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
     val projectViewModel: ProjectViewModel = hiltViewModel()
+    val context = LocalContext.current
 
     val uiState = projectViewModel.uiState.collectAsState().value
+
+    var isDeletePopupShowing by remember {
+        mutableStateOf(false)
+    }
+
+    if (isDeletePopupShowing) {
+        DeleteConfirmationDialog(setShowDialog = {
+            isDeletePopupShowing = false
+        }) {
+            isDeletePopupShowing = false
+            projectViewModel.deleteSelectedProjects()
+            Toast.makeText(context, "Deleted successfully", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -76,7 +97,8 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
                     .clip(RoundedCornerShape(6.dp))
                     .background(Color(0xFFf3f3f3))
                     .clickable(onClick = {
-                        projectViewModel.deleteSelectedProjects()
+                        //todo:delete popup
+                        isDeletePopupShowing = true
                     }),
                 contentAlignment = Alignment.Center
             ) {

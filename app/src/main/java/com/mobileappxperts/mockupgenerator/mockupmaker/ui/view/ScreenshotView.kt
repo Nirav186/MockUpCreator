@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,8 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.getImageFromAsset
+import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.DeviceFrameItem
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 
 class ScreenshotView @JvmOverloads constructor(
@@ -49,7 +52,10 @@ class ScreenshotView @JvmOverloads constructor(
     val textColor: MutableState<Color>,
     val isLoading: MutableState<Boolean>,
     val backgroundState: MutableState<BackgroundState>,
-    val onTextClick: () -> Unit
+    val onTextClick: () -> Unit,
+    val selectedFrame: MutableState<DeviceFrameItem>,
+    val isPaid: MutableState<Boolean>,
+    val onAdClick: () -> Unit
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
 
     @Composable
@@ -95,14 +101,6 @@ class ScreenshotView @JvmOverloads constructor(
 
                 }
             }
-//            selectedBg.value?.let {
-//                AsyncImage(
-//                    modifier = Modifier.fillMaxSize(),
-//                    model = "file:///android_asset/${selectedBg.value?.name}",
-//                    contentDescription = null,
-//                    contentScale = ContentScale.FillBounds
-//                )
-//            }
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -177,6 +175,27 @@ class ScreenshotView @JvmOverloads constructor(
                             }
                         )
                     }
+                }
+            }
+            if (isPaid.value && isLoading.value.not()) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_watermark),
+                        contentDescription = null,
+                        modifier = Modifier.width((selectedFrame.value.width - 60).dp)
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_remove_watermark),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .width((selectedFrame.value.width - 60).dp)
+                            .clickable(onClick = onAdClick)
+                    )
                 }
             }
         }
