@@ -1,5 +1,6 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.home
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,11 +16,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AppOpenAdManager
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.Constants
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
@@ -36,6 +40,13 @@ fun Home(
     onSettingsClick: () -> Unit
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
+    val context = LocalContext.current
+
+    if (Constants.isFirstTimeAppOpenShow && AppOpenAdManager.appOpenAd != null) {
+        AppOpenAdManager.appOpenAd?.show(context as ComponentActivity)
+        Constants.isFirstTimeAppOpenShow = false
+    }
+
     Column {
         Box(
             modifier = Modifier
@@ -97,8 +108,8 @@ fun TabHome(selectedPos: MutableState<Int>) {
             interactionSource = interactionSource,
             indication = null,
             onClick = {
-            selectedPos.value = 0
-        }),
+                selectedPos.value = 0
+            }),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
@@ -132,8 +143,8 @@ fun TabMyProjects(selectedPos: MutableState<Int>) {
             interactionSource = interactionSource,
             indication = null,
             onClick = {
-            selectedPos.value = 1
-        }),
+                selectedPos.value = 1
+            }),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(

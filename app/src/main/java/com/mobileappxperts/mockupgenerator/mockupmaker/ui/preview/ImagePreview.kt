@@ -14,6 +14,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DeleteConfirmationDialog
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import java.io.File
 
@@ -32,6 +37,7 @@ fun FullScreenImageView(
     imagePath: String,
     onBackPressed: () -> Unit
 ) {
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -74,6 +80,28 @@ fun FullScreenHomeImageView(
     onBackPressed: () -> Unit
 ) {
     val context = LocalContext.current
+
+    var isDeletePopupShowing by remember {
+        mutableStateOf(Pair("", false))
+    }
+
+    if (isDeletePopupShowing.second) {
+        DeleteConfirmationDialog(setShowDialog = {
+            isDeletePopupShowing = Pair("", false)
+        }) {
+            val isDeleted = File(isDeletePopupShowing.first).delete()
+            if (isDeleted) {
+                onBackPressed()
+                Toast
+                    .makeText(
+                        context,
+                        "Deleted successfully",
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -118,16 +146,7 @@ fun FullScreenHomeImageView(
                     .padding(start = 10.dp)
                     .size(40.dp)
                     .clickable(onClick = {
-//todo:delete popup
-                        onBackPressed()
-                        File(imagePath).delete()
-                        Toast
-                            .makeText(
-                                context,
-                                "Deleted successfully",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        isDeletePopupShowing = Pair(imagePath, true)
                     }),
                 painter = painterResource(id = R.drawable.delete_btn),
                 contentDescription = null
