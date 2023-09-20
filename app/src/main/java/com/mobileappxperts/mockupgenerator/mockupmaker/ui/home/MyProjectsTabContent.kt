@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -108,7 +109,7 @@ fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {
                             modifier = Modifier
                                 .padding(20.dp)
                                 .fillMaxWidth(),
-                            text = "Click + to add new project",
+                            text = stringResource(R.string.click_to_add_new_project),
                             style = TextStyle(
                                 color = AppColor,
                                 fontSize = 18.sp,

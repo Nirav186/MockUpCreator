@@ -12,6 +12,7 @@
     <string name="rewarded_id" translatable="false">ca-app-pub-3940256099942544/5354046379</string>
     <string name="default_title_text">App name</string>
     <string name="default_des_text">Add app description here</string>
+    <string name="click_to_add_new_project">Click + to add new project</string>
 
     <!-- live id-->
 <!--    <string name="app_id" translatable="false">ca-app-pub-8608272927918158~1770958302</string>-->
