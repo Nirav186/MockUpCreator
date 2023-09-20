@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -40,7 +41,6 @@ fun Splash() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = AppColor)
     ) {
         Image(
             painter = painterResource(id = R.drawable.bg_splash),
@@ -49,32 +49,14 @@ fun Splash() {
             contentScale = ContentScale.Crop
         )
         Image(
-            painter = painterResource(id = R.drawable.ic_splash_text),
+            painter = painterResource(id = R.drawable.text_splash),
             contentDescription = "Splash Text",
             modifier = Modifier
-                .padding(top = 100.dp, start = 30.dp, end = 30.dp)
+                .padding(start = 40.dp, end = 40.dp, bottom = 80.dp)
                 .fillMaxWidth()
-                .height(80.dp),
+                .aspectRatio(2.212f)
+                .align(Alignment.Center),
             contentScale = ContentScale.FillBounds
         )
-        
-//        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-//            Image(
-//                modifier = Modifier
-//                    .size(200.dp),
-//                painter = painterResource(id = R.drawable.splash_logo),
-//                contentDescription = null
-//            )
-//            Text(
-//                modifier = Modifier.padding(top = 10.dp),
-//                text = stringResource(id = R.string.app_name),
-//                style = TextStyle(
-//                    color = Color.Black,
-//                    fontSize = 20.sp,
-//                    fontWeight = FontWeight.Bold,
-//                    fontFamily = AppFonts
-//                )
-//            )
-//        }
     }
 }
