@@ -24,6 +24,7 @@ object AdManager {
     var interstitialAd: InterstitialAd? = null
 
     fun showInterstitialAd(activity: Activity) {
+        if (Constants.isIntertitialAdEnabled.not()) return
         if (!Constants.isInterReadyToShow) return
         if (interstitialAd == null) {
             loadIntertitialAd(activity)
@@ -39,6 +40,7 @@ object AdManager {
     }
 
     fun showRewardAd(activity: Activity, onRewardEarned: () -> Unit) {
+        if (Constants.isRewardAdEnabled.not()) return
         if (rewardedInterstitialAd == null) {
             Toast.makeText(activity, "Ad is not loaded", Toast.LENGTH_SHORT).show()
             loadRewardedAd(activity)
@@ -53,6 +55,7 @@ object AdManager {
     }
 
     private fun loadRewardedAd(activity: Activity) {
+        if (Constants.isRewardAdEnabled.not()) return
         RewardedInterstitialAd.load(activity, activity.getString(R.string.rewarded_id),
             AdRequest.Builder().build(), object :
                 RewardedInterstitialAdLoadCallback() {
@@ -69,6 +72,7 @@ object AdManager {
     }
 
     private fun loadIntertitialAd(activity: Activity) {
+        if (Constants.isIntertitialAdEnabled.not()) return
         InterstitialAd.load(
             activity,
             activity.getString(R.string.interstitial_id),

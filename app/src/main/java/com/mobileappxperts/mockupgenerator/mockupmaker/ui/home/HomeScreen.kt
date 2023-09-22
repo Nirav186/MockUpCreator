@@ -42,7 +42,7 @@ fun Home(
     val homeViewModel: HomeViewModel = hiltViewModel()
     val context = LocalContext.current
 
-    if (Constants.isFirstTimeAppOpenShow && AppOpenAdManager.appOpenAd != null) {
+    if (Constants.isFirstTimeAppOpenShow && AppOpenAdManager.appOpenAd != null && Constants.isAppOpenAdEnabled) {
         AppOpenAdManager.appOpenAd?.show(context as ComponentActivity)
         Constants.isFirstTimeAppOpenShow = false
     }

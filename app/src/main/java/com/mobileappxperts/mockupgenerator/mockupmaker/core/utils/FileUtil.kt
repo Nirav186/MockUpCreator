@@ -1,13 +1,23 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.core.utils
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.hasPermissions
 import net.lingala.zip4j.ZipFile
-import java.io.*
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 fun copyFile(inputFile: String, outputPath: String) {
     val `in`: InputStream?
@@ -35,18 +45,38 @@ fun copyFile(inputFile: String, outputPath: String) {
 }
 
 fun Context.saveAndShareZip(screenshots: List<String>, zipName: String) {
-    val destPath =
-        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath +
-                File.separator + zipName.plus(".zip")
-    val listOfFiles = mutableListOf<File>()
-    screenshots.forEach {
-        listOfFiles.add(File(it))
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val destPath =
+            cacheDir.absolutePath + File.separator + zipName.plus(".zip")
+        val listOfFiles = mutableListOf<File>()
+        screenshots.forEach {
+            listOfFiles.add(File(it))
+        }
+        if (File(destPath).exists()) {
+            File(destPath).delete()
+        }
+        ZipFile(destPath).addFiles(listOfFiles)
+        shareFile(File(destPath))
+    } else if (hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        val destPath =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).absolutePath +
+                    File.separator + zipName.plus(".zip")
+        val listOfFiles = mutableListOf<File>()
+        screenshots.forEach {
+            listOfFiles.add(File(it))
+        }
+        if (File(destPath).exists()) {
+            File(destPath).delete()
+        }
+        ZipFile(destPath).addFiles(listOfFiles)
+        shareFile(File(destPath))
+    } else {
+        ActivityCompat.requestPermissions(
+            this as Activity,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            1
+        )
     }
-    if (File(destPath).exists()) {
-        File(destPath).delete()
-    }
-    ZipFile(destPath).addFiles(listOfFiles)
-    shareFile(File(destPath))
 }
 
 fun Context.shareFile(file: File) {

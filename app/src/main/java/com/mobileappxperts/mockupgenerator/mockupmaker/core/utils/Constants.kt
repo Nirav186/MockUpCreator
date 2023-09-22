@@ -8,6 +8,11 @@ object Constants {
 
     var isFirstTimeAppOpenShow = true
 
+    var isBannerAdEnabled = true
+    var isAppOpenAdEnabled = true
+    var isIntertitialAdEnabled = true
+    var isRewardAdEnabled = true
+
     val bgColors = listOf(
         Color(0xFF000000),
         Color(0xFF606c38),

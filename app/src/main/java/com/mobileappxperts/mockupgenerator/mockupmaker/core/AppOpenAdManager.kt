@@ -14,6 +14,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.google.android.gms.ads.appopen.AppOpenAd.AppOpenAdLoadCallback
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.Constants
 import java.util.Date
 
 
@@ -80,6 +81,9 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
     private var loadTime: Long = 0
 
     fun loadAd(context: Context) {
+
+        if (Constants.isAppOpenAdEnabled.not()) return
+
         // Do not load ad if there is an unused ad or one is already loading.
         if (isLoadingAd || isAdAvailable()) {
             return
@@ -124,6 +128,7 @@ class AppOpenAdManager : Application.ActivityLifecycleCallbacks {
     }
 
     private fun showAdIfAvailable(activity: Activity) {
+        if (Constants.isAppOpenAdEnabled.not()) return
         showAdIfAvailable(
             activity,
             object : OnShowAdCompleteListener {

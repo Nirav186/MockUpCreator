@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<defaultsMap>
+    <entry>
+        <key>appOpenAd</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>bannerAd</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>intertitialAd</key>
+        <value>true</value>
+    </entry>
+    <entry>
+        <key>rewardAd</key>
+        <value>true</value>
+    </entry>
+
+</defaultsMap>

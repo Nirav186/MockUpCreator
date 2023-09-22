@@ -52,8 +52,8 @@ fun Splash() {
             painter = painterResource(id = R.drawable.text_splash),
             contentDescription = "Splash Text",
             modifier = Modifier
-                .padding(start = 40.dp, end = 40.dp, bottom = 80.dp)
-                .fillMaxWidth()
+                .padding(bottom = 80.dp)
+                .width(220.dp)
                 .aspectRatio(2.212f)
                 .align(Alignment.Center),
             contentScale = ContentScale.FillBounds

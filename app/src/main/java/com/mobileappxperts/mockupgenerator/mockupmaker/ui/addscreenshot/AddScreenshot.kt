@@ -65,9 +65,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddScreenshot(
-    navHostController: NavHostController,
-    homeFrame: HomeFrame? = null,
-    project: Project? = null
+    navHostController: NavHostController, homeFrame: HomeFrame? = null, project: Project? = null
 ) {
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
     val projectViewModel = hiltViewModel<ProjectViewModel>()
@@ -100,17 +98,13 @@ fun AddScreenshot(
             sheetContent = {
                 when (selectedBottomSheetOption) {
                     BottomPanelSelectedOption.BG_COLOR_SELECTION -> {
-                        ColorBottomSheet(
-                            sheetState = sheetState,
-                            onColorSelected = {
-                                backgroundState.value = BackgroundState.BackgroundColor(it)
-                            }, onBgSelect = {
-                                backgroundState.value = BackgroundState.Background(it)
-                            },
-                            onGradientSelect = {
-                                backgroundState.value = BackgroundState.BackgroundGradient(it)
-                            },
-                            backgroundState = backgroundState.value
+                        ColorBottomSheet(sheetState = sheetState, onColorSelected = {
+                            backgroundState.value = BackgroundState.BackgroundColor(it)
+                        }, onBgSelect = {
+                            backgroundState.value = BackgroundState.Background(it)
+                        }, onGradientSelect = {
+                            backgroundState.value = BackgroundState.BackgroundGradient(it)
+                        }, backgroundState = backgroundState.value
                         )
                     }
 
@@ -140,14 +134,10 @@ fun AddScreenshot(
                     mutableStateOf(Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8))
                 }
                 val deviceFrameView: MutableState<DeviceFrameView> = remember {
-                    mutableStateOf(
-                        DeviceFrameView(
-                            context = context,
-                            bitmap = null,
-                            frame = selectedFrame,
-                            onLoading = {}
-                        )
-                    )
+                    mutableStateOf(DeviceFrameView(context = context,
+                        bitmap = null,
+                        frame = selectedFrame,
+                        onLoading = {}))
                 }
 
                 val imageBitmap = remember(bitmap) { mutableStateOf(bitmap.value) }
@@ -160,35 +150,28 @@ fun AddScreenshot(
 
                 val isLoading = remember { mutableStateOf(false) }
                 val screenshotView: MutableState<ScreenshotView> = remember {
-                    mutableStateOf(
-                        ScreenshotView(
-                            modifier = Modifier,
-                            context = context,
-                            title = title,
-                            subTitle = subTitle,
-                            deviceFrameView = deviceFrameView,
-                            bitmap = bitmap,
-                            textColor = selectedTextColor,
-                            isLoading = isLoading,
-                            backgroundState = backgroundState,
-                            onTextClick = {
-                                coroutineScope.launch {
-                                    selectedBottomSheetOption =
-                                        BottomPanelSelectedOption.TEXT_EDIT
-                                    sheetState.show()
-                                }
-                            },
-                            selectedFrame = selectedFrame,
-                            isPaid = isPaidFrame,
-                            onAdClick = {
-                                AdManager.showRewardAd(
-                                    context as ComponentActivity,
-                                    onRewardEarned = {
-                                        isPaidFrame.value = false
-                                    })
+                    mutableStateOf(ScreenshotView(modifier = Modifier,
+                        context = context,
+                        title = title,
+                        subTitle = subTitle,
+                        deviceFrameView = deviceFrameView,
+                        bitmap = bitmap,
+                        textColor = selectedTextColor,
+                        isLoading = isLoading,
+                        backgroundState = backgroundState,
+                        onTextClick = {
+                            coroutineScope.launch {
+                                selectedBottomSheetOption = BottomPanelSelectedOption.TEXT_EDIT
+                                sheetState.show()
                             }
-                        )
-                    )
+                        },
+                        selectedFrame = selectedFrame,
+                        isPaid = isPaidFrame,
+                        onAdClick = {
+                            AdManager.showRewardAd(context as ComponentActivity, onRewardEarned = {
+                                isPaidFrame.value = false
+                            })
+                        }))
                 }
 
                 val galleryLauncher =
@@ -216,8 +199,7 @@ fun AddScreenshot(
                             homeFrame.background?.let {
                                 backgroundState.value = BackgroundState.Background(
                                     BackgroundModel(
-                                        homeFrame.background,
-                                        homeFrame.textColor
+                                        homeFrame.background, homeFrame.textColor
                                     )
                                 )
                             }
@@ -252,14 +234,12 @@ fun AddScreenshot(
                 ) {
                     key(selectedFrame.value) {
                         AndroidView(modifier = Modifier.alpha(0f), factory = {
-                            DeviceFrameView(
-                                context = it,
+                            DeviceFrameView(context = it,
                                 frame = selectedFrame,
                                 bitmap = bitmap,
                                 onLoading = {
                                     isLoading.value = it
-                                }
-                            ).apply {
+                                }).apply {
                                 post {
                                     deviceFrameView.value = this
                                 }
@@ -275,8 +255,7 @@ fun AddScreenshot(
                             AndroidView(modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(1f), factory = {
-                                ScreenshotView(
-                                    modifier = Modifier.fillMaxSize(),
+                                ScreenshotView(modifier = Modifier.fillMaxSize(),
                                     context = it,
                                     title = title,
                                     subTitle = subTitle,
@@ -295,58 +274,52 @@ fun AddScreenshot(
                                     selectedFrame = selectedFrame,
                                     isPaid = isPaidFrame,
                                     onAdClick = {
-                                        AdManager.showRewardAd(
-                                            context as ComponentActivity,
+                                        AdManager.showRewardAd(context as ComponentActivity,
                                             onRewardEarned = {
                                                 isPaidFrame.value = false
                                             })
-                                    }
-                                ).apply {
+                                    }).apply {
                                     post {
                                         screenshotView.value = this
                                     }
                                 }
                             })
                         }
-                        BottomPanel(modifier = Modifier.padding(10.dp),
-                            onPaletteClick = {
-                                coroutineScope.launch {
-                                    if (sheetState.isVisible) {
-                                        sheetState.hide()
-                                    } else {
-                                        selectedBottomSheetOption =
-                                            BottomPanelSelectedOption.BG_COLOR_SELECTION
-                                        sheetState.show()
-                                    }
-                                }
-                            },
-                            onPhoneClick = {
-                                coroutineScope.launch {
-                                    if (sheetState.isVisible) {
-                                        sheetState.hide()
-                                    } else {
-                                        selectedBottomSheetOption =
-                                            BottomPanelSelectedOption.DEVICE_FRAME_SELECTION
-                                        sheetState.show()
-                                    }
-                                }
-                            },
-                            onSaveClick = {
-                                AdManager.showInterstitialAd(context as ComponentActivity)
-                                if (homeFrame == null) {
-                                    val filePath =
-                                        screenshotView.value.capture().saveScreenshot(context)
-                                    project?.let {
-                                        project.screenshots.add(filePath)
-                                        projectViewModel.addProject(project)
-                                    }
-                                    navHostController.previousBackStackEntry?.savedStateHandle?.set(
-                                        "filePath",
-                                        filePath
-                                    )
+                        BottomPanel(modifier = Modifier.padding(10.dp), onPaletteClick = {
+                            coroutineScope.launch {
+                                if (sheetState.isVisible) {
+                                    sheetState.hide()
                                 } else {
-                                    val tempString =
-                                        screenshotView.value.capture().saveHomeScreenshot(context)
+                                    selectedBottomSheetOption =
+                                        BottomPanelSelectedOption.BG_COLOR_SELECTION
+                                    sheetState.show()
+                                }
+                            }
+                        }, onPhoneClick = {
+                            coroutineScope.launch {
+                                if (sheetState.isVisible) {
+                                    sheetState.hide()
+                                } else {
+                                    selectedBottomSheetOption =
+                                        BottomPanelSelectedOption.DEVICE_FRAME_SELECTION
+                                    sheetState.show()
+                                }
+                            }
+                        }, onSaveClick = {
+                            AdManager.showInterstitialAd(context as ComponentActivity)
+                            if (homeFrame == null) {
+                                val filePath =
+                                    screenshotView.value.capture().saveScreenshot(context)
+                                project?.let {
+                                    project.screenshots.add(filePath)
+                                    projectViewModel.addProject(project)
+                                }
+                                navHostController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "filePath", filePath
+                                )
+                            } else {
+                                val tempString =
+                                    screenshotView.value.capture().saveHomeScreenshot(context)
 //                                    if (BuildConfig.DEBUG) {
 //                                        isDebugDialogShow = true
 //                                        val secondaryString =
@@ -358,28 +331,25 @@ fun AddScreenshot(
 //                                        debugString =
 //                                            "$tempString\nFrame==> ${selectedFrame.value.frameId}\nBackground==>$secondaryString"
 //                                    }
-                                }
-                                navHostController.navigateUp()
+                            }
+                            navHostController.navigateUp()
 //                                if (BuildConfig.DEBUG) {
 //
 //                                } else {
 //                                    navHostController.navigateUp()
 //                                }
-                            },
-                            onAddImageClick = {
-                                galleryLauncher.launch("image/*")
-                            },
-                            onAddText = {
-                                coroutineScope.launch {
-                                    if (sheetState.isVisible) {
-                                        sheetState.hide()
-                                    } else {
-                                        selectedBottomSheetOption =
-                                            BottomPanelSelectedOption.TEXT_EDIT
-                                        sheetState.show()
-                                    }
+                        }, onAddImageClick = {
+                            galleryLauncher.launch("image/*")
+                        }, onAddText = {
+                            coroutineScope.launch {
+                                if (sheetState.isVisible) {
+                                    sheetState.hide()
+                                } else {
+                                    selectedBottomSheetOption = BottomPanelSelectedOption.TEXT_EDIT
+                                    sheetState.show()
                                 }
-                            })
+                            }
+                        })
                     }
                 }
             }
@@ -395,24 +365,19 @@ fun SmallFrameImg(frame: DeviceFrameItem, onClick: () -> Unit, isPaid: Boolean) 
             .clickable(onClick = onClick)
             .background(SecondaryColorBG.copy(alpha = 0.35f))
     ) {
-        SubcomposeAsyncImage(
-            modifier = Modifier
-                .padding(10.dp)
-                .height(100.dp)
-                .padding(horizontal = 5.dp),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(frame.frameUrl)
-                .build(),
+        SubcomposeAsyncImage(modifier = Modifier
+            .padding(10.dp)
+            .height(100.dp)
+            .padding(horizontal = 5.dp),
+            model = ImageRequest.Builder(LocalContext.current).data(frame.frameUrl).build(),
             contentDescription = null,
             loading = {
                 Box(modifier = Modifier.fillMaxHeight()) {
                     CircularProgressIndicator(
-                        modifier = Modifier.align(Alignment.Center),
-                        color = AppColor
+                        modifier = Modifier.align(Alignment.Center), color = AppColor
                     )
                 }
-            }
-        )
+            })
         if (isPaid) {
             Image(
                 modifier = Modifier
@@ -449,8 +414,7 @@ fun BottomPanel(
             contentDescription = null
         )
         Divider(
-            color = SecondaryColor,
-            modifier = Modifier
+            color = SecondaryColor, modifier = Modifier
                 .height(44.dp)
                 .width(1.dp)
                 .alpha(0.4f)
@@ -556,7 +520,8 @@ fun TextBottomSheet(
             modifier = Modifier
                 .padding(end = 10.dp)
                 .width(150.dp)
-                .align(Alignment.End), buttonText = "Done"
+                .align(Alignment.End),
+            buttonText = "Done"
         ) {
             coroutineScope.launch {
                 sheetState.hide()
@@ -568,8 +533,7 @@ fun TextBottomSheet(
 
 @Composable
 fun DeviceFrameBottomSheet(
-    frames: List<DeviceFrameItem>,
-    onFrameSelect: (frame: DeviceFrameItem, isPaid: Boolean) -> Unit
+    frames: List<DeviceFrameItem>, onFrameSelect: (frame: DeviceFrameItem, isPaid: Boolean) -> Unit
 ) {
     val androidFrames = frames.filter { it.deviceType.equals("android", ignoreCase = true) }
     val iosFrames = frames.filter { it.deviceType.equals("ios", ignoreCase = true) }
@@ -587,12 +551,8 @@ fun DeviceFrameBottomSheet(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                modifier = Modifier.weight(1f),
-                text = "Choose Frame",
-                style = TextStyle(
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp
+                modifier = Modifier.weight(1f), text = "Choose Frame", style = TextStyle(
+                    color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 22.sp
                 )
             )
             Row(
@@ -612,9 +572,7 @@ fun DeviceFrameBottomSheet(
                         .clickable(onClick = {
                             selectedTabPos = 0
                         })
-                        .padding(6.dp),
-                    text = "Android",
-                    style = TextStyle(
+                        .padding(6.dp), text = "Android", style = TextStyle(
                         textAlign = TextAlign.Center
                     )
                 )
@@ -627,9 +585,7 @@ fun DeviceFrameBottomSheet(
                         .clickable(onClick = {
                             selectedTabPos = 1
                         })
-                        .padding(6.dp),
-                    text = "iOS",
-                    style = TextStyle(
+                        .padding(6.dp), text = "iOS", style = TextStyle(
                         textAlign = TextAlign.Center
                     )
                 )
@@ -645,11 +601,9 @@ fun DeviceFrameBottomSheet(
             ) {
                 items(androidFrames.size) {
                     SmallFrameImg(
-                        frame = androidFrames[it],
-                        onClick = {
+                        frame = androidFrames[it], onClick = {
                             onFrameSelect(androidFrames[it], it > 4)
-                        },
-                        isPaid = it > 4
+                        }, isPaid = it > 4
                     )
                 }
             }
@@ -663,11 +617,9 @@ fun DeviceFrameBottomSheet(
             ) {
                 items(iosFrames.size) {
                     SmallFrameImg(
-                        frame = iosFrames[it],
-                        onClick = {
+                        frame = iosFrames[it], onClick = {
                             onFrameSelect(iosFrames[it], it > 4)
-                        },
-                        isPaid = it > 4
+                        }, isPaid = it > 4
                     )
                 }
             }
@@ -721,12 +673,9 @@ fun ColorBottomSheet(
             modifier = Modifier.padding(horizontal = 12.dp)
         )
         BgPicker(
-            bgs = Constants.bgs,
-            backgroundState = backgroundState,
-            onBgSelected = {
+            bgs = Constants.bgs, backgroundState = backgroundState, onBgSelected = {
                 onBgSelect(it)
-            },
-            modifier = Modifier.padding(vertical = 6.dp)
+            }, modifier = Modifier.padding(vertical = 6.dp)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
@@ -742,8 +691,7 @@ fun ColorBottomSheet(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
@@ -755,14 +703,9 @@ fun ColorBottomSheet(
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp, end = 30.dp)
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null,
-                        onClick = {
-                            dialogState.show()
-                        }),
-                text = "more...",
-                style = TextStyle(
+                    .clickable(interactionSource = interactionSource, indication = null, onClick = {
+                        dialogState.show()
+                    }), text = "more...", style = TextStyle(
                     color = AppColor,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal,
@@ -773,12 +716,9 @@ fun ColorBottomSheet(
         }
         Divider(thickness = 1.dp, color = MaterialTheme.colors.onPrimary)
         ColorPicker(
-            colors = colors,
-            backgroundState = backgroundState,
-            onColorSelected = {
+            colors = colors, backgroundState = backgroundState, onColorSelected = {
                 onColorSelected(it)
-            },
-            modifier = Modifier.padding(vertical = 6.dp)
+            }, modifier = Modifier.padding(vertical = 6.dp)
         )
         Spacer(modifier = Modifier.height(14.dp))
         Box(

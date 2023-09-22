@@ -1,9 +1,5 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.project
 
-import android.Manifest
-import android.app.Activity
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -51,7 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -59,7 +54,6 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DropdownMenuNoPaddingVertical
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.hasPermissions
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.shareFile
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
@@ -225,23 +219,10 @@ fun ProjectPage(
         ) {
             AppButton(modifier = Modifier.weight(1f), buttonText = "Export", onClick = {
                 if (projectViewModel.project.screenshots.isNotEmpty()) {
-                    if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        context.saveAndShareZip(
-                            screenshots = projectViewModel.project.screenshots,
-                            zipName = projectViewModel.project.name
-                        )
-                    } else if (context.hasPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                        context.saveAndShareZip(
-                            screenshots = projectViewModel.project.screenshots,
-                            zipName = projectViewModel.project.name
-                        )
-                    } else {
-                        ActivityCompat.requestPermissions(
-                            context as Activity,
-                            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                            1
-                        )
-                    }
+                    context.saveAndShareZip(
+                        screenshots = projectViewModel.project.screenshots,
+                        zipName = projectViewModel.project.name
+                    )
                 }
             })
             AppButton(modifier = Modifier.weight(1f),
