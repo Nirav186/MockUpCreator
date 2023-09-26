@@ -30,12 +30,13 @@ object AdManager {
             loadIntertitialAd(activity)
         } else {
             interstitialAd?.show(activity)
+            Constants.lastTimeStampForInter = System.currentTimeMillis()
             loadIntertitialAd(activity)
-            CoroutineScope(Dispatchers.IO).launch {
-                Constants.isInterReadyToShow = false
-                delay(40000)
-                Constants.isInterReadyToShow = true
-            }
+//            CoroutineScope(Dispatchers.IO).launch {
+//                Constants.isInterReadyToShow = false
+//                delay(40000)
+//                Constants.isInterReadyToShow = true
+//            }
         }
     }
 

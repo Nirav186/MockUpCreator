@@ -37,6 +37,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AppOpenAdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
@@ -59,6 +60,9 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.ScreenshotView
 import com.raedapps.alwan.ui.AlwanDialog
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -82,7 +86,7 @@ fun AddScreenshot(
         val selectedTextColor = remember { mutableStateOf(Color.White) }
 
         val backgroundState: MutableState<BackgroundState> = remember {
-            mutableStateOf(BackgroundState.BackgroundColor(Color(0xFF606c38)))
+            mutableStateOf(Constants.getRandomBackground())
         }
 
         var selectedBottomSheetOption by remember {
@@ -134,10 +138,12 @@ fun AddScreenshot(
                     mutableStateOf(Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8))
                 }
                 val deviceFrameView: MutableState<DeviceFrameView> = remember {
-                    mutableStateOf(DeviceFrameView(context = context,
-                        bitmap = null,
-                        frame = selectedFrame,
-                        onLoading = {}))
+                    mutableStateOf(
+                        DeviceFrameView(context = context,
+                            bitmap = null,
+                            frame = selectedFrame,
+                            onLoading = {})
+                    )
                 }
 
                 val imageBitmap = remember(bitmap) { mutableStateOf(bitmap.value) }
@@ -150,28 +156,32 @@ fun AddScreenshot(
 
                 val isLoading = remember { mutableStateOf(false) }
                 val screenshotView: MutableState<ScreenshotView> = remember {
-                    mutableStateOf(ScreenshotView(modifier = Modifier,
-                        context = context,
-                        title = title,
-                        subTitle = subTitle,
-                        deviceFrameView = deviceFrameView,
-                        bitmap = bitmap,
-                        textColor = selectedTextColor,
-                        isLoading = isLoading,
-                        backgroundState = backgroundState,
-                        onTextClick = {
-                            coroutineScope.launch {
-                                selectedBottomSheetOption = BottomPanelSelectedOption.TEXT_EDIT
-                                sheetState.show()
-                            }
-                        },
-                        selectedFrame = selectedFrame,
-                        isPaid = isPaidFrame,
-                        onAdClick = {
-                            AdManager.showRewardAd(context as ComponentActivity, onRewardEarned = {
-                                isPaidFrame.value = false
+                    mutableStateOf(
+                        ScreenshotView(modifier = Modifier,
+                            context = context,
+                            title = title,
+                            subTitle = subTitle,
+                            deviceFrameView = deviceFrameView,
+                            bitmap = bitmap,
+                            textColor = selectedTextColor,
+                            isLoading = isLoading,
+                            backgroundState = backgroundState,
+                            onTextClick = {
+                                coroutineScope.launch {
+                                    selectedBottomSheetOption = BottomPanelSelectedOption.TEXT_EDIT
+                                    sheetState.show()
+                                }
+                            },
+                            selectedFrame = selectedFrame,
+                            isPaid = isPaidFrame,
+                            onAdClick = {
+                                AdManager.showRewardAd(
+                                    context as ComponentActivity,
+                                    onRewardEarned = {
+                                        isPaidFrame.value = false
+                                    })
                             })
-                        }))
+                    )
                 }
 
                 val galleryLauncher =
@@ -182,6 +192,10 @@ fun AddScreenshot(
                             android.os.Handler(Looper.getMainLooper()).postDelayed({
                                 imageBitmap.value = deviceFrameView.value.capture()
                             }, 100)
+                        }
+                        coroutineScope.launch {
+                            delay(1500)
+                            AppOpenAdManager.isShowingAd = false
                         }
                     }
                 LaunchedEffect(key1 = true, block = {
@@ -339,6 +353,7 @@ fun AddScreenshot(
 //                                    navHostController.navigateUp()
 //                                }
                         }, onAddImageClick = {
+                            AppOpenAdManager.isShowingAd = true
                             galleryLauncher.launch("image/*")
                         }, onAddText = {
                             coroutineScope.launch {

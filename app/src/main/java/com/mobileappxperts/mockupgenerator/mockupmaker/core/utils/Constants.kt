@@ -3,15 +3,28 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.core.utils
 import androidx.compose.ui.graphics.Color
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
+import kotlin.random.Random
 
 object Constants {
-
-    var isFirstTimeAppOpenShow = true
 
     var isBannerAdEnabled = true
     var isAppOpenAdEnabled = true
     var isIntertitialAdEnabled = true
     var isRewardAdEnabled = true
+
+    var lastTimeStampForInter: Long = 0
+    private var delayForInterstitial = 30000
+    var isInterReadyToShow = (System.currentTimeMillis() - lastTimeStampForInter) > delayForInterstitial
+
+    var lastTimeStampForAppOpen: Long = 0
+    private var delayForAppOpen = 60000
+//    var isAppOpenReadyToShow = (System.currentTimeMillis() - lastTimeStampForAppOpen) > delayForAppOpen
+
+    fun isAppOpenReadyToShow() = (System.currentTimeMillis() - lastTimeStampForAppOpen) > delayForAppOpen
+
+    const val MOCK_DATA_JSON_NAME = "device_frames.json"
+    const val HOME_DATA_JSON_NAME = "home_frames.json"
 
     val bgColors = listOf(
         Color(0xFF000000),
@@ -42,33 +55,29 @@ object Constants {
         Color(0xFF05668d),
     )
 
-    var isInterReadyToShow = true
-    const val MOCK_DATA_JSON_NAME = "device_frames.json"
-    const val HOME_DATA_JSON_NAME = "home_frames.json"
-
     val bgs = listOf(
-        BackgroundModel("bg1.png",1),
-        BackgroundModel("bg2.png",1),
-        BackgroundModel("bg3.png",1),
-        BackgroundModel("bg4.png",1),
-        BackgroundModel("bg5.png",1),
-        BackgroundModel("bg6.png",1),
-        BackgroundModel("bg7.png",1),
-        BackgroundModel("bg8.png",1),
-        BackgroundModel("bg9.png",1),
-        BackgroundModel("bg10.png",1),
-        BackgroundModel("bg11.png",1),
-        BackgroundModel("bg12.png",1),
-        BackgroundModel("bg13.png",1),
-        BackgroundModel("bg14.png",1),
-        BackgroundModel("bg15.png",1),
-        BackgroundModel("bg16.png",1),
-        BackgroundModel("bg17.png",1),
-        BackgroundModel("bg18.png",1),
-        BackgroundModel("bg19.png",1),
-        BackgroundModel("bg20.png",1),
-        BackgroundModel("bg21.png",1),
-        BackgroundModel("bg22.png",1),
+        BackgroundModel("bg1.png", 1),
+        BackgroundModel("bg2.png", 1),
+        BackgroundModel("bg3.png", 1),
+        BackgroundModel("bg4.png", 1),
+        BackgroundModel("bg5.png", 1),
+        BackgroundModel("bg6.png", 1),
+        BackgroundModel("bg7.png", 1),
+        BackgroundModel("bg8.png", 1),
+        BackgroundModel("bg9.png", 1),
+        BackgroundModel("bg10.png", 1),
+        BackgroundModel("bg11.png", 1),
+        BackgroundModel("bg12.png", 1),
+        BackgroundModel("bg13.png", 1),
+        BackgroundModel("bg14.png", 1),
+        BackgroundModel("bg15.png", 1),
+        BackgroundModel("bg16.png", 1),
+        BackgroundModel("bg17.png", 1),
+        BackgroundModel("bg18.png", 1),
+        BackgroundModel("bg19.png", 1),
+        BackgroundModel("bg20.png", 1),
+        BackgroundModel("bg21.png", 1),
+        BackgroundModel("bg22.png", 1),
     )
 
     val gradients = listOf(
@@ -100,11 +109,29 @@ object Constants {
         "gr26",
     )
 
+    fun getRandomBackground(): BackgroundState {
+        val list = listOf(0, 1, 2)
+        return when (list.random()) {
+            0 -> {
+                val randomColor = bgColors.random()
+                BackgroundState.BackgroundColor(randomColor)
+            }
+
+            1 -> {
+                val randomBgs = bgs.random()
+                BackgroundState.Background(randomBgs)
+            }
+
+            2 -> {
+                val randomGradients = gradients.random()
+                BackgroundState.BackgroundGradient(randomGradients)
+            }
+
+            else -> {
+                val randomColor = bgColors.random()
+                BackgroundState.BackgroundColor(randomColor)
+            }
+        }
+    }
+
 }
-
-
-
-data class ColorPicker(
-    val primaryColor: Color,
-    val secondaryColor: Color
-)
