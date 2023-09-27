@@ -2,6 +2,7 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.ui.addscreenshot
 
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
@@ -60,8 +61,6 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.ScreenshotView
 import com.raedapps.alwan.ui.AlwanDialog
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -134,8 +133,11 @@ fun AddScreenshot(
             },
         ) {
             Scaffold {
+                val isImageSelected = remember { mutableStateOf(false) }
                 val bitmap: MutableState<Bitmap> = remember {
-                    mutableStateOf(Bitmap.createBitmap(100, 100, Bitmap.Config.ALPHA_8))
+                    mutableStateOf(
+                        BitmapFactory.decodeResource(context.resources, R.drawable.ic_default_ss)
+                    )
                 }
                 val deviceFrameView: MutableState<DeviceFrameView> = remember {
                     mutableStateOf(
@@ -155,6 +157,21 @@ fun AddScreenshot(
                     }
 
                 val isLoading = remember { mutableStateOf(false) }
+                val galleryLauncher =
+                    rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+                        uri?.let {
+                            isImageSelected.value = true
+                            bitmap.value =
+                                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+                            android.os.Handler(Looper.getMainLooper()).postDelayed({
+                                imageBitmap.value = deviceFrameView.value.capture()
+                            }, 100)
+                        }
+                        coroutineScope.launch {
+                            delay(1500)
+                            AppOpenAdManager.isShowingAd = false
+                        }
+                    }
                 val screenshotView: MutableState<ScreenshotView> = remember {
                     mutableStateOf(
                         ScreenshotView(modifier = Modifier,
@@ -174,6 +191,11 @@ fun AddScreenshot(
                             },
                             selectedFrame = selectedFrame,
                             isPaid = isPaidFrame,
+                            isImageSelected = isImageSelected,
+                            onAddImageClick = {
+                                AppOpenAdManager.isShowingAd = true
+                                galleryLauncher.launch("image/*")
+                            },
                             onAdClick = {
                                 AdManager.showRewardAd(
                                     context as ComponentActivity,
@@ -183,21 +205,6 @@ fun AddScreenshot(
                             })
                     )
                 }
-
-                val galleryLauncher =
-                    rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-                        uri?.let {
-                            bitmap.value =
-                                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-                            android.os.Handler(Looper.getMainLooper()).postDelayed({
-                                imageBitmap.value = deviceFrameView.value.capture()
-                            }, 100)
-                        }
-                        coroutineScope.launch {
-                            delay(1500)
-                            AppOpenAdManager.isShowingAd = false
-                        }
-                    }
                 LaunchedEffect(key1 = true, block = {
                     homeFrame?.let {
                         frames.find { it.frameId == homeFrame.frameId }?.let {
@@ -269,7 +276,8 @@ fun AddScreenshot(
                             AndroidView(modifier = Modifier
                                 .fillMaxSize()
                                 .alpha(1f), factory = {
-                                ScreenshotView(modifier = Modifier.fillMaxSize(),
+                                ScreenshotView(
+                                    modifier = Modifier.fillMaxSize(),
                                     context = it,
                                     title = title,
                                     subTitle = subTitle,
@@ -292,7 +300,13 @@ fun AddScreenshot(
                                             onRewardEarned = {
                                                 isPaidFrame.value = false
                                             })
-                                    }).apply {
+                                    },
+                                    isImageSelected = isImageSelected,
+                                    onAddImageClick = {
+                                        AppOpenAdManager.isShowingAd = true
+                                        galleryLauncher.launch("image/*")
+                                    }
+                                ).apply {
                                     post {
                                         screenshotView.value = this
                                     }

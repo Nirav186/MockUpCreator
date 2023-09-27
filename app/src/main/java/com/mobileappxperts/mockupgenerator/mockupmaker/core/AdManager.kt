@@ -25,18 +25,13 @@ object AdManager {
 
     fun showInterstitialAd(activity: Activity) {
         if (Constants.isIntertitialAdEnabled.not()) return
-        if (!Constants.isInterReadyToShow) return
+        if (!Constants.isInterReadyToShow()) return
         if (interstitialAd == null) {
             loadIntertitialAd(activity)
         } else {
             interstitialAd?.show(activity)
             Constants.lastTimeStampForInter = System.currentTimeMillis()
             loadIntertitialAd(activity)
-//            CoroutineScope(Dispatchers.IO).launch {
-//                Constants.isInterReadyToShow = false
-//                delay(40000)
-//                Constants.isInterReadyToShow = true
-//            }
         }
     }
 

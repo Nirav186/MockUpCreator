@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
@@ -55,7 +56,9 @@ class ScreenshotView @JvmOverloads constructor(
     val onTextClick: () -> Unit,
     val selectedFrame: MutableState<DeviceFrameItem>,
     val isPaid: MutableState<Boolean>,
-    val onAdClick: () -> Unit
+    val onAdClick: () -> Unit,
+    val onAddImageClick: () -> Unit,
+    val isImageSelected: MutableState<Boolean>
 ) : AbstractComposeView(context, attributeSet, defStyleAttr) {
 
     @Composable
@@ -157,23 +160,35 @@ class ScreenshotView @JvmOverloads constructor(
                     }
                 } else {
                     if (deviceFrameView.value.width > 0 && deviceFrameView.value.height > 0) {
-                        SubcomposeAsyncImage(
-                            modifier = Modifier
-                                .align(Alignment.CenterHorizontally)
-                                .padding(top = 20.dp, bottom = 40.dp),
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(bitmap.value)
-                                .build(),
-                            contentDescription = null,
-                            loading = {
-                                Box(modifier = modifier.fillMaxHeight()) {
-                                    CircularProgressIndicator(
-                                        modifier = Modifier.align(Alignment.Center),
-                                        color = AppColor
-                                    )
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            SubcomposeAsyncImage(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(top = 20.dp, bottom = 40.dp),
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(bitmap.value)
+                                    .build(),
+                                contentDescription = null,
+                                loading = {
+                                    Box(modifier = modifier.fillMaxHeight()) {
+                                        CircularProgressIndicator(
+                                            modifier = Modifier.align(Alignment.Center),
+                                            color = AppColor
+                                        )
+                                    }
                                 }
+                            )
+                            if (isImageSelected.value.not() && isPaid.value.not() && isLoading.value.not()) {
+                                Image(
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .size(100.dp)
+                                        .clickable(onClick = onAddImageClick),
+                                    painter = painterResource(id = R.drawable.add_image_icon),
+                                    contentDescription = null
+                                )
                             }
-                        )
+                        }
                     }
                 }
             }

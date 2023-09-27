@@ -15,7 +15,7 @@ object Constants {
 
     var lastTimeStampForInter: Long = 0
     private var delayForInterstitial = 30000
-    var isInterReadyToShow = (System.currentTimeMillis() - lastTimeStampForInter) > delayForInterstitial
+    fun isInterReadyToShow() = (System.currentTimeMillis() - lastTimeStampForInter) > delayForInterstitial
 
     var lastTimeStampForAppOpen: Long = 0
     private var delayForAppOpen = 60000
