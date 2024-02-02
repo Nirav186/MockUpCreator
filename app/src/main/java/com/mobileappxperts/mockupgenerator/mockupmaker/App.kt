@@ -15,7 +15,7 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = this
-        AppOpenAdManager(this, getString(R.string.app_open_id))
+//        AppOpenAdManager(this, getString(R.string.app_open_id))
     }
 
 }
