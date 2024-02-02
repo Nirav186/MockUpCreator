@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AppOpenAdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.feedBackApp
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.privacyPolicy
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.ratingApp
@@ -90,15 +91,19 @@ fun SettingScreen(onBackPressed: () -> Unit) {
             }
         }
         SettingRow(painterResource(id = R.drawable.ic_privacy_policy), "Privacy Policy") {
+            AppOpenAdManager.isShowingAd = true
             context.privacyPolicy()
         }
         SettingRow(painterResource(id = R.drawable.ic_share_app), "Share App") {
+            AppOpenAdManager.isShowingAd = true
             context.shareApp()
         }
         SettingRow(painterResource(id = R.drawable.ic_rate_us), "Rating & Review") {
+            AppOpenAdManager.isShowingAd = true
             context.ratingApp()
         }
         SettingRow(painterResource(id = R.drawable.ic_feedback), "Feedback") {
+            AppOpenAdManager.isShowingAd = true
             context.feedBackApp()
         }
     }

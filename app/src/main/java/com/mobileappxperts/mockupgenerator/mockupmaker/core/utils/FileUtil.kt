@@ -10,6 +10,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import com.mobileappxperts.mockupgenerator.mockupmaker.core.AppOpenAdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.hasPermissions
 import net.lingala.zip4j.ZipFile
 import java.io.File
@@ -80,6 +81,7 @@ fun Context.saveAndShareZip(screenshots: List<String>, zipName: String) {
 }
 
 fun Context.shareFile(file: File) {
+    AppOpenAdManager.isShowingAd = true
     val uri: Uri = FileProvider.getUriForFile(
         this,
         packageName.plus(".provider"),
