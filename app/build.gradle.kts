@@ -69,16 +69,16 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.compose.ui:ui:1.5.2")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.5.2")
-    implementation("androidx.compose.material:material:1.6.0")
+    implementation("androidx.compose.ui:ui:1.6.1")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
+    implementation("androidx.compose.material:material:1.6.1")
     implementation("androidx.lifecycle:lifecycle-process:2.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.5.2")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.5.2")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.2")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.1")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -90,10 +90,10 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
     // LiveData
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.1")
 
     // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.1")
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
@@ -112,12 +112,12 @@ dependencies {
     implementation("io.github.vanpra.compose-material-dialogs:color:0.9.0")
     implementation("com.raedapps:alwan:1.0.0")
 
-    implementation("com.google.android.gms:play-services-ads:22.0.0")
+    implementation("com.google.android.gms:play-services-ads:22.6.0")
 
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
-    implementation("com.google.firebase:firebase-config:21.6.0")
+    implementation("com.google.firebase:firebase-config:21.6.1")
     implementation("com.google.firebase:firebase-common-ktx:20.4.2")
-    implementation("androidx.navigation:navigation-compose:2.7.6")
+    implementation("androidx.navigation:navigation-compose:2.7.7")
 }
 // Allow references to generated code
 kapt {
