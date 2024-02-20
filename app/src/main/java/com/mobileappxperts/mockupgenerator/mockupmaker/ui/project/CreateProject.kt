@@ -1,9 +1,9 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.project
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -42,7 +42,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.CustomTextField
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DropDownMenu
@@ -51,6 +50,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
+import com.nirav.commons.ads.CommonAdManager.showInterstitialAd
 
 @Composable
 fun CreateProject(
@@ -228,7 +228,8 @@ fun saveProject(
         Toast.makeText(context, "Please Enter Project Description", Toast.LENGTH_SHORT).show()
         return
     }
-    AdManager.showInterstitialAd(context as ComponentActivity)
+    (context as Activity).showInterstitialAd()
+//    AdManager.showInterstitialAd(context as ComponentActivity)
     projectViewModel.addProject(project)
     navController.navigateUp()
 }

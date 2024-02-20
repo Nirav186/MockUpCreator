@@ -51,7 +51,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DropdownMenuNoPaddingVertical
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
@@ -60,6 +59,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
+import com.nirav.commons.ads.compose.AdmobBanner
 import java.io.File
 
 

@@ -34,7 +34,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.DeleteConfirmationDialog
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.saveAndShareZip
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
@@ -44,6 +43,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.SecondaryColor
+import com.nirav.commons.ads.compose.AdmobBanner
 
 @Composable
 fun MyProjectsTabContent(onProjectSelect: (Project) -> Unit) {

@@ -12,10 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.utils.Constants
 import com.mobileappxperts.mockupgenerator.mockupmaker.navigation.NavigationGraph
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.MockUpScreenShotsTheme
+import com.nirav.commons.CommonGdprDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -23,8 +23,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AdManager.initAds(this)
-        getDataFromRemoteConfig()
+//        AdManager.initAds(this)
+//        getDataFromRemoteConfig()
+        CommonGdprDialog.checkGDPR(this) {
+            App().getAdsFromRemoteConfig(this) {
+//                showBannerAd(binding.adView)
+            }
+        }
         setContent {
             MockUpApp()
         }
