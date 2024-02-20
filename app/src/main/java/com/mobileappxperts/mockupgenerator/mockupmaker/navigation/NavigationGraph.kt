@@ -9,7 +9,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.gson.Gson
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.composableWithArgs
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getString
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
@@ -23,6 +22,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.CreateProject
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectPage
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.settings.SettingScreen
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.splash.SplashScreen
+import com.nirav.commons.ads.CommonAdManager.showInterstitialAd
 
 @Composable
 fun NavigationGraph(navController: NavHostController) {
@@ -118,6 +118,6 @@ fun NavigationGraph(navController: NavHostController) {
 }
 
 fun onBack(navController: NavController, activity: Activity) {
-    AdManager.showInterstitialAd(activity)
+    activity.showInterstitialAd()
     navController.popBackStack()
 }

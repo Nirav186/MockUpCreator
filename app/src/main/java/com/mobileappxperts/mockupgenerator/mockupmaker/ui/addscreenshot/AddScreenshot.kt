@@ -1,6 +1,7 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.addscreenshot
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Looper
@@ -37,8 +38,6 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdManager
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AppOpenAdManager
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.AppButton
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.components.BgPicker
@@ -58,10 +57,11 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.project.ProjectViewMod
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.*
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.DeviceFrameView
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.view.ScreenshotView
+import com.nirav.commons.ads.CommonAdManager
+import com.nirav.commons.ads.CommonAdManager.showInterstitialAd
 import com.raedapps.alwan.ui.AlwanDialog
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -167,10 +167,6 @@ fun AddScreenshot(
                                 imageBitmap.value = deviceFrameView.value.capture()
                             }, 100)
                         }
-                        coroutineScope.launch {
-                            delay(1500)
-                            AppOpenAdManager.isShowingAd = false
-                        }
                     }
                 val screenshotView: MutableState<ScreenshotView> = remember {
                     mutableStateOf(
@@ -193,15 +189,20 @@ fun AddScreenshot(
                             isPaid = isPaidFrame,
                             isImageSelected = isImageSelected,
                             onAddImageClick = {
-                                AppOpenAdManager.isShowingAd = true
                                 galleryLauncher.launch("image/*")
                             },
                             onAdClick = {
-                                AdManager.showRewardAd(
-                                    context as ComponentActivity,
+                                CommonAdManager.showRewardAd(
+                                    activity = context as ComponentActivity,
                                     onRewardEarned = {
                                         isPaidFrame.value = false
-                                    })
+                                    }
+                                )
+//                                AdManager.showRewardAd(
+//                                    context as ComponentActivity,
+//                                    onRewardEarned = {
+//                                        isPaidFrame.value = false
+//                                    })
                             })
                     )
                 }
@@ -296,14 +297,18 @@ fun AddScreenshot(
                                     selectedFrame = selectedFrame,
                                     isPaid = isPaidFrame,
                                     onAdClick = {
-                                        AdManager.showRewardAd(context as ComponentActivity,
+//                                        AdManager.showRewardAd(context as ComponentActivity,
+//                                            onRewardEarned = {
+//                                                isPaidFrame.value = false
+//                                            })
+                                        CommonAdManager.showRewardAd(
+                                            activity = context as ComponentActivity,
                                             onRewardEarned = {
                                                 isPaidFrame.value = false
                                             })
                                     },
                                     isImageSelected = isImageSelected,
                                     onAddImageClick = {
-                                        AppOpenAdManager.isShowingAd = true
                                         galleryLauncher.launch("image/*")
                                     }
                                 ).apply {
@@ -334,7 +339,8 @@ fun AddScreenshot(
                                 }
                             }
                         }, onSaveClick = {
-                            AdManager.showInterstitialAd(context as ComponentActivity)
+                            (context as Activity).showInterstitialAd()
+//                            AdManager.showInterstitialAd(context as ComponentActivity)
                             if (homeFrame == null) {
                                 val filePath =
                                     screenshotView.value.capture().saveScreenshot(context)
@@ -367,7 +373,6 @@ fun AddScreenshot(
 //                                    navHostController.navigateUp()
 //                                }
                         }, onAddImageClick = {
-                            AppOpenAdManager.isShowingAd = true
                             galleryLauncher.launch("image/*")
                         }, onAddText = {
                             coroutineScope.launch {

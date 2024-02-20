@@ -40,13 +40,13 @@ import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.mobileappxperts.mockupgenerator.mockupmaker.R
-import com.mobileappxperts.mockupgenerator.mockupmaker.core.AdmobBanner
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.ext.getHomeScreenshots
 import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.HomeFrame
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.deviceframe.DeviceFrameViewModel
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppFonts
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.FredokaOne
+import com.nirav.commons.ads.compose.AdmobBanner
 
 @Composable
 fun HomeTabContent(

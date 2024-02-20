@@ -6,21 +6,21 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.google.gson.Gson
 
 sealed class NavigationTarget(var route: String) {
-    object Splash : NavigationTarget("app://splash")
-    object Home : NavigationTarget("app://home")
-    object EditScreenShot : NavigationTarget("app://editScreenShot")
-    object CreateProject : NavigationTarget("app://createProject?project={project}")
-    object ProjectPage : NavigationTarget("app://projectPage?project={project}")
+    data object Splash : NavigationTarget("app://splash")
+    data object Home : NavigationTarget("app://home")
+    data object EditScreenShot : NavigationTarget("app://editScreenShot")
+    data object CreateProject : NavigationTarget("app://createProject?project={project}")
+    data object ProjectPage : NavigationTarget("app://projectPage?project={project}")
 
     //    object AddScreenshot :
 //        NavigationTarget("app://addScreenshot?homeFrame={homeFrame}?project={project}")
-    object AddScreenshot :
+    data object AddScreenshot :
         NavigationTarget("app://addScreenshot?homeFrame={homeFrame},project={project}")
 
-    object ImagePreview : NavigationTarget("app://imagePreview?imagePath={imagePath}")
-    object HomeImagePreview : NavigationTarget("app://homeImagePreview?imagePath={imagePath}")
-    object Settings : NavigationTarget("app://settings")
-    object Temp : NavigationTarget("app://temp")
+    data object ImagePreview : NavigationTarget("app://imagePreview?imagePath={imagePath}")
+    data object HomeImagePreview : NavigationTarget("app://homeImagePreview?imagePath={imagePath}")
+    data object Settings : NavigationTarget("app://settings")
+    data object Temp : NavigationTarget("app://temp")
 }
 
 fun buildProjectPageRoute(project: Project): String {
@@ -63,5 +63,7 @@ fun buildAddScreenshotRoute(
     homeFrame: HomeFrame? = null,
     project: Project? = null
 ): String {
-    return "app://addScreenshot?homeFrame=${Gson().toJson(homeFrame)},project=${Gson().toJson(project)}"
+    return "app://addScreenshot?" +
+            "homeFrame=${if (homeFrame == null) null else Gson().toJson(homeFrame)}," +
+            "project=${if (project == null) null else Gson().toJson(project)}"
 }
