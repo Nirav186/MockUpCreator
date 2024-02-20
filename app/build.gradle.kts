@@ -16,14 +16,14 @@ android {
             keyAlias = "key0"
         }
     }
-    compileSdkVersion(34)
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.mobileappxperts.mockupgenerator.mockupmaker"
         minSdk = 24
         targetSdk = 34
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 1
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -112,8 +112,6 @@ dependencies {
     // Color sheet
     implementation("io.github.vanpra.compose-material-dialogs:color:0.9.0")
     implementation("com.raedapps:alwan:1.0.0")
-
-//    implementation("com.google.android.gms:play-services-ads:22.6.0")
 
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-config:21.6.1")

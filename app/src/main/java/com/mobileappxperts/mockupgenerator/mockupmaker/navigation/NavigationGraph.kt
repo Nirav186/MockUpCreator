@@ -39,7 +39,7 @@ fun NavigationGraph(navController: NavHostController) {
             }, onProjectSelect = { project ->
                 navController.navigate(buildProjectPageRoute(project))
             }, onHomeFrameClick = { homeFrame ->
-                navController.navigate(buildAddScreenshotRoute(homeFrame, Project()))
+                navController.navigate(buildAddScreenshotRoute(homeFrame, null))
             }, onImagePreview = {
                 navController.navigate(buildHomeImagePreviewRoute(it))
             }, onSettingsClick = {

@@ -26,7 +26,12 @@ fun NavGraphBuilder.composableWithArgs(
 ) {
     composable(
         route = route,
-        arguments = arguments.map { navArgument(it) { defaultValue = "" } }
+        arguments = arguments.map {
+            navArgument(it) {
+                defaultValue = null
+                nullable = true
+            }
+        },
     ) { backStack ->
         content(backStack)
     }
