@@ -35,9 +35,9 @@ class App : Application() {
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val json = remoteConfig.getString(jsonConfigKey)
+                    val json = FirebaseRemoteConfig.getInstance().getString(jsonConfigKey)
                     if (json.isNotEmpty()) {
-                        CommonAdManager.init(
+                        CommonAdManager.initWithGdpr(
                             activity = activity,
                             application = this,
                             jsonString = json,

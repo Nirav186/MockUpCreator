@@ -1,27 +1,10 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.core.utils
 
 import androidx.compose.ui.graphics.Color
-import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
-import com.mobileappxperts.mockupgenerator.mockupmaker.R
 import com.mobileappxperts.mockupgenerator.mockupmaker.core.BackgroundState
-import kotlin.random.Random
+import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.BackgroundModel
 
 object Constants {
-
-    var isBannerAdEnabled = true
-    var isAppOpenAdEnabled = true
-    var isIntertitialAdEnabled = true
-    var isRewardAdEnabled = true
-
-    var lastTimeStampForInter: Long = 0
-    private var delayForInterstitial = 30000
-    fun isInterReadyToShow() = (System.currentTimeMillis() - lastTimeStampForInter) > delayForInterstitial
-
-    var lastTimeStampForAppOpen: Long = 0
-    private var delayForAppOpen = 60000
-//    var isAppOpenReadyToShow = (System.currentTimeMillis() - lastTimeStampForAppOpen) > delayForAppOpen
-
-    fun isAppOpenReadyToShow() = (System.currentTimeMillis() - lastTimeStampForAppOpen) > delayForAppOpen
 
     const val MOCK_DATA_JSON_NAME = "device_frames.json"
     const val HOME_DATA_JSON_NAME = "home_frames.json"

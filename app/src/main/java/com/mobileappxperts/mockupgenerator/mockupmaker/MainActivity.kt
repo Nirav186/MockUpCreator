@@ -23,42 +23,12 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        AdManager.initAds(this)
-//        getDataFromRemoteConfig()
-        CommonGdprDialog.checkGDPR(this) {
-            App().getAdsFromRemoteConfig(this) {
-//                showBannerAd(binding.adView)
-            }
+        App().getAdsFromRemoteConfig(this) {
+            //showBannerAd(binding.adView)
         }
         setContent {
             MockUpApp()
         }
-    }
-
-    private fun getDataFromRemoteConfig() {
-        val mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-        val configSettings =
-            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(0)
-                .build()
-        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings)
-        mFirebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
-
-        mFirebaseRemoteConfig.fetchAndActivate()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Constants.isAppOpenAdEnabled = mFirebaseRemoteConfig.getBoolean("appOpenAd")
-                    Constants.isBannerAdEnabled = mFirebaseRemoteConfig.getBoolean("bannerAd")
-                    Constants.isIntertitialAdEnabled = mFirebaseRemoteConfig.getBoolean("intertitialAd")
-                    Constants.isRewardAdEnabled = mFirebaseRemoteConfig.getBoolean("rewardAd")
-                } else {
-                    Log.d("", "")
-                }
-            }
-            .addOnFailureListener {
-                Log.e("TAG1112", "getDataFromRemoteConfig: " + it.message)
-            }
-
-
     }
 
     @Composable

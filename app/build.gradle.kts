@@ -118,7 +118,7 @@ dependencies {
     implementation("com.google.firebase:firebase-common-ktx:20.4.2")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
-    implementation("com.github.Nirav186:commons:0.1.3")
+    implementation("com.github.Nirav186:commons:0.2.3")
 }
 // Allow references to generated code
 kapt {
