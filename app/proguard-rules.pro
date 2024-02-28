@@ -20,9 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keepclassmembers  public class com.mobileappxperts.mockupgenerator.mockupmaker.data.model** { *;}
--keepclassmembers  public class com.mobileappxperts.mockupgenerator.mockupmaker.data** { *;}
--keep class com.mobileappxperts.mockupgenerator.mockupmaker.data** { *;}
+-keepclassmembers  public class mockupmaker.screenshots.mockup.generator.data.model** { *;}
+-keepclassmembers  public class mockupmaker.screenshots.mockup.generator.data** { *;}
+-keep class mockupmaker.screenshots.mockup.generator.data** { *;}
 
 # Please add these rules to your existing keep rules in order to
 #  suppress warnings.

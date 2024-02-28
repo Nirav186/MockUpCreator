@@ -7,19 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mobileappxperts.mockupgenerator.mockupmaker"
-    signingConfigs {
-        create("release") {
-            storePassword = "com.mobileappxperts.mockupgenerator.mockupmaker"
-            keyPassword = "com.mobileappxperts.mockupgenerator.mockupmaker"
-            storeFile = file("D:\\Projects\\mockupcreator\\mockupcreator.jks")
-            keyAlias = "key0"
-        }
-    }
+    namespace = "mockupmaker.screenshots.mockup.generator"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mobileappxperts.mockupgenerator.mockupmaker"
+        applicationId = "mockupmaker.screenshots.mockup.generator"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -37,7 +29,6 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs["release"]
         }
     }
 
