@@ -1,5 +1,7 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.home
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,6 +28,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.data.model.Project
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.TabTextStyle
+import com.nirav.commons.ads.compose.CommonComposeExitDialog
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -36,12 +40,24 @@ fun Home(
     onSettingsClick: () -> Unit
 ) {
     val homeViewModel: HomeViewModel = hiltViewModel()
-//    val context = LocalContext.current
+    val activity = LocalContext.current as Activity
+    var shouldShowExitDialog by remember { mutableStateOf(false) }
 
-//    if (Constants.isFirstTimeAppOpenShow && AppOpenAdManager.appOpenAd != null && Constants.isAppOpenAdEnabled) {
-//        AppOpenAdManager.appOpenAd?.show(context as ComponentActivity)
-//        Constants.isFirstTimeAppOpenShow = false
-//    }
+    BackHandler {
+        shouldShowExitDialog = true
+    }
+
+    if (shouldShowExitDialog) {
+        CommonComposeExitDialog(
+            onNegativeButtonClick = {
+                shouldShowExitDialog = false
+            },
+            onPositiveButtonClick = {
+                shouldShowExitDialog = false
+                activity.finish()
+            }
+        )
+    }
 
     Column {
         Box(

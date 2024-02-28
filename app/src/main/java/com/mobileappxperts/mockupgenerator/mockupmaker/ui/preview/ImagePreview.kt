@@ -1,6 +1,7 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.preview
 
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ fun FullScreenImageView(
     onBackPressed: () -> Unit
 ) {
 
+    BackHandler { onBackPressed() }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -102,6 +104,8 @@ fun FullScreenHomeImageView(
             }
         }
     }
+
+    BackHandler { onBackPressed() }
 
     Box(
         modifier = Modifier

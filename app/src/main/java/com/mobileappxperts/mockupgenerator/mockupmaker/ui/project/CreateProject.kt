@@ -56,7 +56,8 @@ import com.nirav.commons.ads.CommonAdManager.showInterstitialAd
 fun CreateProject(
     navController: NavHostController,
     project: Project?,
-    onAddScreenshotClick: () -> Unit
+    onAddScreenshotClick: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
 
     val createViewModel: CreateViewModel = hiltViewModel()
@@ -84,9 +85,7 @@ fun CreateProject(
         }
     }
 
-    BackHandler {
-        navController.navigateUp()
-    }
+    BackHandler { onBackPressed() }
 
     Column(
         modifier = Modifier
@@ -115,7 +114,7 @@ fun CreateProject(
         }
         CustomTextField(
             value = createViewModel.projectName,
-            onValueChange = {createViewModel.projectName = it},
+            onValueChange = { createViewModel.projectName = it },
             placeholderText = "Project Name"
         )
 

@@ -1,5 +1,6 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.core.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,10 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.AppColor
@@ -80,6 +83,65 @@ fun ButtonWithBg(
             imageVector = imageVector,
             contentDescription = null,
             tint = color
+        )
+    }
+}
+
+@Preview
+@Composable
+fun AppButton() {
+    Button(
+        onClick = { /*TODO*/ },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        shape = RoundedCornerShape(10.dp),
+        contentPadding = PaddingValues(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = AppColor,
+            contentColor = Color.White,
+            disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.12f)
+                .compositeOver(MaterialTheme.colors.surface),
+            disabledContentColor = MaterialTheme.colors.onSurface
+                .copy(alpha = ContentAlpha.disabled)
+        )
+    ) {
+        Text(
+            text = "Yes",
+            style = TextStyle(
+                color = Color.White,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+fun OutLinedButton() {
+    OutlinedButton(
+        onClick = { /*TODO*/ },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp),
+        shape = RoundedCornerShape(10.dp),
+        contentPadding = PaddingValues(10.dp),
+        colors = ButtonDefaults.outlinedButtonColors(
+            backgroundColor = MaterialTheme.colors.surface,
+            contentColor = MaterialTheme.colors.primary,
+            disabledContentColor = MaterialTheme.colors.onSurface
+                .copy(alpha = ContentAlpha.disabled)
+        ),
+        border = BorderStroke(width = 2.dp, color = AppColor)
+    ) {
+        Text(
+            text = "Yes",
+            style = TextStyle(
+                color = Color.Black,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
         )
     }
 }

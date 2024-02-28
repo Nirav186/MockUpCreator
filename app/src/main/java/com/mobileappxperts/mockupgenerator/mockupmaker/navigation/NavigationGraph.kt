@@ -53,6 +53,9 @@ fun NavigationGraph(navController: NavHostController) {
                 project = project,
                 onAddScreenshotClick = {
                     navController.navigate(NavigationTarget.AddScreenshot.route)
+                },
+                onBackPressed = {
+                    onBack(navController, activity)
                 }
             )
         }
@@ -86,7 +89,11 @@ fun NavigationGraph(navController: NavHostController) {
         ) {
             val homeFrame = Gson().fromJson(it.getString("homeFrame"), HomeFrame::class.java)
             val project = Gson().fromJson(it.getString("project"), Project::class.java)
-            AddScreenshot(navController, homeFrame, project)
+            AddScreenshot(
+                navHostController = navController,
+                homeFrame = homeFrame,
+                project = project,
+                onBackPressed = { onBack(navController, activity) })
         }
         composable(route = NavigationTarget.Temp.route) {
             FullMockUps()
@@ -110,9 +117,7 @@ fun NavigationGraph(navController: NavHostController) {
             }
         }
         composable(route = NavigationTarget.Settings.route) {
-            SettingScreen {
-                navController.popBackStack()
-            }
+            SettingScreen { onBack(navController, activity) }
         }
     }
 }

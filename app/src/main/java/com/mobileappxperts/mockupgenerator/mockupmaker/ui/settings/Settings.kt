@@ -1,5 +1,6 @@
 package com.mobileappxperts.mockupgenerator.mockupmaker.ui.settings
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -37,6 +38,7 @@ import com.mobileappxperts.mockupgenerator.mockupmaker.ui.theme.BgColor
 @Composable
 fun SettingScreen(onBackPressed: () -> Unit) {
     val context = LocalContext.current
+    BackHandler { onBackPressed() }
     Column(
         modifier = Modifier
             .fillMaxSize()

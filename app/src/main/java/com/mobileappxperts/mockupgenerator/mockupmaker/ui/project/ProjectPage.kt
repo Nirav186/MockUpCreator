@@ -2,6 +2,7 @@ package com.mobileappxperts.mockupgenerator.mockupmaker.ui.project
 
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -79,6 +80,8 @@ fun ProjectPage(
             ?.observeAsState()
 
     projectViewModel.getProjectById(projectId = projectId)
+
+    BackHandler { onBackPressed() }
 
     LaunchedEffect(key1 = true) {
         result?.value?.let {

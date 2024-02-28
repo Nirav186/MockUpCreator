@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -68,13 +69,18 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AddScreenshot(
-    navHostController: NavHostController, homeFrame: HomeFrame? = null, project: Project? = null
+    navHostController: NavHostController,
+    homeFrame: HomeFrame? = null,
+    project: Project? = null,
+    onBackPressed: () -> Unit
 ) {
     val deviceFrameViewModel = hiltViewModel<DeviceFrameViewModel>()
     val projectViewModel = hiltViewModel<ProjectViewModel>()
     val frames = deviceFrameViewModel.state.frameItems
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
+
+    BackHandler { onBackPressed() }
     if (frames.isNotEmpty()) {
         val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden,
             confirmStateChange = { it != ModalBottomSheetValue.HalfExpanded })

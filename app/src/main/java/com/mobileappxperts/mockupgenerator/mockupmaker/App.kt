@@ -28,7 +28,7 @@ class App : Application() {
 
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings =
-            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(10000).build()
+            FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(0).build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         val jsonConfigKey = if (BuildConfig.DEBUG) "test_ids" else "real_ids"
 
