@@ -22,4 +22,6 @@
 <!--    <string name="native_id" translatable="false">ca-app-pub-8608272927918158/3785665986</string>-->
 <!--    <string name="app_open_id" translatable="false">ca-app-pub-8608272927918158/1632762470</string>-->
 <!--    <string name="rewarded_id" translatable="false">ca-app-pub-8608272927918158/8076264787</string>-->
+
+    <string name="one_signal_id">50767f84-76c4-4859-bc4e-bcce0b483344</string>
 </resources>

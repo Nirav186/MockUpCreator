@@ -4,12 +4,20 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
     namespace = "mockupmaker.screenshots.mockup.generator"
     compileSdk = 34
-
+    signingConfigs {
+        create("release") {
+            storePassword = "mockupmaker.screenshots.mockup.generator"
+            keyPassword = "mockupmaker.screenshots.mockup.generator"
+            storeFile = file("mockupmaker.screenshots.mockup.generator.jks")
+            keyAlias = "mockupmaker.screenshots.mockup.generator"
+        }
+    }
     defaultConfig {
         applicationId = "mockupmaker.screenshots.mockup.generator"
         minSdk = 24
@@ -26,9 +34,10 @@ android {
     buildTypes {
         getByName("release") {
             isDebuggable = false
-            isMinifyEnabled = true
-            isShrinkResources = true
+//            isMinifyEnabled = true
+//            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs["release"]
         }
     }
 
@@ -109,7 +118,12 @@ dependencies {
     implementation("com.google.firebase:firebase-common-ktx:20.4.2")
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+
     implementation("com.github.Nirav186:commons:0.2.5")
+
+    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 }
 // Allow references to generated code
 kapt {

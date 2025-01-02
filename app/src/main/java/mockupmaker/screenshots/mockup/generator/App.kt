@@ -4,10 +4,13 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import com.google.firebase.FirebaseApp
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.nirav.commons.ads.CommonAdManager
+import com.onesignal.OneSignal
+import com.onesignal.debug.LogLevel
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -20,7 +23,8 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = this
-//        AppOpenAdManager(this, getString(R.string.app_open_id))
+        OneSignal.Debug.logLevel = LogLevel.VERBOSE
+        OneSignal.initWithContext(this, getString(R.string.one_signal_id))
     }
 
     fun getAdsFromRemoteConfig(activity: Activity, onAdsInitialized: () -> Unit) {
@@ -30,8 +34,8 @@ class App : Application() {
         val configSettings =
             FirebaseRemoteConfigSettings.Builder().setMinimumFetchIntervalInSeconds(0).build()
         remoteConfig.setConfigSettingsAsync(configSettings)
-        val jsonConfigKey = if (mockupmaker.screenshots.mockup.generator.BuildConfig.DEBUG) "test_ids" else "real_ids"
-
+        val jsonConfigKey = if (BuildConfig.DEBUG) "test_ids" else "real_ids"
+        Log.e("TAG111", "getAdsFromRemoteConfig: $jsonConfigKey")
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
