@@ -4,26 +4,26 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
-    namespace = "com.mobileappxperts.mockupgenerator.mockupmaker"
+    namespace = "mockupmaker.screenshots.mockup.generator"
+    compileSdk = 34
     signingConfigs {
         create("release") {
-            storePassword = "com.mobileappxperts.mockupgenerator.mockupmaker"
-            keyPassword = "com.mobileappxperts.mockupgenerator.mockupmaker"
-            storeFile = file("D:\\Projects\\mockupcreator\\mockupcreator.jks")
-            keyAlias = "key0"
+            storePassword = "mockupmaker.screenshots.mockup.generator"
+            keyPassword = "mockupmaker.screenshots.mockup.generator"
+            storeFile = file("mockupmaker.screenshots.mockup.generator.jks")
+            keyAlias = "mockupmaker.screenshots.mockup.generator"
         }
     }
-    compileSdkVersion(34)
-
     defaultConfig {
-        applicationId = "com.mobileappxperts.mockupgenerator.mockupmaker"
-        minSdkVersion(23)
-        targetSdkVersion(34)
-        versionCode = 4
-        versionName = "1.0.3"
+        applicationId = "mockupmaker.screenshots.mockup.generator"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -34,8 +34,8 @@ android {
     buildTypes {
         getByName("release") {
             isDebuggable = false
-            isMinifyEnabled = true
-            isShrinkResources = true
+//            isMinifyEnabled = true
+//            isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs["release"]
         }
@@ -50,6 +50,7 @@ android {
     }
 
     buildFeatures {
+        buildConfig = true
         compose = true
     }
 
@@ -69,16 +70,16 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation("androidx.compose.ui:ui:1.6.1")
-    implementation("androidx.compose.ui:ui-tooling-preview:1.6.1")
-    implementation("androidx.compose.material:material:1.6.1")
+    implementation("androidx.compose.ui:ui:1.6.2")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.2")
+    implementation("androidx.compose.material:material:1.6.2")
     implementation("androidx.lifecycle:lifecycle-process:2.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.1")
-    debugImplementation("androidx.compose.ui:ui-tooling:1.6.1")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.2")
+    debugImplementation("androidx.compose.ui:ui-tooling:1.6.2")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.2")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
@@ -86,14 +87,14 @@ dependencies {
     // Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
-    kapt("androidx.hilt:hilt-compiler:1.1.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // LiveData
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.1")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.2")
 
     // Icons
-    implementation("androidx.compose.material:material-icons-extended:1.6.1")
+    implementation("androidx.compose.material:material-icons-extended:1.6.2")
 
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
@@ -112,12 +113,17 @@ dependencies {
     implementation("io.github.vanpra.compose-material-dialogs:color:0.9.0")
     implementation("com.raedapps:alwan:1.0.0")
 
-    implementation("com.google.android.gms:play-services-ads:22.6.0")
-
     implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
     implementation("com.google.firebase:firebase-config:21.6.1")
     implementation("com.google.firebase:firebase-common-ktx:20.4.2")
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation("com.github.Nirav186:commons:0.2.5")
+
+    implementation ("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 }
 // Allow references to generated code
 kapt {
